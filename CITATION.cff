@@ -1,20 +1,17 @@
-﻿cff-version: 1.2.0
-title: UL-TransXNet: Reproducibility package for ROI-based ultrasound lesion classification
-message: If you use this research artifact, please cite the associated manuscript and this repository.
-type: software
+cff-version: 1.2.0
+message: "If you use this package, please cite the manuscript."
+title: "UL-TransXNet: A Compact Architecture for Multi-Dataset Ultrasound Lesion Classification"
 authors:
-  - name: Afr1ste
-repository-code: https://github.com/Afr1ste/ul-transxnet
-url: https://github.com/Afr1ste/ul-transxnet
-abstract: Source code, configuration summaries, compact results, manuscript assets, and Android demo source for UL-TransXNet ultrasound lesion classification experiments on TN5000, BUSI, and AUL.
+  - family-names: Li
+    given-names: Zihan
+  - family-names: Yang
+    given-names: Cong
+date-released: 2026-05-05
+version: "2026.05.05-no-retrain-revision"
+repository-code: "https://github.com/Afr1ste/ul-transxnet"
 keywords:
   - ultrasound
-  - thyroid nodule
-  - breast ultrasound
-  - liver ultrasound
+  - lesion classification
   - ROI classification
+  - TransXNet
   - medical image analysis
-  - lightweight neural networks
-license: NOASSERTION
-version: 1.0.0
-date-released: '2026-05-05'

@@ -1,0 +1,27 @@
+{
+  "dataset": "busi",
+  "mode": "full",
+  "fold": 4,
+  "run_dir": "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\busi_roi_runs_ggg_mca_clean_5fold_safe\\20260426_192506",
+  "data_root": "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\busi\\busi_voc_v3_square_consistent",
+  "used_ckpts": [
+    "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\busi_roi_runs_ggg_mca_clean_5fold_safe\\20260426_192506\\epoch200_auc_0.9440.pth",
+    "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\busi_roi_runs_ggg_mca_clean_5fold_safe\\20260426_192506\\epoch187_auc_0.9433.pth",
+    "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\busi_roi_runs_ggg_mca_clean_5fold_safe\\20260426_192506\\epoch185_auc_0.9425.pth"
+  ],
+  "temperature": 4.471525192260742,
+  "threshold": 0.64,
+  "threshold_info": {
+    "threshold": 0.64,
+    "bal_acc": 0.773015873015873,
+    "f1_macro": 0.7619414483821263,
+    "acc": 0.7669902912621359,
+    "auc": 0.8369047619047619,
+    "recall_0": 0.746031746031746,
+    "recall_1": 0.8,
+    "tn": 47,
+    "fp": 16,
+    "fn": 8,
+    "tp": 32
+  }
+}

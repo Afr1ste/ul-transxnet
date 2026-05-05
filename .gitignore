@@ -1,60 +1,54 @@
-﻿# Git ignore for UL-TransXNet research artifacts
+# Python
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
-*.so
-*.dll
-*.dylib
 .venv/
 venv/
-.env
-.env.*
-.idea/
-.vscode/
-.DS_Store
 
-# Datasets and experiment outputs
-TN5000_forReview/
-TN5000_forReview_preproc_usmild_v1/
-busi/
-aul/
-thyroidxl/
-medmnist_data/
-isic2019_smoke_dataset/
-*_runs*/
-*_logs*/
-*_queue_logs*/
-overnight_logs*/
-cleanup_reports/
-__pycache__/
-
-# Model binaries and exports
-*.pth
+# Training outputs and model artifacts
 *.pt
-*.onnx
+*.pth
 *.ckpt
+*.onnx
 *.engine
+*.tflite
 *.apk
 *.aab
-*.zip
+checkpoints/
+weights/
+runs/
+wandb/
+logs/
+run_outputs/
 
-# Android build/local state
-.gradle/
-.kotlin/
-build/
-local.properties
+# Data and generated image folders
+data/
+datasets/
+*_forReview/
+*_forReview_preproc_*/
+ROI*/
+JPEGImages/
+Annotations/
+ImageSets/
+pred_voc_roots/
 
-# Paper build byproducts
-paper/*.aux
-paper/*.bbl
-paper/*.blg
-paper/*.fls
-paper/*.fdb_latexmk
-paper/*.log
-paper/*.out
-paper/*.synctex.gz
-paper/_compile_preview/
+# LaTeX build products
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.spl
+*.synctex.gz
 
-# Generated audit outputs
-reproduced_tables/
+# Android build products
+android/**/build/
+android/**/.gradle/
+android/**/local.properties
+android/**/assets/*.onnx
+
+# OS and editor
+.DS_Store
+.idea/
+.vscode/

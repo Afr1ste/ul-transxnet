@@ -22,7 +22,7 @@
 
 \begin{frontmatter}
 
-\title{UL-TransXNet: A Lightweight Architecture for Multi-Dataset Ultrasound Lesion Classification}
+\title{UL-TransXNet: A Compact Architecture for Multi-Dataset Ultrasound Lesion Classification}
 
 \author[inst1]{Zihan Li}
 \author[inst1]{Cong Yang\texorpdfstring{\corref{cor1}}{}}
@@ -36,19 +36,19 @@
             country={China}}
 
 \begin{abstract}
-Ultrasound lesion classification is challenging because speckle noise, weak boundaries, low contrast, and acquisition-dependent variation obscure lesion cues. We present UL-TransXNet, a compact ROI-based TransXNet family architecture for benign--malignant ultrasound lesion classification. Lesion annotations are used to construct expanded square ROI crops, after which a lightweight hierarchical backbone models local texture and broader contextual relationships. We evaluate the model on three public datasets: TN5000 for thyroid nodules, BUSI for breast lesions, and AUL for liver lesions. Under the unified ROI protocol, UL-TransXNet obtains mean test AUC/balanced-accuracy pairs of 0.9483/0.8726 on TN5000, 0.8998/0.7961 on BUSI, and 0.8767/0.8200 on AUL. The result does not imply uniform superiority: ConvNeXt-Tiny remains slightly stronger on TN5000 at the selected operating point. Instead, the main finding is cross-dataset competitiveness, with the strongest average performance across the three datasets and clear gains on BUSI and AUL. TN5000 ablations show that the TransXNet family refinements improve operating-point behavior, while MCA contributes mainly to thresholded decision quality and cross-dataset robustness rather than to a uniform AUC gain. An auxiliary automatic-ROI experiment further shows that detector-predicted crops improve full-image classification on BUSI and AUL, with a remaining gap to oracle ROI performance. Android experiments quantify deployment trade-offs, where horizontal-flip test-time augmentation improves AUC from 0.9402 to 0.9466 at 226.2 ms per image. These results support UL-TransXNet as a competitive lightweight ultrasound classifier, while broader domain generalization remains open.
+Ultrasound lesion classification is challenging because speckle noise, weak boundaries, low contrast, and acquisition-dependent variation obscure lesion cues. We present UL-TransXNet, a compact ROI-based TransXNet family architecture for benign--malignant ultrasound lesion classification. Lesion annotations are used to construct expanded ROI crops, after which a parameter/MAC-efficient hierarchical backbone models local texture and broader contextual relationships. We evaluate the model on three public datasets: TN5000 for thyroid nodules, BUSI for breast lesions, and AUL for liver lesions. Under dataset-specific training and the unified ROI reporting protocol, UL-TransXNet obtains mean test AUC/balanced-accuracy pairs of 0.9483/0.8726 on TN5000, 0.8998/0.7961 on BUSI, and 0.8767/0.8200 on AUL. The result does not imply uniform superiority: ConvNeXt-Tiny remains slightly stronger on TN5000 at the selected operating point. Instead, the main finding is multi-dataset in-domain competitiveness, with the strongest average performance across the three datasets and clear gains on BUSI and AUL. TN5000 ablations show that the TransXNet family refinements improve operating-point behavior, while MCA contributes mainly to thresholded decision quality and multi-dataset operating behavior rather than to a uniform AUC gain. Automatic-ROI experiments provide workflow evidence: TN5000 verifies detector-front-end feasibility on the primary benchmark, while BUSI/AUL compare oracle ROI, detector-predicted ROI, and full-image inputs and show that automatic crops improve over full-image classification but remain below oracle ROI performance. Android experiments quantify prototype inference trade-offs, where horizontal-flip test-time augmentation improves AUC from 0.9402 to 0.9466 at 226.2 ms per image. These results support UL-TransXNet as a competitive compact ultrasound classifier, while broader external generalization and clinical deployment remain open.
 \end{abstract}
 
 \begin{highlights}
 \item UL-TransXNet classifies ultrasound lesions from ROI crops.
-\item Three public datasets support cross-organ evaluation.
+\item Three public datasets support multi-dataset in-domain evaluation.
 \item Ablations isolate MCA, MUDD, and differential attention.
 \item Automatic ROI experiments connect localization and classification.
 \item Android experiments quantify accuracy--latency trade-offs.
 \end{highlights}
 
 \begin{keyword}
-Ultrasound image classification \sep Thyroid nodule \sep Breast ultrasound \sep Liver ultrasound \sep Lightweight neural network \sep Mobile deployment
+Ultrasound image classification \sep Thyroid nodule \sep Breast ultrasound \sep Liver ultrasound \sep Compact neural network \sep Mobile inference prototype
 \end{keyword}
 
 \end{frontmatter}
@@ -76,7 +76,7 @@ This research did not receive any specific grant from funding agencies in the pu
 The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
 
 \section*{Data availability}
-The datasets analyzed in this study are publicly available from their original sources, which are cited in the manuscript. Source code, protocol configuration files, environment specifications, paper-generation scripts, Android demonstration source, artifact-validation utilities, and compact result summaries are available at \url{https://github.com/Afr1ste/ul-transxnet}. Dataset files, generated ROI image folders, trained checkpoints, detector weights, ONNX binaries, Android application packages, and full run logs are not redistributed in the repository. These restricted or large artifacts are retained in the project archive and may be made available from the corresponding author upon reasonable request where permitted by the applicable terms of the original datasets and software providers.
+The datasets analyzed in this study are publicly available from their original sources, which are cited in the manuscript. A reproducibility package is prepared for release at \url{https://github.com/Afr1ste/ul-transxnet} and includes source code, split/protocol configuration files, environment specifications, paper-generation scripts, Android demonstration source, artifact-validation utilities, compact result summaries, table provenance, validation thresholds, temperature-scaling values, and prediction CSV files required for table regeneration. Dataset image files, generated ROI image folders, trained checkpoints, detector weights, ONNX binaries, Android application packages, and full raw run logs are not redistributed in the repository. These restricted or large artifacts are retained in the project archive and may be made available from the corresponding author upon reasonable request where permitted by the applicable terms of the original datasets and software providers.
 
 \bibliographystyle{elsarticle-num}
 \bibliography{refs}

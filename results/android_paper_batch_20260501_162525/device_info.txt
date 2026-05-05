@@ -1,0 +1,20 @@
+TN5000 Android paper batch device info
+========================================
+manufacturer=Xiaomi
+brand=Xiaomi
+model=24129PN74C
+device=dada
+product=dada
+sdk_int=36
+release=16
+abis=arm64-v8a
+native_heap_start_mb=34.0437
+
+selected_modes=GGG-MCA+TTA,GGG-MCA Ensemble
+cold_runs_per_mode=1
+hot_runs_per_mode=1
+threshold=0.730000
+temperature=1.819830
+expand_ratio=0.300000
+square_crop=false
+note=

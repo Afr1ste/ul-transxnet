@@ -1,0 +1,22 @@
+\begin{table}[t]
+    \centering
+    \small
+    \caption{Offline paired statistical comparison between UL-TransXNet and the strongest non-\textit{Ours} baseline in Table~\ref{tab:main_results}. $\Delta$ denotes UL-TransXNet minus baseline. Confidence intervals are paired bootstrap 95\% intervals over seeds or folds; $p$ is an exact two-sided paired sign-flip test. Because only three TN5000 seeds and five BUSI/AUL folds are available, these tests are intended as repeated-run stability checks rather than large-sample clinical significance tests.}
+    \label{tab:paired_statistical_tests}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lllcccc}
+        \toprule
+        Dataset & Baseline & Metric & $n$ & $\Delta$ & 95\% CI & $p$ \\
+        \midrule
+        TN5000 & ConvNeXt-Tiny & AUC & 3 & -0.0025 & [-0.0040, -0.0006] & 0.2500 \\
+        TN5000 & ConvNeXt-Tiny & BalAcc & 3 & -0.0068 & [-0.0104, -0.0022] & 0.2500 \\
+        \midrule
+        BUSI & Swin-T & AUC & 5 & +0.0807 & [0.0697, 0.0918] & 0.0625 \\
+        BUSI & Swin-T & BalAcc & 5 & +0.0823 & [0.0647, 0.0961] & 0.0625 \\
+        \midrule
+        AUL & Swin-T & AUC & 5 & +0.0449 & [0.0375, 0.0574] & 0.0625 \\
+        AUL & Swin-T & BalAcc & 5 & +0.0417 & [0.0160, 0.0674] & 0.0625 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}

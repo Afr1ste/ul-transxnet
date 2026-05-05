@@ -1,0 +1,32 @@
+TN5000 Android deployment summary
+========================================
+mode=GGG-MCA Ensemble
+assets_used=tn5000_ggg_mca_s27_current.onnx;tn5000_ggg_mca_s27_epoch047.onnx;tn5000_ggg_mca_s27_epoch046.onnx
+model_bytes_total=168164403
+mode_prepare_ms=2573.928491
+threshold=0.730000
+temperature=1.819830
+expand_ratio=0.300000
+square_crop=false
+
+total=1000
+correct=892
+accuracy=0.892000
+balanced_accuracy=0.872333
+precision_macro=0.853315
+recall_macro=0.872333
+f1_macro=0.862041
+auc=0.948457
+recall_benign=0.832031
+recall_malignant=0.912634
+confusion=[[TN=213,FP=43],[FN=65,TP=679]]
+
+avg_preprocess_ms=3.846273
+avg_inference_ms=732.496239
+avg_total_ms=736.342512
+p50_total_ms=735.462110
+p95_total_ms=762.172390
+total_runtime_sec=751.084341
+peak_java_heap_mb=176.063255
+peak_native_heap_mb=472.657562
+csv=/storage/emulated/0/Android/data/com.afriste.tn5000ortdemo/files/eval_reports/paper_batch_20260501_162525/ggg-mca ensemble_cold1.csv

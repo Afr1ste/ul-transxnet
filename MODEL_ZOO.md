@@ -1,25 +1,16 @@
-﻿# Model and artifact availability
+# Model Artifacts
 
-This repository publishes architecture definitions, training/evaluation scripts, compact result summaries, and Android demo source. It intentionally does not redistribute trained model weights or exported binaries.
+This public repository does not include trained checkpoints, detector weights,
+ONNX exports, or APK binaries.
 
-## Included
+The omitted artifacts are large and/or tied to third-party dataset files that
+cannot be redistributed here. The repository instead provides:
 
-- UL-TransXNet / TransXNet-family model definitions in `src/models/`.
-- Baseline and ablation training scripts in `src/scripts/`.
-- ONNX export utilities in `android/export/`.
-- Android ONNX Runtime demo source in `android/TN5000OrtDemoComplete/`.
+- model source code under `src/models/`;
+- training and evaluation entry points under `src/scripts/`;
+- Android ONNX Runtime demo source under `android/`;
+- frozen CSV outputs and SHA256 provenance under `results/`.
 
-## Not included
-
-- `.pth` / `.pt` training checkpoints.
-- `.onnx` model exports.
-- Android `.apk` files.
-- Full training logs and intermediate run folders.
-
-## Rationale
-
-The excluded files are large, environment-specific, or coupled to dataset redistribution constraints. The published scripts and configs are sufficient to rebuild these artifacts after obtaining the datasets and installing the environment.
-
-## Rebuilding model binaries
-
-After training, use the ONNX export scripts under `android/export/`. Place exported ONNX files in the Android app asset folder locally; do not commit them unless redistribution permissions are explicitly resolved.
+For the 2026-05-05 no-retrain revision, reported values are audited through
+`MODEL_SELECTION_PROTOCOL.md` and
+`results/no_retrain_revision_20260505/model_selection_source_files.csv`.

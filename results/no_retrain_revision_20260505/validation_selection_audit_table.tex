@@ -1,0 +1,18 @@
+\begin{table}[t]
+    \centering
+    \small
+    \caption{Validation-performance audit for the TransXNet-family selection. Values are averages over three TN5000 seeds or five BUSI/AUL training folds. The selected row is the final UL-TransXNet configuration used in the main manuscript tables.}
+    \label{tab:validation_selection_audit}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lccccc}
+        \toprule
+        Variant & TN5000 val AUC & BUSI val AUC & AUL val AUC & Mean val AUC & Selected \\
+        \midrule
+        TransXNet & 0.9577 & 0.7796 & 0.7464 & 0.8279 & no \\
+        TransXNet-GG & 0.9632 & 0.8011 & 0.7390 & 0.8345 & no \\
+        GGG-noMCA & 0.9700 & 0.8957 & 0.8798 & 0.9152 & no \\
+        UL-TransXNet & 0.9638 & 0.9199 & 0.8827 & \textbf{0.9222} & yes \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}

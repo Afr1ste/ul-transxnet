@@ -1,0 +1,21 @@
+\begin{table*}[t]
+    \centering
+    \small
+    \caption{Closed-loop classification with oracle ROI, automatic detector ROI, and full-image input. Values are mean $\pm$ standard deviation across five folds. Bracketed intervals are fold-bootstrap 95\% confidence intervals for AUC and balanced accuracy.}
+    \label{tab:auto_roi_closed_loop}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{llcccc}
+        \toprule
+        Dataset & Input & AUC & BalAcc & F1-macro & Acc \\
+        \midrule
+        BUSI & oracle & 0.8998 $\pm$ 0.0116 [0.8880, 0.9067] & 0.7961 $\pm$ 0.0104 [0.7865, 0.8045] & 0.8018 $\pm$ 0.0119 & 0.8140 $\pm$ 0.0130 \\
+        BUSI & auto & 0.8725 $\pm$ 0.0158 [0.8564, 0.8845] & 0.7839 $\pm$ 0.0179 [0.7704, 0.8010] & 0.7893 $\pm$ 0.0176 & 0.8031 $\pm$ 0.0167 \\
+        BUSI & full & 0.7737 $\pm$ 0.0044 [0.7701, 0.7777] & 0.6982 $\pm$ 0.0237 [0.6762, 0.7178] & 0.6915 $\pm$ 0.0378 & 0.7023 $\pm$ 0.0418 \\
+        \midrule
+        AUL & oracle & 0.8767 $\pm$ 0.0009 [0.8759, 0.8776] & 0.8200 $\pm$ 0.0487 [0.7755, 0.8599] & 0.7462 $\pm$ 0.0405 & 0.7685 $\pm$ 0.0418 \\
+        AUL & auto & 0.8507 $\pm$ 0.0222 [0.8320, 0.8708] & 0.7593 $\pm$ 0.0288 [0.7340, 0.7847] & 0.6908 $\pm$ 0.0561 & 0.7165 $\pm$ 0.0713 \\
+        AUL & full & 0.7441 $\pm$ 0.0111 [0.7344, 0.7538] & 0.6805 $\pm$ 0.0214 [0.6623, 0.6999] & 0.6787 $\pm$ 0.0203 & 0.7512 $\pm$ 0.0190 \\
+        \bottomrule
+    \end{tabular}%
+    }
+\end{table*}

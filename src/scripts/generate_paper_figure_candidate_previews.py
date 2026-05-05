@@ -68,7 +68,7 @@ def save_auto_roi_sheet(dataset: str, cfg: dict[str, Any], candidates: pd.DataFr
     fig, axes = plt.subplots(len(candidates), 4, figsize=(10.7, 2.42 * len(candidates)), dpi=220)
     if len(candidates) == 1:
         axes = axes[None, :]
-    col_titles = ["Original", "Detector output", "Expanded square ROI", "Classifier input"]
+    col_titles = ["Original", "Detector output", "Expanded ROI", "Classifier input"]
 
     for r, row in candidates.iterrows():
         row = row.to_dict()

@@ -1,0 +1,17 @@
+﻿\begin{table}[t]
+    \centering
+    \small
+    \caption{Uncertainty and calibration summary for UL-TransXNet on the main test sets. Values follow the manuscript seed/fold-level reporting protocol; intervals are bootstrap 95\% confidence intervals over seeds or folds. ECE uses 10 confidence bins.}
+    \label{tab:calibration_uncertainty}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lcccc}
+        \toprule
+        Dataset & AUC 95\% CI & BalAcc 95\% CI & ECE & Brier \\
+        \midrule
+        TN5000 & 0.9483 [0.9475, 0.9488] & 0.8726 [0.8662, 0.8771] & 0.0220 & 0.0741 \\
+        BUSI & 0.8998 [0.8880, 0.9067] & 0.7961 [0.7865, 0.8045] & 0.0696 & 0.1358 \\
+        AUL & 0.8767 [0.8759, 0.8776] & 0.8200 [0.7755, 0.8599] & 0.1283 & 0.1597 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}

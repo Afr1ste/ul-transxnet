@@ -1,0 +1,26 @@
+{
+  "dataset": "aul",
+  "mode": "oracle",
+  "fold": 3,
+  "run_dir": "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\aul_roi_runs_ggg_mca_clean_5fold_safe\\20260426_201108",
+  "data_root": "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\aul\\aul_voc_roi_v1",
+  "used_ckpts": [
+    "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\aul_roi_runs_ggg_mca_clean_5fold_safe\\20260426_201108\\epoch008_auc_0.8314.pth",
+    "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\aul_roi_runs_ggg_mca_clean_5fold_safe\\20260426_201108\\epoch006_auc_0.8310.pth"
+  ],
+  "temperature": 0.48519816994667053,
+  "threshold": 0.73,
+  "threshold_info": {
+    "threshold": 0.73,
+    "bal_acc": 0.8658911325724319,
+    "f1_macro": 0.8261617900172117,
+    "acc": 0.8316831683168316,
+    "auc": 0.83099209833187,
+    "recall_0": 0.9705882352941176,
+    "recall_1": 0.7611940298507462,
+    "tn": 33,
+    "fp": 1,
+    "fn": 16,
+    "tp": 51
+  }
+}

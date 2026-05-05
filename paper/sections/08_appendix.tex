@@ -3,7 +3,7 @@
 \section{Supplementary Benchmark Tables}
 \label{sec:appendix_benchmark}
 
-Table~\ref{tab:full_benchmark} reports the full benchmark table used to support the main comparison. Values are mean $\pm$ standard deviation across TN5000 seeds or BUSI/AUL folds. The proposed model is UL-TransXNet, which corresponds to the TransXNet-GGG-MCA configuration in the ablation notation; baseline rows are taken from the same comparison protocol.
+Table~\ref{tab:full_benchmark} reports the full benchmark table used to support the main comparison. Values are mean $\pm$ standard deviation across TN5000 seeds or BUSI/AUL training folds evaluated on fixed held-out test sets. The proposed model is UL-TransXNet, which corresponds to the TransXNet-GGG-MCA configuration in the ablation notation; baseline rows are taken from the same comparison protocol.
 
 \begin{table*}[t]
     \centering
@@ -32,4 +32,4 @@ Table~\ref{tab:full_benchmark} reports the full benchmark table used to support 
 \section{Reproducibility Note}
 \label{sec:appendix_sources}
 
-All main benchmark tables were generated from the seed/fold summary CSV files used by the experiment pipeline. The project archive records the dataset split manifests, ROI construction scripts, training entry points, aggregation scripts, model checkpoints, Android deployment artifacts, and a table-level source index required to reproduce the reported TN5000, BUSI, AUL, and Android deployment results.
+All main benchmark tables were generated from the seed/fold summary CSV files used by the experiment pipeline. The project archive records the dataset split manifests, ROI construction scripts, training entry points, aggregation scripts, model checkpoints, Android artifacts, validation thresholds, fitted temperatures, prediction CSV files, and a table-level source index required to reproduce the reported TN5000, BUSI, AUL, automatic-ROI, and Android prototype results. The prepared source-controlled release is intended to include the scripts, compact configurations, split metadata, table summaries, prediction-level CSV files, and the model-selection protocol with source-file checksums that can be shared without redistributing dataset images or large trained weights.

@@ -1,0 +1,23 @@
+\begin{table}[t]
+    \centering
+    \small
+    \caption{TN5000 automatic ROI sanity check using existing detector and classifier outputs. Detector values summarize three YOLO11n detector seeds; classification values summarize automatic-ROI closed-loop evaluation across the three detector seeds. No classifier retraining is involved.}
+    \label{tab:tn5000_auto_roi_summary}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lcc}
+        \toprule
+        Block & Metric & Value \\
+        \midrule
+        Detector & mAP50 & 0.9520 $\pm$ 0.0090 \\
+        Detector & mean IoU & 0.7855 $\pm$ 0.0033 \\
+        Detector & R@0.75 & 0.7880 $\pm$ 0.0122 \\
+        Detector & no-detection rate & 0.0000 $\pm$ 0.0000 \\
+        \midrule
+        Auto ROI classifier & AUC & 0.9437 $\pm$ 0.0042 \\
+        Auto ROI classifier & BalAcc & 0.8686 $\pm$ 0.0056 \\
+        Auto ROI classifier & F1-macro & 0.8519 $\pm$ 0.0116 \\
+        Auto ROI classifier & Acc & 0.8820 $\pm$ 0.0115 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}

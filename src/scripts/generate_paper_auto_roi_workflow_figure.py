@@ -20,7 +20,7 @@ DATASETS = {
 
 COL_GT = "#2E7D32"       # restrained green
 COL_PRED = "#B23A3A"     # muted red
-COL_SQ = "#345E8A"       # muted blue
+COL_ROI = "#345E8A"      # muted blue
 COL_GRAY = "#303030"
 
 
@@ -33,34 +33,23 @@ def clamp_box(box, w, h):
     return [max(0, min(w, x1)), max(0, min(h, y1)), max(0, min(w, x2)), max(0, min(h, y2))]
 
 
-def expanded_square(box, w, h, ratio):
+def expanded_roi(box, w, h, ratio):
     x1, y1, x2, y2 = box
     bw = max(1.0, x2 - x1)
     bh = max(1.0, y2 - y1)
     cx = (x1 + x2) / 2.0
     cy = (y1 + y2) / 2.0
-    side = max(bw, bh) * (1.0 + ratio)
-    sx1 = cx - side / 2.0
-    sy1 = cy - side / 2.0
-    sx2 = cx + side / 2.0
-    sy2 = cy + side / 2.0
-    if sx1 < 0:
-        sx2 -= sx1
-        sx1 = 0
-    if sy1 < 0:
-        sy2 -= sy1
-        sy1 = 0
-    if sx2 > w:
-        sx1 -= (sx2 - w)
-        sx2 = w
-    if sy2 > h:
-        sy1 -= (sy2 - h)
-        sy2 = h
-    sx1, sy1, sx2, sy2 = clamp_box([sx1, sy1, sx2, sy2], w, h)
-    return [sx1, sy1, sx2, sy2]
+    ew = bw * (1.0 + ratio)
+    eh = bh * (1.0 + ratio)
+    rx1 = cx - ew / 2.0
+    ry1 = cy - eh / 2.0
+    rx2 = cx + ew / 2.0
+    ry2 = cy + eh / 2.0
+    rx1, ry1, rx2, ry2 = clamp_box([rx1, ry1, rx2, ry2], w, h)
+    return [rx1, ry1, rx2, ry2]
 
 
-def draw_overlay(img, gt_box=None, pred_box=None, sq_box=None):
+def draw_overlay(img, gt_box=None, pred_box=None, roi_box=None):
     out = img.convert("RGB").copy()
     draw = ImageDraw.Draw(out)
     def rect(box, color, width=4, dash=False):
@@ -82,14 +71,14 @@ def draw_overlay(img, gt_box=None, pred_box=None, sq_box=None):
         rect(gt_box, COL_GT, width=3)
     if pred_box is not None:
         rect(pred_box, COL_PRED, width=4)
-    if sq_box is not None:
-        rect(sq_box, COL_SQ, width=4, dash=True)
+    if roi_box is not None:
+        rect(roi_box, COL_ROI, width=4, dash=True)
     return out
 
 
-def crop_square(img, sq_box):
+def crop_roi(img, roi_box):
     w, h = img.size
-    x1, y1, x2, y2 = [int(round(v)) for v in clamp_box(sq_box, w, h)]
+    x1, y1, x2, y2 = [int(round(v)) for v in clamp_box(roi_box, w, h)]
     if x2 <= x1 or y2 <= y1:
         return img.copy()
     return img.crop((x1, y1, x2, y2))
@@ -171,20 +160,20 @@ def main():
         w, h = img.size
         gt = to_float_box(row, "gt")
         pred = to_float_box(row, "pred")
-        sq = expanded_square(pred, w, h, cfg["expand"])
-        cases.append((ds, cfg, row, img, gt, pred, sq))
+        roi = expanded_roi(pred, w, h, cfg["expand"])
+        cases.append((ds, cfg, row, img, gt, pred, roi))
 
     fig, axes = plt.subplots(2, 4, figsize=(10.2, 5.05), dpi=300)
-    col_titles = ["Original image", "Detector output", "Expanded square ROI", "Classifier input / output"]
+    col_titles = ["Original image", "Detector output", "Expanded ROI", "Classifier input / output"]
 
-    for r, (ds, cfg, row, img, gt, pred, sq) in enumerate(cases):
+    for r, (ds, cfg, row, img, gt, pred, roi) in enumerate(cases):
         overlay_det = draw_overlay(img, gt_box=gt, pred_box=pred)
-        overlay_sq = draw_overlay(img, pred_box=pred, sq_box=sq)
-        crop = crop_square(img, sq)
+        overlay_roi = draw_overlay(img, pred_box=pred, roi_box=roi)
+        crop = crop_roi(img, roi)
 
         setup_axis(axes[r, 0], img, col_titles[0] if r == 0 else "", cfg["label"])
         setup_axis(axes[r, 1], overlay_det, col_titles[1] if r == 0 else "", f"IoU={float(row['iou']):.2f}")
-        setup_axis(axes[r, 2], overlay_sq, col_titles[2] if r == 0 else "", f"expand={int(cfg['expand']*100)}%, square")
+        setup_axis(axes[r, 2], overlay_roi, col_titles[2] if r == 0 else "", f"expand={int(cfg['expand']*100)}%")
         add_output_card(axes[r, 3], crop, row)
         axes[r, 3].set_title(col_titles[3] if r == 0 else "", fontsize=10.5, pad=7, fontweight="semibold")
         axes[r, 3].text(0.5, -0.075, r"$B \times 3 \times 256 \times 256$", transform=axes[r, 3].transAxes, ha="center", va="top", fontsize=8.5, color="#303030")
@@ -195,7 +184,7 @@ def main():
     legend_handles = [
         Rectangle((0, 0), 1, 1, fill=False, edgecolor=COL_GT, linewidth=3.0, label="Reference annotation"),
         Rectangle((0, 0), 1, 1, fill=False, edgecolor=COL_PRED, linewidth=3.0, label="Detector box"),
-        Rectangle((0, 0), 1, 1, fill=False, edgecolor=COL_SQ, linewidth=3.0, linestyle=(0, (3, 2)), label="Expanded square ROI"),
+        Rectangle((0, 0), 1, 1, fill=False, edgecolor=COL_ROI, linewidth=3.0, linestyle=(0, (3, 2)), label="Expanded ROI"),
     ]
     fig.legend(
         handles=legend_handles,

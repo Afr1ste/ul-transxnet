@@ -1,0 +1,19 @@
+\begin{table}[t]
+    \centering
+    \small
+    \caption{Original TransXNet versus UL-TransXNet under the same dataset-specific reporting protocol. $\Delta$ denotes UL-TransXNet minus TransXNet.}
+    \label{tab:original_transxnet_delta}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lcccccc}
+        \toprule
+        Dataset & \multicolumn{2}{c}{TransXNet} & \multicolumn{2}{c}{UL-TransXNet} & \multicolumn{2}{c}{$\Delta$} \\
+        \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+        & AUC & BalAcc & AUC & BalAcc & AUC & BalAcc \\
+        \midrule
+        TN5000 & 0.9495 & 0.8697 & 0.9483 & 0.8726 & -0.0012 & 0.0028 \\
+        BUSI & 0.7227 & 0.6560 & 0.8998 & 0.7961 & 0.1770 & 0.1401 \\
+        AUL & 0.6582 & 0.6263 & 0.8767 & 0.8200 & 0.2186 & 0.1937 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}

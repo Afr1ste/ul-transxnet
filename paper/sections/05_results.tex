@@ -2,7 +2,7 @@
 \label{sec:results}
 
 \subsection{Main comparison results on public ultrasound datasets}
-Table~\ref{tab:main_results} summarizes the main comparison results, reported as mean $\pm$ standard deviation across TN5000 seeds or BUSI/AUL folds. The evidence should be read carefully. On TN5000, ConvNeXt-Tiny is slightly stronger than the proposed model at the selected operating point. On BUSI and AUL, however, UL-TransXNet provides a clear gain over the strongest non-\textit{Ours} baseline. Averaged over the three datasets, the proposed model gives the strongest overall performance, especially in balanced accuracy.
+Table~\ref{tab:main_results} summarizes the main comparison results, reported as mean $\pm$ standard deviation across TN5000 seeds or BUSI/AUL training folds evaluated on the fixed held-out test sets. The evidence should be read carefully. On TN5000, ConvNeXt-Tiny is slightly stronger than the proposed model at the selected operating point. On BUSI and AUL, however, UL-TransXNet provides a clear gain over the strongest non-\textit{Ours} baseline. Averaged over the three dataset-specific evaluations, the proposed model gives the strongest overall performance, especially in balanced accuracy.
 
 \begin{table*}[t]
     \centering
@@ -27,11 +27,33 @@ Table~\ref{tab:main_results} summarizes the main comparison results, reported as
     }
 \end{table*}
 
-These results delimit the central claim. The proposed model should not be described as uniformly better than every baseline on every dataset. Its advantage is cross-dataset: it is competitive on TN5000 and substantially stronger on BUSI and AUL. The mean AUC over TN5000, BUSI, and AUL is 0.9083 for UL-TransXNet, compared with 0.8672 for the strongest-per-dataset non-\textit{Ours} rows listed in Table~\ref{tab:main_results}. The corresponding mean balanced accuracy is 0.8296 versus 0.7905. This supports the claim that the architecture is a strong lightweight multi-dataset ultrasound classifier, not a claim of uniform dominance on the primary thyroid benchmark.
+These results delimit the central claim. The proposed model should not be described as uniformly better than every baseline on every dataset. Its advantage is a multi-dataset in-domain pattern: it is competitive on TN5000 and substantially stronger on BUSI and AUL under dataset-specific training. The mean AUC over TN5000, BUSI, and AUL is 0.9083 for UL-TransXNet, compared with 0.8672 for the strongest-per-dataset non-\textit{Ours} rows listed in Table~\ref{tab:main_results}. The corresponding mean balanced accuracy is 0.8296 versus 0.7905. This supports the claim that the architecture is a strong compact multi-dataset ultrasound classifier, not a claim of uniform dominance on the primary thyroid benchmark or external cross-organ generalization.
 
 AUL illustrates the distinction between threshold-free ranking and thresholded operating-point metrics. UL-TransXNet has higher AUC and balanced accuracy than Swin-T, whereas Swin-T has slightly higher macro F1 and raw accuracy at its validation-selected threshold. We therefore interpret the AUL result as better ranking and class-balanced operating behavior, not as dominance over every thresholded metric.
 
 Table~\ref{tab:paired_statistical_tests} adds an offline paired statistical check over the same repeated runs used by Table~\ref{tab:main_results}. On TN5000, the proposed model is slightly below ConvNeXt-Tiny. On BUSI and AUL, the paired differences are consistently positive for both AUC and balanced accuracy. Because the available repeated units are only three TN5000 seeds and five BUSI/AUL folds, these tests are used as stability evidence rather than as large-sample clinical significance claims.
+
+Table~\ref{tab:original_transxnet_delta} directly compares the original TransXNet baseline with UL-TransXNet under the same dataset-specific reporting protocol. This comparison is important because the method is a TransXNet-family adaptation rather than a detached backbone. The final model is not a TN5000 AUC improvement over the original TransXNet, but it slightly improves the TN5000 validation-selected operating point and gives much larger gains on BUSI and AUL.
+
+\begin{table}[t]
+    \centering
+    \small
+    \caption{Original TransXNet versus UL-TransXNet under the same dataset-specific reporting protocol. $\Delta$ denotes UL-TransXNet minus TransXNet.}
+    \label{tab:original_transxnet_delta}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lcccccc}
+        \toprule
+        Dataset & \multicolumn{2}{c}{TransXNet} & \multicolumn{2}{c}{UL-TransXNet} & \multicolumn{2}{c}{$\Delta$} \\
+        \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+        & AUC & BalAcc & AUC & BalAcc & AUC & BalAcc \\
+        \midrule
+        TN5000 & 0.9495 & 0.8697 & 0.9483 & 0.8726 & -0.0012 & 0.0028 \\
+        BUSI & 0.7227 & 0.6560 & 0.8998 & 0.7961 & 0.1770 & 0.1401 \\
+        AUL & 0.6582 & 0.6263 & 0.8767 & 0.8200 & 0.2186 & 0.1937 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
 
 \begin{table}[t]
     \centering
@@ -56,7 +78,7 @@ Table~\ref{tab:paired_statistical_tests} adds an offline paired statistical chec
     \end{adjustbox}
 \end{table}
 
-Table~\ref{tab:complexity_performance} gives the corresponding complexity--performance view for the full comparison pool. This table makes the deployment trade-off more explicit than the accuracy-only table: UL-TransXNet is not the smallest or fastest model, but it achieves the highest mean AUC and mean balanced accuracy with 14.37M parameters and 2.36 GMACs. Its local CUDA batch-1 latency is 30.23 ms, which is slower than the most GPU-optimized baselines but remains within an interactive range. In contrast, the strongest TN5000 baselines ConvNeXt-Tiny and Swin-T require 28.21M/5.82G and 27.91M/7.11G, respectively. The input column is included because EfficientFormer-L1 is evaluated at its native 224 input while the other models use the 256 ROI input used by the proposed model.
+Table~\ref{tab:complexity_performance} gives the corresponding complexity--performance view for the full comparison pool. This table makes the trade-off more explicit than the accuracy-only table: UL-TransXNet is parameter/MAC-efficient, but it is not the smallest model and is not CUDA-latency optimal. It achieves the highest mean AUC and mean balanced accuracy with 14.37M parameters and 2.36 GMACs, while its local CUDA batch-1 latency is 30.23 ms, slower than several GPU-optimized baselines. In contrast, the strongest TN5000 baselines ConvNeXt-Tiny and Swin-T require 28.21M/5.82G and 27.91M/7.11G, respectively. The input column is included because EfficientFormer-L1 is evaluated at its native 224 input while the other models use the 256 ROI input used by the proposed model.
 
 \begin{table*}[t]
     \centering
@@ -107,12 +129,31 @@ Table~\ref{tab:tn5000_structure_ablation} reports the unified-protocol TN5000 st
     \end{adjustbox}
 \end{table}
 
-The structure ablation shows that the TransXNet-family modifications are useful but metric-dependent. The G and GG variants improve thresholded operating-point behavior relative to the baseline. The GGG-MCA configuration is not the TN5000 AUC winner, but it remains competitive and corresponds to the model that generalizes best across the three main datasets. Table~\ref{tab:gg_vs_final_selection} makes this selection criterion explicit: \texttt{TransXNet-GG} is the strongest TN5000-only structure, whereas UL-TransXNet is substantially stronger on BUSI and AUL and therefore gives the better three-dataset average.
+The structure ablation shows that the TransXNet-family modifications are useful but metric-dependent. The G and GG variants improve thresholded operating-point behavior relative to the baseline. The GGG-MCA configuration is not the TN5000 AUC winner, but it remains competitive and corresponds to the best multi-dataset in-domain pattern in this result set. Table~\ref{tab:validation_selection_audit} audits the model-family choice using validation AUC from the completed runs. The selection rule is to choose the TransXNet-family row with the highest mean validation AUC over TN5000, BUSI, and AUL under the dataset-specific training protocols; the source-controlled model-selection protocol records the contributing CSV files and checksums. UL-TransXNet gives the highest mean validation AUC across TN5000, BUSI, and AUL, while \texttt{GGG-noMCA} remains the strongest TN5000 validation-AUC row. Table~\ref{tab:gg_vs_final_selection} then shows the corresponding test-set behavior: \texttt{TransXNet-GG} is the strongest TN5000-only structure, whereas UL-TransXNet is substantially stronger on BUSI and AUL and therefore gives the better three-dataset average.
 
 \begin{table}[t]
     \centering
     \small
-    \caption{TN5000-only optimum versus the final cross-dataset configuration. The final model is selected for three-dataset behavior, not for the single best TN5000 ablation row.}
+    \caption{Validation-performance audit for the TransXNet-family selection. Values are averages over three TN5000 seeds or five BUSI/AUL training folds. The selected row is the final UL-TransXNet configuration used in the main manuscript tables.}
+    \label{tab:validation_selection_audit}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lccccc}
+        \toprule
+        Variant & TN5000 val AUC & BUSI val AUC & AUL val AUC & Mean val AUC & Selected \\
+        \midrule
+        TransXNet & 0.9577 & 0.7796 & 0.7464 & 0.8279 & no \\
+        TransXNet-GG & 0.9632 & 0.8011 & 0.7390 & 0.8345 & no \\
+        GGG-noMCA & \textbf{0.9700} & 0.8957 & 0.8798 & 0.9152 & no \\
+        UL-TransXNet & 0.9638 & \textbf{0.9199} & \textbf{0.8827} & \textbf{0.9222} & yes \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
+
+\begin{table}[t]
+    \centering
+    \small
+    \caption{TN5000-only optimum versus the final multi-dataset configuration. The final reported model is retained for three-dataset behavior, not for the single best TN5000 ablation row.}
     \label{tab:gg_vs_final_selection}
     \begin{adjustbox}{max width=\columnwidth}
     \begin{tabular}{lcccc}
@@ -132,7 +173,7 @@ The structure ablation shows that the TransXNet-family modifications are useful 
 \end{table}
 
 \subsection{TN5000 core-module ablation}
-Table~\ref{tab:tn5000_module_ablation} isolates the core-module path under the same TN5000 protocol. Differential attention provides the clearest single-module operating-point improvement: \texttt{GGG-core+DA} improves balanced accuracy, macro F1, and accuracy over \texttt{GGG-core}. MUDD alone gives a smaller gain in thresholded metrics and does not improve AUC in this setting. Adding MCA to the full GGG configuration lowers TN5000 AUC slightly relative to the no-MCA full model, but improves balanced accuracy, macro F1, and accuracy. This supports a restrained interpretation of MCA: it is useful for decision-level robustness and cross-dataset behavior, not a universal AUC booster.
+Table~\ref{tab:tn5000_module_ablation} isolates the core-module path under the same TN5000 protocol. Differential attention provides the clearest single-module operating-point improvement: \texttt{GGG-core+DA} improves balanced accuracy, macro F1, and accuracy over \texttt{GGG-core}. MUDD alone gives a smaller gain in thresholded metrics and does not improve AUC in this setting. Adding MCA to the full GGG configuration lowers TN5000 AUC slightly relative to the no-MCA full model, but improves balanced accuracy, macro F1, and accuracy. This supports a restrained interpretation of MCA: it is useful for decision-level robustness and multi-dataset behavior, not a universal AUC booster.
 
 \begin{table}[t]
     \centering
@@ -155,7 +196,7 @@ Table~\ref{tab:tn5000_module_ablation} isolates the core-module path under the s
 \end{table}
 
 \subsection{MCA effect across datasets}
-Table~\ref{tab:mca_effect} compares the final GGG model with and without MCA across the three main datasets. The result explains why the final manuscript should keep MCA in the model family but avoid overclaiming it. On TN5000, MCA improves balanced accuracy, macro F1, and accuracy while slightly reducing AUC. On BUSI, MCA provides a large gain across all reported metrics. On AUL, MCA gives a small AUC and balanced-accuracy gain with nearly unchanged macro F1 and accuracy. Thus, MCA is best described as a module that improves cross-dataset operating behavior, especially on BUSI, rather than as a universally dominant change.
+Table~\ref{tab:mca_effect} compares the final GGG model with and without MCA across the three main datasets. The result explains why the final manuscript should keep MCA in the model family but avoid overclaiming it. On TN5000, MCA improves balanced accuracy, macro F1, and accuracy while slightly reducing AUC. On BUSI, MCA provides a large gain across all reported metrics. On AUL, MCA gives a small AUC and balanced-accuracy gain with nearly unchanged macro F1 and accuracy. Thus, MCA is best described as a module that improves multi-dataset operating behavior, especially on BUSI, rather than as a universally dominant change.
 
 \begin{table*}[t]
     \centering
@@ -181,14 +222,38 @@ Table~\ref{tab:mca_effect} compares the final GGG model with and without MCA acr
 \end{table*}
 
 \subsection{Automatic ROI localization and closed-loop classification}
-The main ROI protocol isolates classifier behavior using annotation-derived crops. Figure~\ref{fig:auto_roi_workflow}, Table~\ref{tab:auto_roi_detector_quality}, and Table~\ref{tab:auto_roi_closed_loop} evaluate a more complete inference chain: an automatic detector first predicts the lesion box, an expanded square ROI is constructed from that prediction, and the same trained UL-TransXNet classifiers are then applied without retraining. The detector does not miss any BUSI or AUL test image in this evaluation, but localization quality differs by dataset. BUSI reaches a mean IoU of 0.7365, whereas AUL reaches 0.5755 and has a lower high-IoU recall.
+The main ROI protocol isolates classifier behavior using annotation-derived crops. Figure~\ref{fig:auto_roi_workflow}, Table~\ref{tab:tn5000_auto_roi_summary}, Table~\ref{tab:auto_roi_detector_quality}, and Table~\ref{tab:auto_roi_closed_loop} evaluate a more complete inference chain: an automatic detector first predicts the lesion box, an expanded ROI is constructed from that prediction, and the same trained UL-TransXNet classifiers are then applied without retraining. The TN5000 automatic-ROI sanity check confirms that the primary benchmark can also be connected to a detector front end. For BUSI and AUL, the detector does not miss any test image in this evaluation, but localization quality differs by dataset. BUSI reaches a mean IoU of 0.7365, whereas AUL reaches 0.5755 and has a lower high-IoU recall.
 
 \begin{figure*}[t]
     \centering
     \includegraphics[width=\textwidth]{fig_auto_roi_workflow.pdf}
-    \caption{Automatic ROI inference workflow for the BUSI/AUL closed-loop evaluation. Green boxes indicate reference annotations used only for evaluation and visualization; red boxes are detector-predicted lesion boxes; blue dashed boxes are the expanded square ROIs used as classifier inputs.}
+    \caption{Automatic ROI inference workflow for the BUSI/AUL closed-loop evaluation. Green boxes indicate reference annotations used only for evaluation and visualization; red boxes are detector-predicted lesion boxes; blue dashed boxes are the expanded ROIs used as classifier inputs.}
     \label{fig:auto_roi_workflow}
 \end{figure*}
+
+\begin{table}[t]
+    \centering
+    \small
+    \caption{TN5000 automatic ROI sanity check using existing detector and classifier outputs. Detector values summarize three YOLO11n detector seeds; classification values summarize automatic-ROI closed-loop evaluation across the three detector seeds. No classifier retraining is involved.}
+    \label{tab:tn5000_auto_roi_summary}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lcc}
+        \toprule
+        Block & Metric & Value \\
+        \midrule
+        Detector & mAP50 & 0.9520 $\pm$ 0.0090 \\
+        Detector & mean IoU & 0.7855 $\pm$ 0.0033 \\
+        Detector & R@0.75 & 0.7880 $\pm$ 0.0122 \\
+        Detector & no-detection rate & 0.0000 $\pm$ 0.0000 \\
+        \midrule
+        Auto ROI classifier & AUC & 0.9437 $\pm$ 0.0042 \\
+        Auto ROI classifier & BalAcc & 0.8686 $\pm$ 0.0056 \\
+        Auto ROI classifier & F1-macro & 0.8519 $\pm$ 0.0116 \\
+        Auto ROI classifier & Acc & 0.8820 $\pm$ 0.0115 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
 
 \begin{table}[t]
     \centering
@@ -262,13 +327,13 @@ Table~\ref{tab:calibration_uncertainty} reports bootstrap confidence intervals a
     \end{adjustbox}
 \end{table}
 
-\subsection{Efficiency and mobile deployment}
-The Android deployment experiment evaluates a TN5000-calibrated prototype of UL-TransXNet. Table~\ref{tab:mobile_results} and Figure~\ref{fig:mobile_tradeoff} show a clear deployment trade-off among three inference variants. A single checkpoint provides the lowest end-to-end latency at 116.5 ms per image. Adding horizontal-flip TTA improves both AUC and balanced accuracy, reaching 0.9466 AUC and 0.8762 balanced accuracy at 226.2 ms per image. The three-checkpoint ensemble further increases AUC to 0.9485, but it reduces balanced accuracy at the selected operating threshold and raises latency to 738.6 ms per image. Thus, the single and TTA variants are the practical interactive settings, whereas the ensemble is better interpreted as an offline ranking or review option.
+\subsection{Efficiency and mobile prototype}
+The Android experiment evaluates a TN5000-calibrated prototype of UL-TransXNet. Table~\ref{tab:mobile_results} and Figure~\ref{fig:mobile_tradeoff} show a trade-off among three inference variants on one device. A single checkpoint provides the lowest end-to-end latency at 116.5 ms per image. Adding horizontal-flip TTA improves both AUC and balanced accuracy, reaching 0.9466 AUC and 0.8762 balanced accuracy at 226.2 ms per image. The three-checkpoint ensemble further increases AUC to 0.9485, but it reduces balanced accuracy at the selected operating threshold and raises latency to 738.6 ms per image. Thus, the single and TTA variants are the practical interactive settings for this prototype, whereas the ensemble is better interpreted as an offline ranking or review option. These measurements are not a full mobile-baseline benchmark.
 
 \begin{table}[t]
     \centering
     \small
-    \caption{Android deployment results on the TN5000 test set. Latency includes ROI preprocessing and ONNX Runtime inference.}
+    \caption{Android prototype results on the TN5000 test set. Latency includes ROI preprocessing and ONNX Runtime inference.}
     \label{tab:mobile_results}
     \begin{adjustbox}{max width=\columnwidth}
     \begin{tabular}{lccccc}
@@ -286,6 +351,6 @@ The Android deployment experiment evaluates a TN5000-calibrated prototype of UL-
 \begin{figure}[t]
     \centering
     \includegraphics[width=\textwidth]{fig_android_deployment_tradeoff.png}
-    \caption{Accuracy--latency trade-off of the Android deployment variants on the TN5000 test set.}
+    \caption{Accuracy--latency trade-off of the Android prototype variants on the TN5000 test set.}
     \label{fig:mobile_tradeoff}
 \end{figure}

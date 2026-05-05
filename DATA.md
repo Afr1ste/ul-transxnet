@@ -1,38 +1,21 @@
-﻿# Data access and local layout
+# Data and Artifact Availability
 
-This repository does not redistribute medical images or annotations. The datasets used in the manuscript must be obtained from their original public sources and cited according to their original licenses and terms.
+The manuscript uses public ultrasound datasets from their original providers:
 
-## Datasets used
+- TN5000 for thyroid nodule ultrasound.
+- BUSI for breast ultrasound lesions.
+- AUL for annotated liver ultrasound.
 
-- TN5000: thyroid nodule ultrasound classification experiments and TN5000 automatic ROI experiments.
-- BUSI: breast ultrasound ROI classification and one-class lesion detector experiments.
-- AUL: abdominal ultrasound liver lesion binary ROI classification and one-class lesion detector experiments.
+This repository does not redistribute dataset images or generated ROI image folders. It includes table-level summaries, prediction CSVs, validation thresholds, fitted temperatures, and provenance files that can be shared without packaging the image datasets.
 
-## Expected local layout
+Restricted or omitted artifacts:
 
-The original experiments used dataset roots with the following logical content:
-
-```text
-<data_root>/
-  images or image folders
-  annotation files, masks, or VOC-style XML files
-  train/validation/test split files or generated fold files
-```
-
-Portable config templates are provided under `configs/`. Set local paths there or pass equivalent command-line arguments to the scripts under `src/scripts/`.
-
-## Important protocol note
-
-The main classification protocol uses annotation-derived ROI crops. The automatic ROI experiments are separate closed-loop experiments that train a detector to predict lesion boxes and then feed expanded square crops to the classifier. The repository keeps these protocols separate to avoid conflating manually defined ROI classification with full-image automatic inference.
-
-## Non-redistribution policy
-
-Do not commit:
-
-- raw medical images;
-- dataset archives;
+- dataset image files;
 - generated ROI image folders;
-- trained `.pth` or `.pt` checkpoints;
+- trained classifier checkpoints;
+- detector weights;
 - ONNX model binaries;
-- Android APKs;
-- patient-level metadata beyond what the original dataset permits.
+- Android APK binaries;
+- full raw training logs.
+
+The manuscript and this repository therefore support table regeneration and provenance audit, not full dataset mirroring.
