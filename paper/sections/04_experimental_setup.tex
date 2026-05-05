@@ -2,7 +2,7 @@
 \label{sec:experimental_setup}
 
 \subsection{Datasets}
-The main paper uses three public ultrasound datasets: TN5000 for thyroid nodules~\cite{Zhang_2025}, BUSI for breast lesions~\cite{Al_Dhabyani_2020}, and the Annotated Ultrasound Liver (AUL) dataset for liver lesions~\cite{aul_dataset}. TN5000 is the largest benchmark and is used for the most detailed ablation analysis. BUSI and AUL are used to test whether the architecture remains competitive beyond thyroid ultrasound.
+The main paper uses three public ultrasound datasets: TN5000 for thyroid nodules~\cite{Zhang_2025}, BUSI for breast lesions~\cite{Al_Dhabyani_2020}, and the Annotated Ultrasound Liver (AUL) dataset for liver lesions~\cite{aul_dataset}. TN5000 is the largest benchmark and is used for the most detailed ablation analysis. BUSI and AUL are used to test whether the architecture remains competitive under additional dataset-specific public ultrasound settings. They are not used as external thyroid-to-breast or thyroid-to-liver generalization tests.
 
 \begin{table}[t]
     \centering
@@ -42,6 +42,11 @@ For each BUSI/AUL fold, a one-class YOLO11n detector is trained on the correspon
 
 \subsection{Compared methods}
 The benchmark pool combines representative CNN, lightweight hybrid, and modern efficient baselines. The comparison set includes ResNet50~\cite{he2016resnet}, EfficientNet-B0~\cite{tan2019efficientnet}, MobileNetV3-Large~\cite{howard2019mobilenetv3}, Swin-T~\cite{liu2021swin}, DenseNet121~\cite{huang2017densenet}, ConvNeXt-Tiny~\cite{liu2022convnext}, RepViT-M1.1~\cite{repvit}, and EfficientFormer-L1~\cite{li2022efficientformer}. The main paper table reports \textit{Ours} together with the strongest non-\textit{Ours} baseline on each dataset, where ``strongest'' is determined by mean test AUC under the same reporting convention. The full baseline table is provided in Appendix Table~\ref{tab:full_benchmark}.
+
+\subsection{Baseline fairness and reporting convention}
+All models are evaluated through the same ROI construction, label mapping, train/validation/test splits, metric computation, validation-derived threshold search, temperature-scaling procedure, and test-time augmentation convention unless an exception is explicitly stated. All backbone models use ImageNet-pretrained initialization when available. The classification head is replaced by the binary head used in this study, so ImageNet classifier logits are not used as medical features. The main exceptions are practical and are reported rather than hidden: EfficientFormer-L1 uses $224 \times 224$ inputs because its wrapper is not compatible with the $256 \times 256$ ROI setting used by the other models; BUSI RepViT-M1.1 disables EMA because the EMA variant produced unstable folds during verification; and AUL uses a lighter training budget than TN5000/BUSI because of the smaller and less stable training setting. These exceptions mean that the benchmark should be interpreted as a carefully matched protocol comparison, not as an exhaustive hyperparameter search for every baseline.
+
+The main results table intentionally reports the proposed model and the strongest non-\textit{Ours} baseline per dataset for readability, while Appendix Table~\ref{tab:full_benchmark} gives the complete baseline pool. This prevents the main text from implying that a single baseline was chosen in advance as the only comparator. It also makes clear that ConvNeXt-Tiny remains the strongest TN5000 operating-point baseline, whereas UL-TransXNet is selected for its validation-audited three-dataset behavior.
 
 \subsection{Evaluation metrics and statistical analysis}
 The main metrics are AUC, balanced accuracy (BalAcc), macro F1, and accuracy. Unless explicitly stated otherwise, ``F1'' in the manuscript refers to macro F1. Because the tables emphasize repeated-seed/fold stability, results are reported as mean $\pm$ standard deviation. Thresholded metrics should be interpreted as validation-selected operating points rather than test-tuned oracle points.

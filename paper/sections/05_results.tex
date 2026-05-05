@@ -31,6 +31,26 @@ These results delimit the central claim. The proposed model should not be descri
 
 AUL illustrates the distinction between threshold-free ranking and thresholded operating-point metrics. UL-TransXNet has higher AUC and balanced accuracy than Swin-T, whereas Swin-T has slightly higher macro F1 and raw accuracy at its validation-selected threshold. We therefore interpret the AUL result as better ranking and class-balanced operating behavior, not as dominance over every thresholded metric.
 
+\begin{table}[t]
+    \centering
+    \small
+    \caption{Claim boundary implied by the current evidence.}
+    \label{tab:claim_boundary}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lll}
+        \toprule
+        Claim & Supported by & Not supported by this study \\
+        \midrule
+        Multi-dataset in-domain competitiveness & Dataset-specific TN5000/BUSI/AUL tests & External cross-organ transfer \\
+        Compact ROI classification & Params/MACs and ROI benchmark results & Smallest or CUDA-fastest model \\
+        Validation-audited model selection & Mean validation AUC protocol and checksums & Test-set architecture search \\
+        Automatic ROI workflow feasibility & TN5000 detector check; BUSI/AUL auto vs full & Novel lesion detector \\
+        Mobile feasibility prototype & Android ONNX Runtime measurement & Clinical deployment validation \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
+
 Table~\ref{tab:paired_statistical_tests} adds an offline paired statistical check over the same repeated runs used by Table~\ref{tab:main_results}. On TN5000, the proposed model is slightly below ConvNeXt-Tiny. On BUSI and AUL, the paired differences are consistently positive for both AUC and balanced accuracy. Because the available repeated units are only three TN5000 seeds and five BUSI/AUL folds, these tests are used as stability evidence rather than as large-sample clinical significance claims.
 
 Table~\ref{tab:original_transxnet_delta} directly compares the original TransXNet baseline with UL-TransXNet under the same dataset-specific reporting protocol. This comparison is important because the method is a TransXNet-family adaptation rather than a detached backbone. The final model is not a TN5000 AUC improvement over the original TransXNet, but it slightly improves the TN5000 validation-selected operating point and gives much larger gains on BUSI and AUL.
@@ -106,7 +126,7 @@ Table~\ref{tab:complexity_performance} gives the corresponding complexity--perfo
     }
 \end{table*}
 
-\subsection{TN5000 structure ablation}
+\subsection{TN5000 progressive-family ablation}
 Table~\ref{tab:tn5000_structure_ablation} reports the unified-protocol TN5000 structure ablation. The strongest TN5000 structure is \texttt{TransXNet-GG}, which achieves the highest AUC, balanced accuracy, macro F1, and accuracy in this ablation group. The \texttt{TransXNet-GGG-MCA} ablation row, which corresponds to UL-TransXNet, is close but not best on TN5000 alone. This distinction is important because it prevents the paper from over-attributing all gains to the final GGG-MCA setting.
 
 \begin{table}[t]
@@ -129,7 +149,7 @@ Table~\ref{tab:tn5000_structure_ablation} reports the unified-protocol TN5000 st
     \end{adjustbox}
 \end{table}
 
-The structure ablation shows that the TransXNet-family modifications are useful but metric-dependent. The G and GG variants improve thresholded operating-point behavior relative to the baseline. The GGG-MCA configuration is not the TN5000 AUC winner, but it remains competitive and corresponds to the best multi-dataset in-domain pattern in this result set. Table~\ref{tab:validation_selection_audit} audits the model-family choice using validation AUC from the completed runs. The selection rule is to choose the TransXNet-family row with the highest mean validation AUC over TN5000, BUSI, and AUL under the dataset-specific training protocols; the source-controlled model-selection protocol records the contributing CSV files and checksums. UL-TransXNet gives the highest mean validation AUC across TN5000, BUSI, and AUL, while \texttt{GGG-noMCA} remains the strongest TN5000 validation-AUC row. Table~\ref{tab:gg_vs_final_selection} then shows the corresponding test-set behavior: \texttt{TransXNet-GG} is the strongest TN5000-only structure, whereas UL-TransXNet is substantially stronger on BUSI and AUL and therefore gives the better three-dataset average.
+The structure ablation is a progressive-family analysis rather than a full factorial proof. It shows that the TransXNet-family modifications are useful but metric-dependent. The G and GG variants improve thresholded operating-point behavior relative to the baseline. The GGG-MCA configuration is not the TN5000 AUC winner, but it remains competitive and corresponds to the best multi-dataset in-domain pattern in this result set. Table~\ref{tab:validation_selection_audit} audits the model-family choice using validation AUC from the completed runs. The selection rule is to choose the TransXNet-family row with the highest mean validation AUC over TN5000, BUSI, and AUL under the dataset-specific training protocols; the source-controlled model-selection protocol records the contributing CSV files and checksums. UL-TransXNet gives the highest mean validation AUC across TN5000, BUSI, and AUL, while \texttt{GGG-noMCA} remains the strongest TN5000 validation-AUC row. Table~\ref{tab:gg_vs_final_selection} then shows the corresponding test-set behavior: \texttt{TransXNet-GG} is the strongest TN5000-only structure, whereas UL-TransXNet is substantially stronger on BUSI and AUL and therefore gives the better three-dataset average.
 
 \begin{table}[t]
     \centering
