@@ -1,0 +1,34 @@
+# TN5000 Current-Protocol Ablation Summary
+
+## P0_structure
+
+| Model | AUC | BalAcc | F1_macro | Acc |
+|---|---:|---:|---:|---:|
+| TransXNet | 0.9495 ? 0.0020 | 0.8697 ? 0.0100 | 0.8366 ? 0.0222 | 0.8640 ? 0.0230 |
+| TransXNet-G | 0.9481 ? 0.0013 | 0.8745 ? 0.0074 | 0.8395 ? 0.0220 | 0.8660 ? 0.0233 |
+| TransXNet-GG | 0.9517 ? 0.0011 | 0.8784 ? 0.0076 | 0.8552 ? 0.0173 | 0.8827 ? 0.0170 |
+| TransXNet-GGG-noMCA | 0.9503 ? 0.0019 | 0.8660 ? 0.0069 | 0.8325 ? 0.0013 | 0.8610 ? 0.0016 |
+| TransXNet-GGG-MCA | 0.9483 ? 0.0006 | 0.8726 ? 0.0046 | 0.8503 ? 0.0123 | 0.8790 ? 0.0140 |
+
+## P1_modules
+
+| Model | AUC | BalAcc | F1_macro | Acc |
+|---|---:|---:|---:|---:|
+| GGG-core | 0.9496 ? 0.0003 | 0.8704 ? 0.0083 | 0.8324 ? 0.0136 | 0.8593 ? 0.0133 |
+| GGG-core+MUDD | 0.9470 ? 0.0006 | 0.8712 ? 0.0045 | 0.8406 ? 0.0097 | 0.8687 ? 0.0111 |
+| GGG-core+DA | 0.9489 ? 0.0016 | 0.8751 ? 0.0044 | 0.8490 ? 0.0100 | 0.8770 ? 0.0099 |
+| GGG-core+MUDD+DA-noMCA | 0.9503 ? 0.0019 | 0.8660 ? 0.0069 | 0.8325 ? 0.0013 | 0.8610 ? 0.0016 |
+| GGG-core+MUDD+DA+MCA | 0.9483 ? 0.0006 | 0.8726 ? 0.0046 | 0.8503 ? 0.0123 | 0.8790 ? 0.0140 |
+
+## Sources
+
+- P0_structure / TransXNet: `tn5000_p0_structure_current_3seed_logs/20260429_030247`
+- P0_structure / TransXNet-G: `tn5000_p0_structure_current_3seed_logs/20260429_104255`
+- P0_structure / TransXNet-GG: `tn5000_p0_structure_current_3seed_logs/20260429_104255`
+- P0_structure / TransXNet-GGG-noMCA: `tn5000_ggg_nomca_current_3seed_logs/20260427_051327`
+- P0_structure / TransXNet-GGG-MCA: `tn5000_ggg_mca_enabled_3seed_logs/20260426_093728`
+- P1_modules / GGG-core: `tn5000_p1_core_module_current_3seed_logs/20260429_213915`
+- P1_modules / GGG-core+MUDD: `tn5000_p1_core_module_current_3seed_logs/20260429_213915`
+- P1_modules / GGG-core+DA: `tn5000_p1_core_module_current_3seed_logs/20260429_213915`
+- P1_modules / GGG-core+MUDD+DA-noMCA: `tn5000_ggg_nomca_current_3seed_logs/20260427_051327`
+- P1_modules / GGG-core+MUDD+DA+MCA: `tn5000_ggg_mca_enabled_3seed_logs/20260426_093728`

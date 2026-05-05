@@ -1,0 +1,47 @@
+[
+  {
+    "dataset": "TN5000",
+    "image_id": "003171",
+    "true_label": 1,
+    "pred_label_csv": 1,
+    "prob_class1_csv": 0.9885446429252625,
+    "prob_true_single_ckpt": 0.999640703201294,
+    "threshold": 0.73,
+    "target_layer": "Block",
+    "target_layer_key": "stage3_h16",
+    "activation_size": "256x256 displayed; target=stage3_h16",
+    "center_energy": 0.6167290291923471,
+    "white_fraction": 0.0,
+    "score": 0.7611258592881438
+  },
+  {
+    "dataset": "BUSI",
+    "image_id": "test_malignant_0206",
+    "true_label": 1,
+    "pred_label_csv": 1,
+    "prob_class1_csv": 0.8959392309188843,
+    "prob_true_single_ckpt": 0.983981192111969,
+    "threshold": 0.67,
+    "target_layer": "Block",
+    "target_layer_key": "stage4_h32",
+    "activation_size": "256x256 displayed; target=stage4_h32",
+    "center_energy": 0.7202466801162283,
+    "white_fraction": 0.0028228759765625,
+    "score": 0.8094032977740513
+  },
+  {
+    "dataset": "AUL",
+    "image_id": "malignant_000382",
+    "true_label": 1,
+    "pred_label_csv": 1,
+    "prob_class1_csv": 0.9059934616088867,
+    "prob_true_single_ckpt": 0.5254424810409546,
+    "threshold": 0.86,
+    "target_layer": "Block",
+    "target_layer_key": "stage4_h32",
+    "activation_size": "256x256 displayed; target=stage4_h32",
+    "center_energy": 0.5691818502901889,
+    "white_fraction": 0.0,
+    "score": 0.5906159880322731
+  }
+]

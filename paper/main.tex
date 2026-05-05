@@ -1,0 +1,84 @@
+﻿\documentclass[review,12pt]{elsarticle}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{subcaption}
+\usepackage{siunitx}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{url}
+
+\journal{Pattern Recognition}
+\graphicspath{{figures/}}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\setlength{\emergencystretch}{2em}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{UL-TransXNet: A Lightweight Architecture for Multi-Dataset Ultrasound Lesion Classification}
+
+\author[inst1]{Zihan Li}
+\author[inst1]{Cong Yang\texorpdfstring{\corref{cor1}}{}}
+\ead{cong.yang@suda.edu.cn}
+\cortext[cor1]{Corresponding author.}
+
+\affiliation[inst1]{organization={School of Future Science and Engineering, Soochow University},
+            city={Suzhou},
+            postcode={215222},
+            state={Jiangsu},
+            country={China}}
+
+\begin{abstract}
+Ultrasound lesion classification is challenging because speckle noise, weak boundaries, low contrast, and acquisition-dependent variation obscure lesion cues. We present UL-TransXNet, a compact ROI-based TransXNet family architecture for benign--malignant ultrasound lesion classification. Lesion annotations are used to construct expanded square ROI crops, after which a lightweight hierarchical backbone models local texture and broader contextual relationships. We evaluate the model on three public datasets: TN5000 for thyroid nodules, BUSI for breast lesions, and AUL for liver lesions. Under the unified ROI protocol, UL-TransXNet obtains mean test AUC/balanced-accuracy pairs of 0.9483/0.8726 on TN5000, 0.8998/0.7961 on BUSI, and 0.8767/0.8200 on AUL. The result does not imply uniform superiority: ConvNeXt-Tiny remains slightly stronger on TN5000 at the selected operating point. Instead, the main finding is cross-dataset competitiveness, with the strongest average performance across the three datasets and clear gains on BUSI and AUL. TN5000 ablations show that the TransXNet family refinements improve operating-point behavior, while MCA contributes mainly to thresholded decision quality and cross-dataset robustness rather than to a uniform AUC gain. An auxiliary automatic-ROI experiment further shows that detector-predicted crops improve full-image classification on BUSI and AUL, with a remaining gap to oracle ROI performance. Android experiments quantify deployment trade-offs, where horizontal-flip test-time augmentation improves AUC from 0.9402 to 0.9466 at 226.2 ms per image. These results support UL-TransXNet as a competitive lightweight ultrasound classifier, while broader domain generalization remains open.
+\end{abstract}
+
+\begin{highlights}
+\item UL-TransXNet classifies ultrasound lesions from ROI crops.
+\item Three public datasets support cross-organ evaluation.
+\item Ablations isolate MCA, MUDD, and differential attention.
+\item Automatic ROI experiments connect localization and classification.
+\item Android experiments quantify accuracy--latency trade-offs.
+\end{highlights}
+
+\begin{keyword}
+Ultrasound image classification \sep Thyroid nodule \sep Breast ultrasound \sep Liver ultrasound \sep Lightweight neural network \sep Mobile deployment
+\end{keyword}
+
+\end{frontmatter}
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_method}
+\input{sections/04_experimental_setup}
+\input{sections/05_results}
+\input{sections/06_discussion}
+\input{sections/07_conclusion}
+\input{sections/08_appendix}
+
+\section*{CRediT authorship contribution statement}
+Zihan Li: Conceptualization, methodology, software, experiments, and writing---original draft. \\
+Cong Yang: Supervision, conceptualization, writing---review and editing, resources, and project administration.
+
+\section*{Ethics statement}
+This study is a secondary analysis of publicly available, de-identified ultrasound datasets. No new patient data were collected by the authors. Ethical approval and consent procedures are governed by the original dataset publications or data providers; therefore, no additional institutional review board approval was required for this retrospective computational study.
+
+\section*{Funding}
+This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
+
+\section*{Declaration of competing interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Data availability}
+The datasets analyzed in this study are publicly available from their original sources, which are cited in the manuscript. The exact split manifests, ROI construction scripts, training and evaluation entry points, model checkpoints, and Android deployment artifacts used to produce the reported results are archived with the project materials and are available from the corresponding author upon reasonable request. Public release of derived artifacts will follow the applicable redistribution terms of the original datasets.
+
+\bibliographystyle{elsarticle-num}
+\bibliography{refs}
+
+\end{document}

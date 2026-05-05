@@ -1,0 +1,15 @@
+﻿torch
+torchvision
+timm
+numpy
+pandas
+scikit-learn
+Pillow
+opencv-python
+matplotlib
+tqdm
+PyYAML
+ultralytics
+onnx
+onnxruntime
+thop
