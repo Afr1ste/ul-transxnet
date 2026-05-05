@@ -1,0 +1,17 @@
+\begin{table}[t]
+    \centering
+    \small
+    \caption{TN5000 oracle ROI, automatic ROI, and full-image closed-loop probe from frozen existing predictions. This single-probe table complements the three-seed automatic-ROI summary in Table~\ref{tab:tn5000_auto_roi_summary}; it uses the same trained classifier family and does not involve retraining.}
+    \label{tab:tn5000_oracle_auto_full_probe}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lcccccc}
+        \toprule
+        Input & AUC & BalAcc & Sens. & Spec. & F1 & Acc \\
+        \midrule
+        Oracle ROI & 0.9464 & 0.8725 & 0.8387 & 0.9062 & 0.8299 & 0.8560 \\
+        Automatic ROI & 0.9391 & 0.8675 & 0.8522 & 0.8828 & 0.8320 & 0.8600 \\
+        Full image & 0.6490 & 0.5997 & 0.7110 & 0.4883 & 0.5865 & 0.6540 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}

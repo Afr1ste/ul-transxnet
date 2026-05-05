@@ -2,7 +2,7 @@
 
 This repository contains the public reproducibility package for the manuscript:
 
-**UL-TransXNet: A Compact Architecture for Multi-Dataset Ultrasound Lesion Classification**
+**UL-TransXNet: A Compact ROI Framework for Multi-Dataset Ultrasound Lesion Classification**
 
 UL-TransXNet is a compact ROI-based TransXNet-family classifier for benign--malignant ultrasound lesion classification. The current manuscript positions the evidence conservatively: the model is evaluated under dataset-specific training on TN5000, BUSI, and AUL, and the results support multi-dataset in-domain competitiveness rather than external cross-organ generalization or clinical deployment validation.
 
@@ -33,6 +33,7 @@ These restrictions avoid redistributing third-party dataset images and large mod
 - `MODEL_SELECTION_PROTOCOL.md`: validation-only selection rule, selected row, and source-checksum index.
 - `RESULTS_PROVENANCE.md`: table/figure provenance map.
 - `results/no_retrain_revision_20260505/`: no-retrain revision tables and model-selection source index.
+- `results/high_roi_no_retrain_20260505/`: TN5000 oracle/automatic/full-image probe, localization-robustness probes, case-level diagnostic statistics, and reliability-diagram source bins.
 - `results/frozen_source_logs/`: copied source CSVs from frozen completed-result logs.
 - `configs/protocol_summary.yaml`: compact dataset/protocol configuration summary.
 

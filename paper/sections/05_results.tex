@@ -242,7 +242,7 @@ Table~\ref{tab:mca_effect} compares the final GGG model with and without MCA acr
 \end{table*}
 
 \subsection{Automatic ROI localization and closed-loop classification}
-The main ROI protocol isolates classifier behavior using annotation-derived crops. Figure~\ref{fig:auto_roi_workflow}, Table~\ref{tab:tn5000_auto_roi_summary}, Table~\ref{tab:auto_roi_detector_quality}, and Table~\ref{tab:auto_roi_closed_loop} evaluate a more complete inference chain: an automatic detector first predicts the lesion box, an expanded ROI is constructed from that prediction, and the same trained UL-TransXNet classifiers are then applied without retraining. The TN5000 automatic-ROI sanity check confirms that the primary benchmark can also be connected to a detector front end. For BUSI and AUL, the detector does not miss any test image in this evaluation, but localization quality differs by dataset. BUSI reaches a mean IoU of 0.7365, whereas AUL reaches 0.5755 and has a lower high-IoU recall.
+The main ROI protocol isolates classifier behavior using annotation-derived crops. Figure~\ref{fig:auto_roi_workflow}, Table~\ref{tab:tn5000_auto_roi_summary}, Table~\ref{tab:tn5000_oracle_auto_full_probe}, Table~\ref{tab:auto_roi_detector_quality}, and Table~\ref{tab:auto_roi_closed_loop} evaluate a more complete inference chain: an automatic detector first predicts the lesion box, an expanded ROI is constructed from that prediction, and the same trained UL-TransXNet classifiers are then applied without retraining. The TN5000 automatic-ROI checks confirm that the primary benchmark can also be connected to a detector front end and that full-image classification is a much weaker fallback. For BUSI and AUL, the detector does not miss any test image in this evaluation, but localization quality differs by dataset. BUSI reaches a mean IoU of 0.7365, whereas AUL reaches 0.5755 and has a lower high-IoU recall.
 
 \begin{figure*}[t]
     \centering
@@ -270,6 +270,26 @@ The main ROI protocol isolates classifier behavior using annotation-derived crop
         Auto ROI classifier & BalAcc & 0.8686 $\pm$ 0.0056 \\
         Auto ROI classifier & F1-macro & 0.8519 $\pm$ 0.0116 \\
         Auto ROI classifier & Acc & 0.8820 $\pm$ 0.0115 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
+
+Table~\ref{tab:tn5000_oracle_auto_full_probe} reports the corresponding TN5000 oracle/automatic/full-image probe from a frozen completed classifier run. The automatic ROI remains close to the oracle ROI and is far stronger than resizing the full ultrasound image, which directly addresses the practical question of whether the annotation-derived ROI protocol can be approximated at inference time. Because this is a single closed-loop probe, it complements rather than replaces the three-seed automatic-ROI summary in Table~\ref{tab:tn5000_auto_roi_summary}.
+
+\begin{table}[t]
+    \centering
+    \small
+    \caption{TN5000 oracle ROI, automatic ROI, and full-image closed-loop probe from frozen existing predictions. This single-probe table complements the three-seed automatic-ROI summary in Table~\ref{tab:tn5000_auto_roi_summary}; it uses the same trained classifier family and does not involve retraining.}
+    \label{tab:tn5000_oracle_auto_full_probe}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lcccccc}
+        \toprule
+        Input & AUC & BalAcc & Sens. & Spec. & F1 & Acc \\
+        \midrule
+        Oracle ROI & 0.9464 & 0.8725 & 0.8387 & 0.9062 & 0.8299 & 0.8560 \\
+        Automatic ROI & 0.9391 & 0.8675 & 0.8522 & 0.8828 & 0.8320 & 0.8600 \\
+        Full image & 0.6490 & 0.5997 & 0.7110 & 0.4883 & 0.5865 & 0.6540 \\
         \bottomrule
     \end{tabular}
     \end{adjustbox}
@@ -316,6 +336,30 @@ The main ROI protocol isolates classifier behavior using annotation-derived crop
 
 Automatic ROI classification is consistently stronger than full-image classification. On BUSI, the automatic ROI improves AUC by 0.0988 and balanced accuracy by 0.0857 over the full-image input. On AUL, the corresponding gains are 0.1066 AUC and 0.0789 balanced accuracy. The automatic ROI remains below oracle ROI, especially on AUL, which is consistent with the lower localization quality in Table~\ref{tab:auto_roi_detector_quality}. These results support the practical use of an automatic ROI front end, while keeping the detector itself outside the main architectural contribution.
 
+Table~\ref{tab:tn5000_localization_robustness_probe} adds two completed TN5000 localization-robustness probes. Light box-jitter training and predicted-box mixing preserve the main oracle/automatic/full-image ordering, but neither gives a clear enough automatic-ROI improvement to replace the original classifier. This negative result is still useful because it narrows the current claim: the manuscript can support automatic-ROI substitution, but it should not claim that the present training recipe already solves localization-error robustness.
+
+\begin{table}[t]
+    \centering
+    \small
+    \caption{TN5000 localization-robustness probes from completed no-retrain evaluations. The probes test whether light box-jitter training or predicted-box mixing improves the oracle/automatic/full-image operating points. They are kept as diagnostic evidence because neither probe clearly improves the automatic-ROI setting enough to replace the original classifier.}
+    \label{tab:tn5000_localization_robustness_probe}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{llcccc}
+        \toprule
+        Probe & Input & AUC & BalAcc & F1 & Acc \\
+        \midrule
+        Box-jitter probe & Oracle ROI & 0.9510 & 0.8748 & 0.8236 & 0.8480 \\
+        Box-jitter probe & Automatic ROI & 0.9457 & 0.8739 & 0.8354 & 0.8620 \\
+        Box-jitter probe & Full image & 0.6387 & 0.5923 & 0.5605 & 0.6030 \\
+        \midrule
+        Predicted-box mix & Oracle ROI & 0.9466 & 0.8840 & 0.8511 & 0.8770 \\
+        Predicted-box mix & Automatic ROI & 0.9429 & 0.8740 & 0.8372 & 0.8640 \\
+        Predicted-box mix & Full image & 0.6598 & 0.6097 & 0.5977 & 0.6670 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
+
 \subsection{Qualitative Grad-CAM sanity check}
 Figure~\ref{fig:gradcam_sanity} provides a qualitative Grad-CAM sanity check using one trained UL-TransXNet checkpoint per dataset. The maps are generated from late spatial backbone blocks selected for readable ROI-level maps. The activations broadly fall on lesion tissue and adjacent ultrasound context inside the ROI. This visualization is used only as a qualitative sanity check that the classifier is not driven solely by image borders or unrelated background. It is not used as quantitative evidence of causal attention or as a substitute for the ablation and closed-loop ROI experiments above.
 
@@ -346,6 +390,33 @@ Table~\ref{tab:calibration_uncertainty} reports bootstrap confidence intervals a
     \end{tabular}
     \end{adjustbox}
 \end{table}
+
+The case-level view in Table~\ref{tab:case_level_diagnostic_statistics} and Figure~\ref{fig:case_level_reliability} is more clinically interpretable than the seed/fold-only summary. It shows that TN5000 remains well calibrated, while BUSI and AUL have larger reliability error. AUL in particular uses a conservative validation-derived threshold: specificity and PPV are high, but sensitivity and NPV are limited. This supports using the reported probabilities and operating points cautiously, especially under dataset shift.
+
+\begin{table*}[t]
+    \centering
+    \small
+    \caption{Case-level diagnostic statistics for seed/fold-averaged UL-TransXNet predictions on the fixed test sets. Brackets are case-bootstrap 95\% confidence intervals. Sensitivity, specificity, PPV, and NPV use the mean validation-derived threshold across the contributing seeds or folds.}
+    \label{tab:case_level_diagnostic_statistics}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lcccccc}
+        \toprule
+        Dataset & AUC & Sensitivity & Specificity & PPV & NPV & ECE/Brier \\
+        \midrule
+        TN5000 & 0.9540 [0.9381, 0.9676] & 0.8750 [0.8511, 0.8981] & 0.8828 [0.8406, 0.9209] & 0.9559 [0.9397, 0.9704] & 0.7085 [0.6571, 0.7576] & 0.024/0.068 \\
+        BUSI & 0.9023 [0.8429, 0.9494] & 0.7115 [0.5833, 0.8333] & 0.8961 [0.8194, 0.9589] & 0.8222 [0.7073, 0.9268] & 0.8214 [0.7402, 0.8990] & 0.104/0.132 \\
+        AUL & 0.8752 [0.8114, 0.9276] & 0.7660 [0.6744, 0.8511] & 1.0000 [1.0000, 1.0000] & 1.0000 [1.0000, 1.0000] & 0.6000 [0.4783, 0.7255] & 0.104/0.156 \\
+        \bottomrule
+    \end{tabular}%
+    }
+\end{table*}
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\textwidth]{fig_reliability_diagram_case_level.png}
+    \caption{Case-level reliability diagrams for seed/fold-averaged UL-TransXNet predictions. Point size indicates the relative number of test cases in each probability bin. TN5000 is close to the diagonal after temperature scaling, whereas BUSI and AUL show larger calibration deviations.}
+    \label{fig:case_level_reliability}
+\end{figure*}
 
 \subsection{Efficiency and mobile prototype}
 The Android experiment evaluates a TN5000-calibrated prototype of UL-TransXNet. Table~\ref{tab:mobile_results} and Figure~\ref{fig:mobile_tradeoff} show a trade-off among three inference variants on one device. A single checkpoint provides the lowest end-to-end latency at 116.5 ms per image. Adding horizontal-flip TTA improves both AUC and balanced accuracy, reaching 0.9466 AUC and 0.8762 balanced accuracy at 226.2 ms per image. The three-checkpoint ensemble further increases AUC to 0.9485, but it reduces balanced accuracy at the selected operating threshold and raises latency to 738.6 ms per image. Thus, the single and TTA variants are the practical interactive settings for this prototype, whereas the ensemble is better interpreted as an offline ranking or review option. These measurements are not a full mobile-baseline benchmark.

@@ -27,6 +27,18 @@ FORBIDDEN_EXTENSIONS = {
     ".pyc",
 }
 
+IGNORED_GENERATED_EXTENSIONS = {
+    ".aux",
+    ".bbl",
+    ".blg",
+    ".fdb_latexmk",
+    ".fls",
+    ".log",
+    ".out",
+    ".spl",
+    ".synctex.gz",
+}
+
 REQUIRED_PATHS = [
     "README.md",
     "REPRODUCE.md",
@@ -37,10 +49,15 @@ REQUIRED_PATHS = [
     "paper/main.pdf",
     "paper/main.tex",
     "paper/sections/05_results.tex",
+    "paper/figures/fig_reliability_diagram_case_level.png",
+    "results/high_roi_no_retrain_20260505/case_level_diagnostic_statistics.csv",
+    "results/high_roi_no_retrain_20260505/tn5000_oracle_auto_full_probe.csv",
+    "results/high_roi_no_retrain_20260505/tn5000_localization_robustness_probe.csv",
     "results/no_retrain_revision_20260505/model_selection_source_files.csv",
     "results/no_retrain_revision_20260505/validation_selection_audit.csv",
     "results/frozen_source_logs",
     "src/models/transxnetggg.py",
+    "src/scripts/generate_high_roi_no_retrain_tables.py",
     "src/scripts/generate_no_retrain_revision_tables.py",
     "android/README.md",
     "android/app/src/main/assets/PLACE_ONNX_MODELS_HERE.txt",
@@ -60,6 +77,7 @@ def iter_repo_files() -> list[Path]:
         p
         for p in ROOT.rglob("*")
         if p.is_file() and ".git" not in p.parts and "__pycache__" not in p.parts
+        and not any(str(p).lower().endswith(ext) for ext in IGNORED_GENERATED_EXTENSIONS)
     ]
 
 
