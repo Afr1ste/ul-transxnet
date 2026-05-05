@@ -1,0 +1,30 @@
+﻿# Common protocol defaults for UL-TransXNet experiments.
+# Replace paths with local dataset locations before full training.
+project:
+  name: UL-TransXNet
+  task: ROI-based ultrasound lesion classification
+  input_size: 256
+  num_classes: 2
+  model: UL-TransXNet
+  backbone_module: src.models.transxnetggg
+  backbone_function: transxnet_t
+  use_mca: true
+  use_mudd: true
+  use_differential_attention: true
+training_defaults:
+  optimizer: AdamW
+  weight_decay: 0.0001
+  save_by_metric: auc
+  threshold_selection: validation_balanced_accuracy
+  temperature_scaling: true
+  checkpoint_ensemble: top_auc_checkpoints
+  test_time_augmentation: horizontal_flip_for_selected_exports
+reporting:
+  metrics:
+    - accuracy
+    - balanced_accuracy
+    - macro_f1
+    - auc
+    - ece
+    - brier
+  confidence_intervals: bootstrap_or_seed_fold_summary

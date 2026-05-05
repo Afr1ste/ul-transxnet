@@ -1,0 +1,30 @@
+﻿dataset: BUSI
+protocol: ROI classification, five folds
+local_paths:
+  data_root: ${BUSI_ROI_ROOT}
+  output_root: ${BUSI_OUTPUT_ROOT:-busi_roi_runs}
+model:
+  name: UL-TransXNet
+  module: src.models.transxnetggg
+  function: transxnet_t
+  input_size: 256
+training:
+  folds: [0, 1, 2, 3, 4]
+  num_epochs: 200
+  early_stop_patience: 36
+  head_lr: 0.00015
+  backbone_lr: 0.00005
+  weight_decay: 0.0001
+  label_smoothing: 0.0
+  lr_schedule: cosine_floor
+  lr_warmup_epochs: 5
+  lr_min_ratio: 0.25
+roi:
+  source: annotation-derived VOC box or generated ROI metadata
+  bbox_expand: 0.3
+  square_crop: true
+evaluation:
+  validation_threshold_mode: balanced_accuracy
+  temperature_scaling: true
+  checkpoint_ensemble_top_k: 3
+  primary_metric: auc

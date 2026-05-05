@@ -55,3 +55,6 @@ paper/*.log
 paper/*.out
 paper/*.synctex.gz
 paper/_compile_preview/
+
+# Generated audit outputs
+reproduced_tables/
