@@ -29,6 +29,8 @@ Table~\ref{tab:main_results} summarizes the main comparison results, reported as
 
 These results delimit the central claim. The proposed model should not be described as uniformly better than every baseline on every dataset. Its advantage is cross-dataset: it is competitive on TN5000 and substantially stronger on BUSI and AUL. The mean AUC over TN5000, BUSI, and AUL is 0.9083 for UL-TransXNet, compared with 0.8672 for the strongest-per-dataset non-\textit{Ours} rows listed in Table~\ref{tab:main_results}. The corresponding mean balanced accuracy is 0.8296 versus 0.7905. This supports the claim that the architecture is a strong lightweight multi-dataset ultrasound classifier, not a claim of uniform dominance on the primary thyroid benchmark.
 
+AUL illustrates the distinction between threshold-free ranking and thresholded operating-point metrics. UL-TransXNet has higher AUC and balanced accuracy than Swin-T, whereas Swin-T has slightly higher macro F1 and raw accuracy at its validation-selected threshold. We therefore interpret the AUL result as better ranking and class-balanced operating behavior, not as dominance over every thresholded metric.
+
 Table~\ref{tab:paired_statistical_tests} adds an offline paired statistical check over the same repeated runs used by Table~\ref{tab:main_results}. On TN5000, the proposed model is slightly below ConvNeXt-Tiny. On BUSI and AUL, the paired differences are consistently positive for both AUC and balanced accuracy. Because the available repeated units are only three TN5000 seeds and five BUSI/AUL folds, these tests are used as stability evidence rather than as large-sample clinical significance claims.
 
 \begin{table}[t]

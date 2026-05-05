@@ -31,6 +31,8 @@ TN5000 uses the official train/val/test split and is reported with three random 
 
 For inference-time calibration, each run uses validation-derived temperature scaling~\cite{guo2017calibration}, averages the top-$k$ validation-improved checkpoints (top-3 on TN5000 and BUSI, top-2 on AUL), applies horizontal-flip test-time augmentation, fits a scalar temperature on validation logits, and searches a decision threshold from 0.10 to 0.95 with step 0.01 using balanced accuracy as the default selection criterion. The resulting validation threshold is applied to the test predictions of that run. Main benchmark tables report mean $\pm$ standard deviation across the three TN5000 seeds or the five BUSI/AUL folds.
 
+Balanced accuracy is used for threshold selection because it gives equal weight to benign and malignant recall and is less tied to class prevalence than raw accuracy. AUC is kept as the threshold-free ranking metric, while macro F1 and accuracy are reported as complementary operating-point summaries.
+
 Importantly, all temperatures and decision thresholds are fixed strictly from validation-derived predictions. No test labels are used for temperature fitting, threshold tuning, or operating-point selection; the test set is used only once for final reporting after these choices are fixed.
 
 \subsection{Automatic ROI closed-loop protocol}
