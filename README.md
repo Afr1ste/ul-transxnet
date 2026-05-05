@@ -1,5 +1,7 @@
 ﻿# UL-TransXNet
 
+Repository: https://github.com/Afr1ste/ul-transxnet
+
 This repository contains the source code, paper assets, and lightweight reproduction scripts for UL-TransXNet, a lightweight ROI-based ultrasound lesion classification framework evaluated on TN5000, BUSI, and AUL.
 
 ## What is included
@@ -18,3 +20,4 @@ This repository does not redistribute public medical image datasets, trained che
 ## Status
 
 This is a research artifact prepared for reproducibility and review. Paths in the original experiment scripts may need to be adjusted to your local dataset locations.
+
