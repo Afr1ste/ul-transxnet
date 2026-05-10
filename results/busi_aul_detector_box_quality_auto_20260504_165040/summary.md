@@ -17,8 +17,8 @@
 - mean_confidence: 0.5288 +/- 0.0921
 
 ## Outputs
-- per-image CSV: `C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\busi_aul_detector_box_quality_auto_20260504_165040\box_quality_per_image.csv`
-- per-fold CSV: `C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\busi_aul_detector_box_quality_auto_20260504_165040\box_quality_per_fold.csv`
-- aggregate CSV: `C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\busi_aul_detector_box_quality_auto_20260504_165040\box_quality_aggregate.csv`
-- overlays: `C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\busi_aul_detector_box_quality_auto_20260504_165040\overlays`
-- predicted VOC roots: `C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\busi_aul_detector_box_quality_auto_20260504_165040\pred_voc_roots`
+- per-image CSV: `<LOCAL_THYROID_ROOT>\eval_reports\busi_aul_detector_box_quality_auto_20260504_165040\box_quality_per_image.csv`
+- per-fold CSV: `<LOCAL_THYROID_ROOT>\eval_reports\busi_aul_detector_box_quality_auto_20260504_165040\box_quality_per_fold.csv`
+- aggregate CSV: `<LOCAL_THYROID_ROOT>\eval_reports\busi_aul_detector_box_quality_auto_20260504_165040\box_quality_aggregate.csv`
+- overlays: `<LOCAL_THYROID_ROOT>\eval_reports\busi_aul_detector_box_quality_auto_20260504_165040\overlays`
+- predicted VOC roots: `<LOCAL_THYROID_ROOT>\eval_reports\busi_aul_detector_box_quality_auto_20260504_165040\pred_voc_roots`

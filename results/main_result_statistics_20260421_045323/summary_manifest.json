@@ -1,15 +1,15 @@
 {
   "datasets": {
     "TN5000": {
-      "log_dir": "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\tn5000_compare_5models_3seed_logs\\20260402_192605",
+      "log_dir": "<LOCAL_THYROID_ROOT>\\tn5000_compare_5models_3seed_logs\\20260402_192605",
       "best_non_ours_by_auc": "Swin-T"
     },
     "BUSI": {
-      "log_dir": "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\busi_compare_5models_5fold_logs\\20260403_083238",
+      "log_dir": "<LOCAL_THYROID_ROOT>\\busi_compare_5models_5fold_logs\\20260403_083238",
       "best_non_ours_by_auc": "Swin-T"
     },
     "AUL": {
-      "log_dir": "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\aul_roi_compare_5models_5fold_logs\\20260404_235703",
+      "log_dir": "<LOCAL_THYROID_ROOT>\\aul_roi_compare_5models_5fold_logs\\20260404_235703",
       "best_non_ours_by_auc": "Swin-T"
     }
   },

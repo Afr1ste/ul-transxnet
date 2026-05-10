@@ -6,7 +6,7 @@ BUSI lesion-only -> VOC ROI dataset builder (v3 square-consistent)
 用途
 ----
 把 BUSI 原始目录:
-    C:/Users/Afr1ste/PycharmProjects/Thyroid/Dataset_BUSI_with_GT
+    <LOCAL_THYROID_ROOT>/Dataset_BUSI_with_GT
 下的 benign / malignant 图像与 mask，转换成与你当前 TN3K 训练脚本兼容的
 VOC 风格 ROI 分类数据集。
 
@@ -98,8 +98,8 @@ from PIL import Image, ImageDraw
 # =============================================================================
 # 用户配置区：直接改这里
 # =============================================================================
-SOURCE_ROOT = Path(os.environ.get("BUSI_SOURCE_ROOT", r"C:/Users/Afr1ste/PycharmProjects/Thyroid/Dataset_BUSI_with_GT"))
-OUTPUT_ROOT = Path(os.environ.get("BUSI_OUTPUT_ROOT", r"C:\Users\Afr1ste\PycharmProjects\Thyroid\busi\busi_voc_v3_square_consistent"))
+SOURCE_ROOT = Path(os.environ.get("BUSI_SOURCE_ROOT", r"<LOCAL_THYROID_ROOT>/Dataset_BUSI_with_GT"))
+OUTPUT_ROOT = Path(os.environ.get("BUSI_OUTPUT_ROOT", r"<LOCAL_THYROID_ROOT>\busi\busi_voc_v3_square_consistent"))
 
 INCLUDE_CLASSES = ["benign", "malignant"]
 CLASS_TO_LABEL = {

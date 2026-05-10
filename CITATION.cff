@@ -1,17 +1,19 @@
 cff-version: 1.2.0
 message: "If you use this package, please cite the manuscript."
-title: "UL-TransXNet: A Compact Architecture for Multi-Dataset Ultrasound Lesion Classification"
+title: "A Reproducible ROI-Robust Evaluation and Mobile Distillation Framework for Ultrasound Lesion Classification"
 authors:
   - family-names: Li
     given-names: Zihan
   - family-names: Yang
     given-names: Cong
-date-released: 2026-05-05
-version: "2026.05.05-no-retrain-revision"
+date-released: 2026-05-10
+version: "2026.05.10-provenance-release"
 repository-code: "https://github.com/Afr1ste/ul-transxnet"
 keywords:
   - ultrasound
   - lesion classification
   - ROI classification
   - TransXNet
+  - knowledge distillation
+  - mobile inference
   - medical image analysis

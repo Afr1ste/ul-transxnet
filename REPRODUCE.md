@@ -1,4 +1,4 @@
-# Reproduction Notes
+﻿# Reproduction Notes
 
 This package is organized for table-level reproducibility and provenance audit.
 
@@ -62,6 +62,32 @@ latexmk -pdf -interaction=nonstopmode main.tex
 
 The checked-in PDF is `paper/main.pdf`.
 
+The supplementary material is built separately:
+
+```powershell
+cd paper
+latexmk -pdf -interaction=nonstopmode supplementary_material.tex
+```
+
+## Public Provenance Release
+
+The current frozen-label and prediction provenance package is stored in:
+
+```text
+results/provenance_release_20260510/
+```
+
+It can be regenerated from the private local experiment workspace with:
+
+```powershell
+python scripts/build_provenance_release.py --thyroid-root <LOCAL_THYROID_ROOT>
+```
+
+External users should treat the checked-in CSVs as the release artifact; the
+command above requires the local private experiment tree and does not download
+or redistribute image data.
+
 ## Full Training Boundary
 
 Full retraining is not directly runnable from this repository alone because dataset image files, generated ROI folders, checkpoints, detector weights, ONNX binaries, APKs, and raw logs are not redistributed. Scripts are included to document the exact training/evaluation entry points, but dataset reconstruction must follow the original dataset licenses and download instructions.
+

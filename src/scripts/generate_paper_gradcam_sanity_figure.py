@@ -21,7 +21,7 @@ from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parent
-PAPER_DIR = Path(r"C:\Users\Afr1ste\OneDrive\My Notes\tex\pr_ultrasound_lesion_classification")
+PAPER_DIR = Path(r"<LOCAL_MANUSCRIPT_ROOT>")
 FIG_DIR = PAPER_DIR / "figures"
 OUT_BASE = FIG_DIR / "fig_gradcam_sanity"
 

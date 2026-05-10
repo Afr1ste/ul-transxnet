@@ -28,7 +28,7 @@
 
 ## Source directories
 
-- Detector 3-seed summary: `C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\tn5000_auto_roi_detector_3seed_summary_20260502_130557`
-- Crop rule sweep: `C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\tn5000_roi_crop_rule_sweep_s27_20260502_141635`
-- Light bbox jitter eval: `C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\tn5000_auto_roi_bboxjitter_light_20260502_185435`
-- Predicted-box mix eval: `C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\tn5000_auto_roi_predboxmix_20260502_185435`
+- Detector 3-seed summary: `<LOCAL_THYROID_ROOT>\eval_reports\tn5000_auto_roi_detector_3seed_summary_20260502_130557`
+- Crop rule sweep: `<LOCAL_THYROID_ROOT>\eval_reports\tn5000_roi_crop_rule_sweep_s27_20260502_141635`
+- Light bbox jitter eval: `<LOCAL_THYROID_ROOT>\eval_reports\tn5000_auto_roi_bboxjitter_light_20260502_185435`
+- Predicted-box mix eval: `<LOCAL_THYROID_ROOT>\eval_reports\tn5000_auto_roi_predboxmix_20260502_185435`

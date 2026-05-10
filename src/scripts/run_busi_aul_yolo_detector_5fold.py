@@ -21,8 +21,8 @@ from typing import Dict, List
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
-PYTHON_EXE = Path(r"C:\Users\Afr1ste\anaconda3\envs\Thyroid\python.exe")
-YOLO_EXE = Path(r"C:\Users\Afr1ste\anaconda3\envs\Thyroid\Scripts\yolo.exe")
+PYTHON_EXE = Path(r"<LOCAL_CONDA_ROOT>\envs\Thyroid\python.exe")
+YOLO_EXE = Path(r"<LOCAL_CONDA_ROOT>\envs\Thyroid\Scripts\yolo.exe")
 
 DATASETS = {
     "busi": PROJECT_ROOT / "detector_datasets" / "busi_yolo_lesion_v1",

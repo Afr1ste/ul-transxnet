@@ -1,4 +1,4 @@
-﻿import argparse
+import argparse
 import csv
 import math
 import random
@@ -8,7 +8,7 @@ from statistics import mean, pstdev
 import numpy as np
 from sklearn.metrics import roc_auc_score, balanced_accuracy_score, f1_score, accuracy_score, brier_score_loss
 
-ROOT = Path(r"C:\Users\Afr1ste\PycharmProjects\Thyroid")
+ROOT = Path(r"<LOCAL_THYROID_ROOT>")
 MAIN_RUN_METRICS = {
     "TN5000": ROOT / r"tn5000_ggg_mca_enabled_3seed_logs\20260426_093728\all_runs_metrics.csv",
     "BUSI": ROOT / r"busi_ggg_mca_clean_5fold_safe_logs\20260426_165332\all_runs_metrics.csv",

@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch
 from matplotlib.patches import Rectangle
 
-ROOT = Path(r"C:\Users\Afr1ste\PycharmProjects\Thyroid")
-PAPER_FIG_DIR = Path(r"C:\Users\Afr1ste\OneDrive\My Notes\tex\pr_ultrasound_lesion_classification\figures")
+ROOT = Path(r"<LOCAL_THYROID_ROOT>")
+PAPER_FIG_DIR = Path(r"<LOCAL_MANUSCRIPT_ROOT>\figures")
 BOX_ROOT = ROOT / r"eval_reports\busi_aul_detector_box_quality_auto_20260504_165040"
 CLOSED_ROOT = ROOT / r"eval_reports\busi_aul_closed_loop_auto_roi_bboxfix_20260504_182516"
 OUT_STEM = PAPER_FIG_DIR / "fig_auto_roi_workflow"

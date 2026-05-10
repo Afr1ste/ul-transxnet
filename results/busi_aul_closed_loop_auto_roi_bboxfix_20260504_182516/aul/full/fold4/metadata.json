@@ -2,11 +2,11 @@
   "dataset": "aul",
   "mode": "full",
   "fold": 4,
-  "run_dir": "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\aul_roi_runs_ggg_mca_clean_5fold_safe\\20260426_201414",
-  "data_root": "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\aul\\aul_voc_roi_v1",
+  "run_dir": "<LOCAL_THYROID_ROOT>\\aul_roi_runs_ggg_mca_clean_5fold_safe\\20260426_201414",
+  "data_root": "<LOCAL_THYROID_ROOT>\\aul\\aul_voc_roi_v1",
   "used_ckpts": [
-    "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\aul_roi_runs_ggg_mca_clean_5fold_safe\\20260426_201414\\epoch013_auc_0.9237.pth",
-    "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\aul_roi_runs_ggg_mca_clean_5fold_safe\\20260426_201414\\epoch011_auc_0.9232.pth"
+    "<LOCAL_THYROID_ROOT>\\aul_roi_runs_ggg_mca_clean_5fold_safe\\20260426_201414\\epoch013_auc_0.9237.pth",
+    "<LOCAL_THYROID_ROOT>\\aul_roi_runs_ggg_mca_clean_5fold_safe\\20260426_201414\\epoch011_auc_0.9232.pth"
   ],
   "temperature": 0.8251127004623413,
   "threshold": 0.76,

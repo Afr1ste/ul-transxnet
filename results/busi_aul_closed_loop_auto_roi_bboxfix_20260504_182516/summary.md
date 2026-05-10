@@ -51,5 +51,5 @@
 - recall_1: 0.8277 +/- 0.0331
 
 ## Outputs
-- per-fold CSV: `C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\busi_aul_closed_loop_auto_roi_bboxfix_20260504_182516\closed_loop_per_fold.csv`
-- aggregate CSV: `C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\busi_aul_closed_loop_auto_roi_bboxfix_20260504_182516\closed_loop_aggregate.csv`
+- per-fold CSV: `<LOCAL_THYROID_ROOT>\eval_reports\busi_aul_closed_loop_auto_roi_bboxfix_20260504_182516\closed_loop_per_fold.csv`
+- aggregate CSV: `<LOCAL_THYROID_ROOT>\eval_reports\busi_aul_closed_loop_auto_roi_bboxfix_20260504_182516\closed_loop_aggregate.csv`

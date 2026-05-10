@@ -90,8 +90,18 @@ class MainActivity : ComponentActivity() {
         binding.cbBatchAccurate.isChecked = false
         binding.cbBatchEnsemble.isChecked = false
         binding.cbBatchGggMca.isChecked = false
-        binding.cbBatchGggMcaTta.isChecked = true
-        binding.cbBatchGggMcaEnsemble.isChecked = true
+        binding.cbBatchGggMcaTta.isChecked = false
+        binding.cbBatchGggMcaEnsemble.isChecked = false
+        binding.cbBatchMobileNetV3.isChecked = false
+        binding.cbBatchRepVit.isChecked = false
+        binding.cbBatchEfficientFormer.isChecked = false
+        binding.cbBatchConvNeXt.isChecked = false
+        binding.cbBatchSpeedCpuSweep.isChecked = true
+        binding.cbBatchSpeedQuant.isChecked = false
+        binding.cbBatchSpeedInput128.isChecked = false
+        binding.cbBatchSpeedXnnpack.isChecked = false
+        binding.cbBatchSpeedNnapi.isChecked = false
+        binding.cbBatchSpeedNnapiFp16.isChecked = false
     }
 
     private fun currentMode(): DeploymentMode {
@@ -114,6 +124,31 @@ class MainActivity : ComponentActivity() {
         if (binding.cbBatchGggMca.isChecked) modes += DeploymentMode.GGG_MCA
         if (binding.cbBatchGggMcaTta.isChecked) modes += DeploymentMode.GGG_MCA_TTA
         if (binding.cbBatchGggMcaEnsemble.isChecked) modes += DeploymentMode.GGG_MCA_ENSEMBLE
+        if (binding.cbBatchMobileNetV3.isChecked) modes += DeploymentMode.BASELINE_MOBILENETV3
+        if (binding.cbBatchRepVit.isChecked) modes += DeploymentMode.BASELINE_REPVIT_M11
+        if (binding.cbBatchEfficientFormer.isChecked) modes += DeploymentMode.BASELINE_EFFICIENTFORMER_L1
+        if (binding.cbBatchConvNeXt.isChecked) modes += DeploymentMode.BASELINE_CONVNEXT_TINY
+        if (binding.cbBatchSpeedCpuSweep.isChecked) {
+            modes += listOf(
+                DeploymentMode.GGG_MCA,
+                DeploymentMode.GGG_MCA_ORT_BASIC,
+                DeploymentMode.GGG_MCA_ORT_EXTENDED,
+                DeploymentMode.GGG_MCA_CPU_1T,
+                DeploymentMode.GGG_MCA_CPU_2T,
+                DeploymentMode.GGG_MCA_CPU_4T,
+                DeploymentMode.GGG_MCA_CPU_8T,
+            )
+        }
+        if (binding.cbBatchSpeedQuant.isChecked) {
+            modes += listOf(
+                DeploymentMode.GGG_MCA_DYNAMIC_INT8,
+                DeploymentMode.GGG_MCA_DYNAMIC_INT8_CPU_4T,
+            )
+        }
+        if (binding.cbBatchSpeedInput128.isChecked) modes += DeploymentMode.GGG_MCA_INPUT_128
+        if (binding.cbBatchSpeedXnnpack.isChecked) modes += DeploymentMode.GGG_MCA_XNNPACK_4T
+        if (binding.cbBatchSpeedNnapi.isChecked) modes += DeploymentMode.GGG_MCA_NNAPI
+        if (binding.cbBatchSpeedNnapiFp16.isChecked) modes += DeploymentMode.GGG_MCA_NNAPI_FP16_NCHW
         return modes
     }
 
@@ -126,6 +161,11 @@ class MainActivity : ComponentActivity() {
             DeploymentMode.GGG_MCA -> "GGG-MCA = current withMCA seed27 ONNX. Use threshold 0.73 and temperature 1.819830."
             DeploymentMode.GGG_MCA_TTA -> "GGG-MCA+TTA = current withMCA seed27 ONNX with horizontal flip test-time augmentation."
             DeploymentMode.GGG_MCA_ENSEMBLE -> "GGG-MCA Ensemble = current top-3 checkpoints with horizontal flip TTA."
+            DeploymentMode.BASELINE_MOBILENETV3 -> "MobileNetV3 baseline = seed27 ONNX, single-pass latency mode."
+            DeploymentMode.BASELINE_REPVIT_M11 -> "RepViT-M1.1 baseline = seed27 ONNX, single-pass latency mode."
+            DeploymentMode.BASELINE_EFFICIENTFORMER_L1 -> "EfficientFormer-L1 baseline = seed27 ONNX at 224 input."
+            DeploymentMode.BASELINE_CONVNEXT_TINY -> "ConvNeXt-Tiny baseline = seed27 ONNX, single-pass latency mode."
+            else -> "${mode.title} = speed-profile benchmark mode."
         }
     }
 

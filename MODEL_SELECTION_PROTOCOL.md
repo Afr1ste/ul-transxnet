@@ -30,3 +30,18 @@ The source-file index is `results/no_retrain_revision_20260505/model_selection_s
 ## No-Retrain Boundary
 
 The 2026-05-05 no-retrain revision pass used only frozen completed-result CSVs and existing automatic-ROI summaries. It did not reload current intermediate datasets, split manifests, checkpoints, model weights, or image folders because working dataset folders may have label drift relative to the frozen logs.
+
+## Frozen Analysis-Label Snapshot
+
+The added 2026-05-10 robustness, mobile, and provenance artifacts use the
+paper-log analysis-label snapshot rather than current live dataset labels. The
+public sanitized case manifest is:
+
+```text
+results/provenance_release_20260510/label_snapshot/paper_log_case_manifest_public.csv
+```
+
+This file records dataset, image id, split, frozen label, relative image and
+annotation paths, bounding-box coordinates, source-run counts, and source-log
+paths. It is the audit surface for the label snapshot used by the added
+analyses.

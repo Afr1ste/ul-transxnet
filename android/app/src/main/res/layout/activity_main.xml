@@ -243,6 +243,66 @@
             android:checked="true"
             android:text="Include GGG-MCA ensemble + TTA" />
 
+        <CheckBox
+            android:id="@+id/cbBatchMobileNetV3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Include MobileNetV3" />
+
+        <CheckBox
+            android:id="@+id/cbBatchRepVit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Include RepViT-M1.1" />
+
+        <CheckBox
+            android:id="@+id/cbBatchEfficientFormer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Include EfficientFormer-L1" />
+
+        <CheckBox
+            android:id="@+id/cbBatchConvNeXt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Include ConvNeXt-Tiny" />
+
+        <CheckBox
+            android:id="@+id/cbBatchSpeedCpuSweep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Include GGG-MCA CPU/ONNX speed sweep" />
+
+        <CheckBox
+            android:id="@+id/cbBatchSpeedQuant"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Include GGG-MCA dynamic INT8" />
+
+        <CheckBox
+            android:id="@+id/cbBatchSpeedInput128"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Include GGG-MCA input-128" />
+
+        <CheckBox
+            android:id="@+id/cbBatchSpeedXnnpack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Include GGG-MCA XNNPACK-4T" />
+
+        <CheckBox
+            android:id="@+id/cbBatchSpeedNnapi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Include GGG-MCA NNAPI plain" />
+
+        <CheckBox
+            android:id="@+id/cbBatchSpeedNnapiFp16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Include GGG-MCA NNAPI FP16/NCHW" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

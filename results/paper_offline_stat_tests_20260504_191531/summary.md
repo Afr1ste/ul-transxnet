@@ -12,9 +12,9 @@ Comparison: UL-TransXNet minus strongest non-Ours baseline from the main result 
 | AUL       | Swin-T        | BalAcc   |         5 |    0.820019 |        0.778313 |   0.0417061  |  0.0159809  |  0.0674312   |       0.0625 |
 
 ## Sources
-- TN5000 ours: `C:\Users\Afr1ste\PycharmProjects\Thyroid\tn5000_ggg_mca_enabled_3seed_logs\20260426_093728\all_runs_metrics.csv`
-- TN5000 baseline: `C:\Users\Afr1ste\PycharmProjects\Thyroid\tn5000_compare_extra4models_3seed_logs\20260421_222342_merged_complete\all_runs_metrics.csv`
-- BUSI ours: `C:\Users\Afr1ste\PycharmProjects\Thyroid\busi_ggg_mca_clean_5fold_safe_logs\20260426_165332\all_runs_metrics.csv`
-- BUSI baseline: `C:\Users\Afr1ste\PycharmProjects\Thyroid\busi_compare_5models_5fold_logs\20260403_083238\all_runs_metrics.csv`
-- AUL ours: `C:\Users\Afr1ste\PycharmProjects\Thyroid\aul_ggg_mca_clean_5fold_safe_logs\20260426_200618\all_runs_metrics.csv`
-- AUL baseline: `C:\Users\Afr1ste\PycharmProjects\Thyroid\aul_roi_compare_5models_5fold_logs\20260404_235703\all_runs_metrics.csv`
+- TN5000 ours: `<LOCAL_THYROID_ROOT>\tn5000_ggg_mca_enabled_3seed_logs\20260426_093728\all_runs_metrics.csv`
+- TN5000 baseline: `<LOCAL_THYROID_ROOT>\tn5000_compare_extra4models_3seed_logs\20260421_222342_merged_complete\all_runs_metrics.csv`
+- BUSI ours: `<LOCAL_THYROID_ROOT>\busi_ggg_mca_clean_5fold_safe_logs\20260426_165332\all_runs_metrics.csv`
+- BUSI baseline: `<LOCAL_THYROID_ROOT>\busi_compare_5models_5fold_logs\20260403_083238\all_runs_metrics.csv`
+- AUL ours: `<LOCAL_THYROID_ROOT>\aul_ggg_mca_clean_5fold_safe_logs\20260426_200618\all_runs_metrics.csv`
+- AUL baseline: `<LOCAL_THYROID_ROOT>\aul_roi_compare_5models_5fold_logs\20260404_235703\all_runs_metrics.csv`

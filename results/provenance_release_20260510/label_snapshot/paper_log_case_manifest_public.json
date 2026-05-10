@@ -1,0 +1,24 @@
+{
+  "release": "provenance_release_20260510",
+  "source_snapshot": "eval_reports/paper_log_label_reconstruction_20260505",
+  "case_count": 6282,
+  "counts_by_dataset_label": {
+    "AUL": {
+      "0": 183,
+      "1": 452
+    },
+    "BUSI": {
+      "0": 435,
+      "1": 212
+    },
+    "TN5000": {
+      "0": 1435,
+      "1": 3565
+    }
+  },
+  "notes": [
+    "Labels come from the frozen paper-log snapshot.",
+    "Bounding boxes are read from local VOC XML files for coordinate provenance only.",
+    "No image files are included in this release."
+  ]
+}

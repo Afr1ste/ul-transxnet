@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 import contextlib, io, json, sys
 from pathlib import Path
 import matplotlib
@@ -7,11 +7,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
-ROOT=Path(r'C:\Users\Afr1ste\PycharmProjects\Thyroid')
+ROOT=Path(r'<LOCAL_THYROID_ROOT>')
 if str(ROOT) not in sys.path: sys.path.insert(0,str(ROOT))
 import generate_paper_gradcam_sanity_figure as grad_fig
 
-OUT_DIR=Path(r'C:\Users\Afr1ste\OneDrive\My Notes\tex\pr_ultrasound_lesion_classification\figures\candidate_previews')
+OUT_DIR=Path(r'<LOCAL_MANUSCRIPT_ROOT>\figures\candidate_previews')
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 

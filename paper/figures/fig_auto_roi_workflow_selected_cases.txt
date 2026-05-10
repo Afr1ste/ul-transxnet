@@ -1,2 +1,0 @@
-BUSI: image_id=test_benign_0341, fold=0, iou=0.9507, pred=1, p1=0.9778, thr=0.6200, source=C:\Users\Afr1ste\PycharmProjects\Thyroid\busi\busi_voc_v3_square_consistent\JPEGImages\test_benign_0341.png
-AUL: image_id=malignant_000002, fold=0, iou=0.8942, pred=1, p1=0.9203, thr=0.8400, source=C:\Users\Afr1ste\PycharmProjects\Thyroid\aul\aul_voc_roi_v1\JPEGImages\malignant_000002.jpg

@@ -1,0 +1,4 @@
+mode,phase,n_runs,auc_mean,avg_total_ms_mean,avg_inference_ms_mean,p95_total_ms_mean,mode_prepare_ms_mean
+GGG-MCA,hot,5,0.943318,168.449763,166.806219,170.528814,257.432281
+EffFormer-L1+KD,hot,5,0.963433,55.954062,54.697119,67.713832,18.202281
+EffFormer-L1+ECA+KD,hot,5,0.957568,56.158779,54.851712,58.327874,18.256031

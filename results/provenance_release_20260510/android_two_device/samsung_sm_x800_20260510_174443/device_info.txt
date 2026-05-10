@@ -1,0 +1,18 @@
+TN5000 Android file-mode paper batch device info
+manufacturer=samsung
+brand=samsung
+model=SM-X800
+device=gts8pwifi
+product=gts8pwifizc
+sdk_int=34
+release=14
+abis=arm64-v8a;armeabi-v7a;armeabi
+dataset_root=/data/user/0/com.afriste.tn5000ortdemo/files/TN5000_forReview
+selected_modes=EffFormer-L1+KD,EffFormer-L1+ECA+KD,GGG-MCA
+cold_runs_per_mode=0
+hot_runs_per_mode=5
+threshold=0.850000
+temperature=1.000000
+expand_ratio=0.300000
+square_crop=false
+note=samsung_sm_x800_paperlog_labels_hot5_20260510

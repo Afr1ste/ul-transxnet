@@ -8,7 +8,7 @@ from matplotlib.ticker import AutoMinorLocator
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-PAPER_ROOT = Path(r"C:\Users\Afr1ste\OneDrive\My Notes\tex\pr_ultrasound_lesion_classification")
+PAPER_ROOT = Path(r"<LOCAL_MANUSCRIPT_ROOT>")
 COMPLEXITY_CSV = PROJECT_ROOT / "eval_reports" / "paper_model_complexity_table.csv"
 FIG_DIR = PAPER_ROOT / "figures"
 

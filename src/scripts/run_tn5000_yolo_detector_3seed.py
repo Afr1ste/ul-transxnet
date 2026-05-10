@@ -28,8 +28,8 @@ from typing import Dict, List, Optional
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
-PYTHON_EXE = Path(r"C:\Users\Afr1ste\anaconda3\envs\Thyroid\python.exe")
-YOLO_EXE = Path(r"C:\Users\Afr1ste\anaconda3\envs\Thyroid\Scripts\yolo.exe")
+PYTHON_EXE = Path(r"<LOCAL_CONDA_ROOT>\envs\Thyroid\python.exe")
+YOLO_EXE = Path(r"<LOCAL_CONDA_ROOT>\envs\Thyroid\Scripts\yolo.exe")
 DATA_YAML = PROJECT_ROOT / "detector_datasets" / "tn5000_yolo_lesion_v1" / "data.yaml"
 RUN_ROOT = PROJECT_ROOT / "tn5000_roi_detector_runs"
 LOG_ROOT = PROJECT_ROOT / "tn5000_roi_detector_logs"

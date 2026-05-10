@@ -7,8 +7,8 @@ from datetime import datetime
 from pathlib import Path
 
 
-PROJECT_ROOT = Path(r"C:\Users\Afr1ste\PycharmProjects\Thyroid")
-PYTHON_EXE = Path(r"C:\Users\Afr1ste\anaconda3\envs\Thyroid\python.exe")
+PROJECT_ROOT = Path(r"<LOCAL_THYROID_ROOT>")
+PYTHON_EXE = Path(r"<LOCAL_CONDA_ROOT>\envs\Thyroid\python.exe")
 
 RUN_TS = datetime.now().strftime("%Y%m%d_%H%M%S")
 MASTER_LOG_DIR = PROJECT_ROOT / "withmca_full_three_dataset_queue_logs"

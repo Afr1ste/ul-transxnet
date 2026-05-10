@@ -28,7 +28,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser()
-    p.add_argument("--tn5000-root", default=r"C:\Users\Afr1ste\PycharmProjects\Thyroid\TN5000_forReview")
+    p.add_argument("--tn5000-root", default=r"<LOCAL_THYROID_ROOT>\TN5000_forReview")
     p.add_argument("--detector-pipeline-dir", default=r"eval_reports\tn5000_auto_roi_pipeline_yolo11n_20260502_1245")
     p.add_argument("--classifier-log-dir", default=r"tn5000_ggg_mca_enabled_3seed_logs\20260426_093728")
     p.add_argument("--output-dir", default="")

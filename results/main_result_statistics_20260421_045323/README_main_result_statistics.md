@@ -1,12 +1,12 @@
 # Main Result Statistics
 
 - Bootstraps: 3000
-- Output dir: C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\main_result_statistics_20260421_045323
+- Output dir: <LOCAL_THYROID_ROOT>\eval_reports\main_result_statistics_20260421_045323
 
 ## Dataset Sources
-- TN5000: C:\Users\Afr1ste\PycharmProjects\Thyroid\tn5000_compare_5models_3seed_logs\20260402_192605
-- BUSI: C:\Users\Afr1ste\PycharmProjects\Thyroid\busi_compare_5models_5fold_logs\20260403_083238
-- AUL: C:\Users\Afr1ste\PycharmProjects\Thyroid\aul_roi_compare_5models_5fold_logs\20260404_235703
+- TN5000: <LOCAL_THYROID_ROOT>\tn5000_compare_5models_3seed_logs\20260402_192605
+- BUSI: <LOCAL_THYROID_ROOT>\busi_compare_5models_5fold_logs\20260403_083238
+- AUL: <LOCAL_THYROID_ROOT>\aul_roi_compare_5models_5fold_logs\20260404_235703
 
 ## CI Summary
 - AUL | Swin-T: AUC 0.8368 [0.7514, 0.9075], BalAcc 0.7793 [0.6984, 0.8549], F1 0.7763 [0.6973, 0.8497]

@@ -1,4 +1,4 @@
-﻿import csv
+import csv
 import itertools
 import math
 from datetime import datetime
@@ -7,8 +7,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(r"C:\Users\Afr1ste\PycharmProjects\Thyroid")
-PAPER_ROOT = Path(r"C:\Users\Afr1ste\OneDrive\My Notes\tex\pr_ultrasound_lesion_classification")
+ROOT = Path(r"<LOCAL_THYROID_ROOT>")
+PAPER_ROOT = Path(r"<LOCAL_MANUSCRIPT_ROOT>")
 
 COMPARISONS = [
     {

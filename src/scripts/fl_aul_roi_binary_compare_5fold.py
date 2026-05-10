@@ -45,7 +45,7 @@ warnings.filterwarnings('ignore')
 
 @dataclass
 class Config:
-    data_root: str = r"C:\Users\Afr1ste\PycharmProjects\Thyroid\aul\aul_voc_roi_v1"
+    data_root: str = r"<LOCAL_THYROID_ROOT>\aul\aul_voc_roi_v1"
     output_root: str = "aul_roi_runs_binary"
 
     model_family: str = "custom"   # custom / timm

@@ -2,12 +2,12 @@
   "dataset": "busi",
   "mode": "full",
   "fold": 0,
-  "run_dir": "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\busi_roi_runs_ggg_mca_clean_5fold_safe\\20260426_165335",
-  "data_root": "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\busi\\busi_voc_v3_square_consistent",
+  "run_dir": "<LOCAL_THYROID_ROOT>\\busi_roi_runs_ggg_mca_clean_5fold_safe\\20260426_165335",
+  "data_root": "<LOCAL_THYROID_ROOT>\\busi\\busi_voc_v3_square_consistent",
   "used_ckpts": [
-    "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\busi_roi_runs_ggg_mca_clean_5fold_safe\\20260426_165335\\epoch200_auc_0.9578.pth",
-    "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\busi_roi_runs_ggg_mca_clean_5fold_safe\\20260426_165335\\epoch199_auc_0.9574.pth",
-    "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\busi_roi_runs_ggg_mca_clean_5fold_safe\\20260426_165335\\epoch198_auc_0.9570.pth"
+    "<LOCAL_THYROID_ROOT>\\busi_roi_runs_ggg_mca_clean_5fold_safe\\20260426_165335\\epoch200_auc_0.9578.pth",
+    "<LOCAL_THYROID_ROOT>\\busi_roi_runs_ggg_mca_clean_5fold_safe\\20260426_165335\\epoch199_auc_0.9574.pth",
+    "<LOCAL_THYROID_ROOT>\\busi_roi_runs_ggg_mca_clean_5fold_safe\\20260426_165335\\epoch198_auc_0.9570.pth"
   ],
   "temperature": 4.005682945251465,
   "threshold": 0.63,

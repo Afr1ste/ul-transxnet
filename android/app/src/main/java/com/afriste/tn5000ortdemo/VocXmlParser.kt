@@ -4,6 +4,8 @@ import android.content.ContentResolver
 import android.net.Uri
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
+import java.io.File
+import java.io.InputStream
 
 data class VocBBox(
     val xmin: Int,
@@ -20,9 +22,20 @@ data class VocParsedSample(
 
 object VocXmlParser {
     fun parseSample(resolver: ContentResolver, xmlUri: Uri, sampleId: String): VocParsedSample {
-        val parser = XmlPullParserFactory.newInstance().newPullParser()
         resolver.openInputStream(xmlUri).use { input ->
             requireNotNull(input) { "Cannot open XML: $xmlUri" }
+            return parseSample(input, sampleId, xmlUri.toString())
+        }
+    }
+
+    fun parseSample(xmlFile: File, sampleId: String): VocParsedSample {
+        xmlFile.inputStream().use { input ->
+            return parseSample(input, sampleId, xmlFile.absolutePath)
+        }
+    }
+
+    private fun parseSample(input: InputStream, sampleId: String, source: String): VocParsedSample {
+            val parser = XmlPullParserFactory.newInstance().newPullParser()
             parser.setInput(input, null)
 
             var eventType = parser.eventType
@@ -75,7 +88,7 @@ object VocXmlParser {
                 eventType = parser.next()
             }
 
-            require(boxes.isNotEmpty()) { "No valid bbox found in $sampleId" }
+            require(boxes.isNotEmpty()) { "No valid bbox found in $sampleId from $source" }
             val unionBox = VocBBox(
                 xmin = boxes.minOf { it.xmin },
                 ymin = boxes.minOf { it.ymin },
@@ -84,6 +97,5 @@ object VocXmlParser {
             )
             val label = labels.groupingBy { it }.eachCount().maxByOrNull { it.value }?.key ?: labels.first()
             return VocParsedSample(sampleId = sampleId, label = label, bbox = unionBox)
-        }
     }
 }

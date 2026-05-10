@@ -1,0 +1,9 @@
+variant,MCA,MUDD,DA,backbone_module,insertion,params_m,macs_g
+GGG-core,0,0,0,models.transxnetggg_nomca_base,GGG token mixer backbone; all three added modules disabled.,14.29,2.34
+GGG-core+MUDD,0,1,0,models.transxnetggg_nomca_mudd,MUDD enabled in deeper stages; MCA and DA disabled.,,
+GGG-core+DA,0,0,1,models.transxnetggg_nomca_da,Differential attention enabled in deep stages; MCA and MUDD disabled.,,
+GGG-core+MUDD+DA-noMCA,0,1,1,models.transxnetggg_nomca,MUDD and differential attention enabled; MCA disabled.,14.29,2.34
+GGG-core+MCA+MUDD+DA,1,1,1,models.transxnetggg,MCA in early/mid GGG token mixers; MUDD and DA in deeper stages.,14.37,2.36
+GGG-core+MCA,1,0,0,models.transxnetggg_mca_only,Pending factorial run: MCA enabled; MUDD and DA disabled.,,
+GGG-core+MCA+MUDD,1,1,0,models.transxnetggg_mca_mudd,Pending factorial run: MCA and MUDD enabled; DA disabled.,,
+GGG-core+MCA+DA,1,0,1,models.transxnetggg_mca_da,Pending factorial run: MCA and DA enabled; MUDD disabled.,,

@@ -29,7 +29,7 @@ def detect_project_root() -> Path:
         Path.cwd(),
         Path(__file__).resolve().parent,
         Path(__file__).resolve().parents[2] if len(Path(__file__).resolve().parents) > 2 else Path.cwd(),
-        Path(r"C:\Users\Afr1ste\PycharmProjects\Thyroid"),
+        Path(r"<LOCAL_THYROID_ROOT>"),
     ]
     for candidate in candidates:
         if (candidate / "eval_reports" / "tn5000_auto_roi_final_summary_20260503_161324").exists():
@@ -42,7 +42,7 @@ def detect_project_root() -> Path:
 
 ROOT = detect_project_root()
 OUT_DIR = ROOT / "eval_reports" / "high_roi_no_retrain_20260505"
-PAPER_DIR = Path(r"C:\Users\Afr1ste\OneDrive\My Notes\tex\pr_ultrasound_lesion_classification")
+PAPER_DIR = Path(r"<LOCAL_MANUSCRIPT_ROOT>")
 PAPER_FIG_DIR = PAPER_DIR / "figures"
 
 MAIN_PREDICTION_SOURCES = {

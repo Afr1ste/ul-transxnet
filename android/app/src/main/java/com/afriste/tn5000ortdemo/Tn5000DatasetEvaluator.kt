@@ -70,6 +70,7 @@ class Tn5000DatasetEvaluator(
     private val context: Context,
     private val engine: Tn5000OrtEngine,
 ) {
+    private val labelSnapshot = LabelSnapshot.load(context, "TN5000")
 
     fun evaluateTestSet(
         rootUri: Uri,
@@ -111,6 +112,7 @@ class Tn5000DatasetEvaluator(
                 ?: error("Missing image file for sample $sampleId")
 
             val sample = VocXmlParser.parseSample(context.contentResolver, xmlDoc.uri, sampleId)
+            val groundTruth = labelSnapshot.labelFor(sampleId) ?: sample.label
             val originalBitmap = context.contentResolver.decodeBitmap(imgDoc.uri)
             val roiBitmap = BitmapUtils.cropRoiTrainingAligned(
                 src = originalBitmap,
@@ -132,7 +134,7 @@ class Tn5000DatasetEvaluator(
             )
             rows += SamplePrediction(
                 sampleId = sampleId,
-                groundTruth = sample.label,
+                groundTruth = groundTruth,
                 predicted = result.predictedIndex,
                 probability0 = result.probabilities.getOrElse(0) { 0f }.toDouble(),
                 probability1 = result.probabilities.getOrElse(1) { 0f }.toDouble(),
@@ -233,6 +235,8 @@ class Tn5000DatasetEvaluator(
             writer.appendLine("temperature=${formatDouble(options.temperature)}")
             writer.appendLine("expand_ratio=${formatDouble(options.expandRatio.toDouble())}")
             writer.appendLine("square_crop=${options.squareCrop}")
+            writer.appendLine("label_snapshot=${labelSnapshot.sourcePath.ifBlank { "XML labels" }}")
+            writer.appendLine("label_snapshot_count=${labelSnapshot.labels.size}")
             writer.appendLine()
             writer.appendLine("total=${summary.total}")
             writer.appendLine("correct=${summary.correct}")

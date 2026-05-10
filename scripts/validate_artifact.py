@@ -48,18 +48,31 @@ REQUIRED_PATHS = [
     "RESULTS_PROVENANCE.md",
     "paper/main.pdf",
     "paper/main.tex",
-    "paper/sections/05_results.tex",
+    "paper/supplementary_material.pdf",
+    "paper/supplementary_material.tex",
     "paper/figures/fig_reliability_diagram_case_level.png",
+    "paper/figures/fig_roi_robustness_curve_crop.pdf",
+    "paper/figures/fig_mobile_latency_tradeoff_crop.pdf",
     "results/high_roi_no_retrain_20260505/case_level_diagnostic_statistics.csv",
     "results/high_roi_no_retrain_20260505/tn5000_oracle_auto_full_probe.csv",
     "results/high_roi_no_retrain_20260505/tn5000_localization_robustness_probe.csv",
+    "results/provenance_release_20260510/README.md",
+    "results/provenance_release_20260510/release_manifest.csv",
+    "results/provenance_release_20260510/label_snapshot/paper_log_case_manifest_public.csv",
+    "results/provenance_release_20260510/predictions/paperlog_per_case_averaged_predictions_public.csv",
+    "results/provenance_release_20260510/predictions/roi_robustness/box_noise_robustness_metrics.csv",
+    "results/provenance_release_20260510/android_two_device/README.md",
     "results/no_retrain_revision_20260505/model_selection_source_files.csv",
     "results/no_retrain_revision_20260505/validation_selection_audit.csv",
     "results/frozen_source_logs",
     "src/models/transxnetggg.py",
+    "scripts/build_provenance_release.py",
     "src/scripts/generate_high_roi_no_retrain_tables.py",
     "src/scripts/generate_no_retrain_revision_tables.py",
+    "src/scripts/audit_busi_duplicates.py",
     "android/README.md",
+    "android/app/src/main/java/com/afriste/tn5000ortdemo/HeadlessBatchActivity.kt",
+    "android/app/src/main/java/com/afriste/tn5000ortdemo/LabelSnapshot.kt",
     "android/app/src/main/assets/PLACE_ONNX_MODELS_HERE.txt",
 ]
 
@@ -165,12 +178,46 @@ def check_manifest(files: list[Path]) -> None:
         raise SystemExit("MANIFEST.csv validation failed:\n" + "\n".join(problems))
 
 
+def check_release_manifest() -> None:
+    release_root = ROOT / "results/provenance_release_20260510"
+    manifest_path = release_root / "release_manifest.csv"
+    with manifest_path.open("r", newline="", encoding="utf-8-sig") as f:
+        rows = {row["path"]: row for row in csv.DictReader(f)}
+
+    expected = {
+        p.relative_to(release_root).as_posix(): p
+        for p in release_root.rglob("*")
+        if p.is_file() and p.name != "release_manifest.csv"
+    }
+
+    problems: list[str] = []
+    missing = sorted(set(expected) - set(rows))
+    extra = sorted(set(rows) - set(expected))
+    if missing:
+        problems.append("missing release-manifest rows: " + ", ".join(missing[:10]))
+    if extra:
+        problems.append("extra release-manifest rows: " + ", ".join(extra[:10]))
+
+    for rel, path in expected.items():
+        row = rows.get(rel)
+        if row is None:
+            continue
+        if int(row["size_bytes"]) != path.stat().st_size:
+            problems.append(f"release size mismatch: {rel}")
+        if row["sha256"].strip().lower() != sha256(path):
+            problems.append(f"release sha256 mismatch: {rel}")
+
+    if problems:
+        raise SystemExit("release_manifest.csv validation failed:\n" + "\n".join(problems))
+
+
 def main() -> None:
     files = iter_repo_files()
     check_required_paths()
     check_forbidden_files(files)
     check_large_files(files)
     check_model_selection_hashes()
+    check_release_manifest()
     check_manifest(files)
     total_bytes = sum(p.stat().st_size for p in files)
     print(f"OK: {len(files)} files, {total_bytes / (1024 * 1024):.2f} MB")

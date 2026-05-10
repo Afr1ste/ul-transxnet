@@ -46,7 +46,7 @@ VALID_IMAGE_SUFFIXES = [".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff"]
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser()
-    p.add_argument("--tn5000-root", default=r"C:\Users\Afr1ste\PycharmProjects\Thyroid\TN5000_forReview")
+    p.add_argument("--tn5000-root", default=r"<LOCAL_THYROID_ROOT>\TN5000_forReview")
     p.add_argument("--detector-weights", required=True)
     p.add_argument("--classifier-log-dir", default=r"tn5000_ggg_mca_enabled_3seed_logs\20260426_093728")
     p.add_argument("--output-dir", default="")

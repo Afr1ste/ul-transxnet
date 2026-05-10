@@ -14,3 +14,12 @@ cannot be redistributed here. The repository instead provides:
 For the 2026-05-05 no-retrain revision, reported values are audited through
 `MODEL_SELECTION_PROTOCOL.md` and
 `results/no_retrain_revision_20260505/model_selection_source_files.csv`.
+
+For the 2026-05-10 mobile-distillation refresh, Android summary CSVs and
+device metadata are audited through:
+
+```text
+results/provenance_release_20260510/android_two_device/
+```
+
+The model binaries used to produce those summaries remain excluded.

@@ -13,7 +13,7 @@ import eval_tn5000_auto_roi_pipeline as autoeval
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser()
-    p.add_argument("--tn5000-root", default=r"C:\Users\Afr1ste\PycharmProjects\Thyroid\TN5000_forReview")
+    p.add_argument("--tn5000-root", default=r"<LOCAL_THYROID_ROOT>\TN5000_forReview")
     p.add_argument("--detector-weights", required=True)
     p.add_argument("--output-dir", default="")
     p.add_argument("--splits", nargs="+", default=["train"], choices=["train", "val", "test"])

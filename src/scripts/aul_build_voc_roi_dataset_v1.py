@@ -67,7 +67,7 @@ from sklearn.model_selection import StratifiedKFold, train_test_split
 # =========================
 # 用户配置
 # =========================
-PROJECT_ROOT = Path(r"C:\Users\Afr1ste\PycharmProjects\Thyroid")
+PROJECT_ROOT = Path(r"<LOCAL_THYROID_ROOT>")
 BENIGN_SOURCE = Path(os.environ.get("AUL_BENIGN_SOURCE", str(PROJECT_ROOT / "Benign.zip")))
 MALIGNANT_SOURCE = Path(os.environ.get("AUL_MALIGNANT_SOURCE", str(PROJECT_ROOT / "Malignant.zip")))
 OUTPUT_ROOT = Path(os.environ.get("AUL_OUTPUT_ROOT", str(PROJECT_ROOT / "aul" / "aul_voc_roi_v1")))

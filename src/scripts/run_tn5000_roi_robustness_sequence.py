@@ -24,7 +24,7 @@ import run_tn5000_compare_5models_3seed as runner
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
-PYTHON_EXE = Path(r"C:\Users\Afr1ste\anaconda3\envs\Thyroid\python.exe")
+PYTHON_EXE = Path(r"<LOCAL_CONDA_ROOT>\envs\Thyroid\python.exe")
 LOG_ROOT = PROJECT_ROOT / "tn5000_roi_robustness_sequence_logs"
 STATUS_PATH = LOG_ROOT / "tn5000_roi_robustness_sequence_latest.status.json"
 DETECTOR_WEIGHTS = (

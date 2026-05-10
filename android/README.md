@@ -1,45 +1,61 @@
-# TN5000 Android ORT Demo Complete
+# TN5000 Android ORT Prototype
 
-This project is a full on-device TN5000 evaluation app with three deployment tiers:
+This Android project documents the on-device evaluation app used for the
+teacher/student mobile-feasibility experiments. It is source-only: ONNX files,
+APKs, and build outputs are intentionally excluded from the repository.
 
-1. **Fast**: single ONNX, no TTA, temperature scaling + threshold.
-2. **Accurate**: single ONNX + horizontal-flip TTA + temperature scaling + threshold.
-3. **Ensemble**: three ONNX checkpoints + horizontal-flip TTA + temperature scaling + threshold.
+## Deployment modes
+
+The current source supports exported artifacts for:
+
+- `GGG-MCA`: TransXNet-family teacher artifact.
+- `EffFormer-L1+KD`: distilled EfficientFormer-L1 student.
+- `EffFormer-L1+ECA+KD`: distilled EfficientFormer-L1 student with ECA.
+- Additional baseline ONNX assets can be dropped into `app/src/main/assets/`
+  for local latency comparisons.
 
 ## Expected model assets
 
-Put these files under `app/src/main/assets/`:
+Put ONNX files under `app/src/main/assets/`. The repository only includes
+`PLACE_ONNX_MODELS_HERE.txt`; model binaries are omitted because they are large
+trained artifacts.
 
-- `tn5000_current_mainline.onnx`  ← required for Fast / Accurate
-- `tn5000_epoch060_bal_acc_0.9195.onnx` ← optional, required for full Ensemble
-- `tn5000_epoch054_bal_acc_0.9169.onnx` ← optional, required for full Ensemble
+## Headless batch runner
 
-`tn5000_current_mainline.onnx` is assumed to correspond to your main exported checkpoint.
+`HeadlessBatchActivity` enables command-line Android evaluation with `adb`.
+The CMPB provenance refresh used:
 
-## Training-aligned defaults
+```text
+modes=EffFormer-L1+KD,EffFormer-L1+ECA+KD,GGG-MCA
+cold_runs=0
+hot_runs=5
+expand_ratio=0.30
+square_crop=false
+```
 
-Use these defaults to match the current desktop mainline as closely as possible:
+The app can load the frozen paper-log analysis-label snapshot from either:
 
-- expand ratio = `0.30`
-- square crop = `false`
-- threshold = `0.61`
-- temperature = `1.157835`
+```text
+/data/user/0/com.afriste.tn5000ortdemo/files/paper_log_case_labels.csv
+/sdcard/Android/data/com.afriste.tn5000ortdemo/files/paper_log_case_labels.csv
+```
+
+The checked-in two-device output summaries are in:
+
+```text
+../results/provenance_release_20260510/android_two_device/
+```
 
 ## Dataset folder layout on the phone
 
-Select the root folder that contains:
+The selected TN5000 root must contain:
 
-- `Annotations/`
-- `JPEGImages/`
-- `ImageSets/Main/test.txt`
+```text
+Annotations/
+JPEGImages/
+ImageSets/Main/test.txt
+```
 
-The app parses XML labels + bboxes, crops ROI on-device, runs the selected deployment mode, exports CSV/TXT reports, and shows paper-friendly statistics including accuracy / balanced accuracy / macro-F1 / AUC / latency breakdown / memory estimates.
-
-
-Paper-batch collection
-----------------------
-This build adds a paper-oriented batch runner:
-- select one or more deployment modes (Fast / Accurate / Ensemble)
-- set cold runs per mode and hot runs per mode
-- run the entire TN5000 test split repeatedly on-device
-- export per-run CSV/TXT plus aggregate CSV summaries under `Android/data/com.afriste.tn5000ortdemo/files/eval_reports/paper_batch_*`
+The app parses XML boxes, applies the same 30% expanded ROI crop protocol,
+runs ONNX Runtime inference, and exports per-run CSV/TXT summaries under the
+app external files directory.

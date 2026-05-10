@@ -45,7 +45,7 @@ warnings.filterwarnings('ignore')
 
 @dataclass
 class Config:
-    data_root: str = r"C:\Users\Afr1ste\PycharmProjects\Thyroid\busi\busi_voc_v3_square_consistent"
+    data_root: str = r"<LOCAL_THYROID_ROOT>\busi\busi_voc_v3_square_consistent"
     output_root: str = "busi_roi_runs_compare_5models_5fold"
 
     model_family: str = "custom"   # custom / timm

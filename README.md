@@ -2,21 +2,21 @@
 
 This repository contains the public reproducibility package for the manuscript:
 
-**UL-TransXNet: A Compact ROI Framework for Multi-Dataset Ultrasound Lesion Classification**
+**A Reproducible ROI-Robust Evaluation and Mobile Distillation Framework for Ultrasound Lesion Classification**
 
-UL-TransXNet is a compact ROI-based TransXNet-family classifier for benign--malignant ultrasound lesion classification. The current manuscript positions the evidence conservatively: the model is evaluated under dataset-specific training on TN5000, BUSI, and AUL, and the results support multi-dataset in-domain competitiveness rather than external cross-organ generalization or clinical deployment validation.
+This repository contains the CSV-level reproducibility package for an ROI-based ultrasound lesion-classification study. The current manuscript positions the evidence conservatively: TransXNet-family models are used as high-capacity teachers and design-space probes, EfficientFormer students are used for mobile deployment, and TN5000/BUSI/AUL results support protocol-separated public-benchmark evidence rather than external clinical validation.
 
 ## Current Package Scope
 
 Included:
 
-- manuscript LaTeX source and compiled PDF under `paper/`;
+- CMPB manuscript LaTeX source, supplementary source, and compiled PDFs under `paper/`;
 - current manuscript figures and figure-generation scripts;
 - model source files under `src/models/`;
 - training, detector, table-generation, and evaluation scripts under `scripts/`;
-- frozen summary CSVs, prediction CSVs, table artifacts, and provenance under `results/`;
+- frozen summary CSVs, prediction CSVs, label-snapshot manifest, table artifacts, and provenance under `results/`;
 - model-selection protocol and source-file checksums in `MODEL_SELECTION_PROTOCOL.md`;
-- Android prototype source under `android/`, excluding ONNX binaries, APKs, and build outputs.
+- Android prototype source under `android/`, including the headless batch runner used for the two-device repeat, excluding ONNX binaries, APKs, and build outputs.
 
 Not included:
 
@@ -29,17 +29,19 @@ These restrictions avoid redistributing third-party dataset images and large mod
 ## Key Files
 
 - `paper/main.pdf`: current compiled manuscript.
-- `paper/main.tex` and `paper/sections/`: manuscript source.
+- `paper/supplementary_material.pdf`: current compiled supplementary material.
+- `paper/main.tex`, `paper/supplementary_material.tex`, and `paper/refs.bib`: manuscript source.
 - `MODEL_SELECTION_PROTOCOL.md`: validation-only selection rule, selected row, and source-checksum index.
 - `RESULTS_PROVENANCE.md`: table/figure provenance map.
+- `results/provenance_release_20260510/`: public label snapshot, per-case predictions, ROI robustness predictions, BUSI duplicate audit, Android two-device repeat, and release-level SHA256 manifest.
 - `results/no_retrain_revision_20260505/`: no-retrain revision tables and model-selection source index.
 - `results/high_roi_no_retrain_20260505/`: TN5000 oracle/automatic/full-image probe, localization-robustness probes, case-level diagnostic statistics, and reliability-diagram source bins.
 - `results/frozen_source_logs/`: copied source CSVs from frozen completed-result logs.
 - `configs/protocol_summary.yaml`: compact dataset/protocol configuration summary.
 
-## No-Retrain Boundary
+## Provenance Boundary
 
-The 2026-05-05 revision used frozen completed-result CSVs and existing automatic-ROI summaries. It did not reload current intermediate datasets, split manifests, checkpoints, model weights, or image folders because working dataset folders may have label drift relative to the frozen logs.
+The 2026-05-10 release uses a frozen paper-log analysis-label snapshot. The public case manifest and prediction CSVs are in `results/provenance_release_20260510/`. Dataset images, generated ROI folders, model checkpoints, detector weights, ONNX exports, APKs, and raw training logs are not redistributed. The package supports table regeneration and provenance audit, not full dataset mirroring.
 
 ## Reproduction Entry Points
 

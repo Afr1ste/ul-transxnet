@@ -44,7 +44,7 @@ warnings.filterwarnings('ignore')
 
 DEFAULT_CONFIG = {
     # ===== 数据 =====
-    'tn5000_root': r"C:\Users\Afr1ste\PycharmProjects\Thyroid\TN5000_forReview",
+    'tn5000_root': r"<LOCAL_THYROID_ROOT>\TN5000_forReview",
     'output_root': 'tn5000_roi_unified_runs',
 
     # ===== 模型 =====

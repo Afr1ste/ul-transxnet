@@ -19,8 +19,8 @@ import generate_paper_auto_roi_workflow_figure as auto_fig
 import generate_paper_gradcam_sanity_figure as grad_fig
 
 
-ROOT = Path(r"C:\Users\Afr1ste\PycharmProjects\Thyroid")
-PAPER_FIG_DIR = Path(r"C:\Users\Afr1ste\OneDrive\My Notes\tex\pr_ultrasound_lesion_classification\figures")
+ROOT = Path(r"<LOCAL_THYROID_ROOT>")
+PAPER_FIG_DIR = Path(r"<LOCAL_MANUSCRIPT_ROOT>\figures")
 OUT_DIR = PAPER_FIG_DIR / "candidate_previews"
 
 

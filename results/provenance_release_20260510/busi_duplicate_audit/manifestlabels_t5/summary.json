@@ -1,0 +1,12 @@
+{
+  "root": "<LOCAL_THYROID_ROOT>\\busi\\busi_voc_v3_square_consistent",
+  "n_images": 647,
+  "trainval": 518,
+  "test": 129,
+  "near_threshold": 5,
+  "label_source": "<LOCAL_THYROID_ROOT>\\busi\\busi_voc_v3_square_consistent\\manifests\\label_manifest.csv",
+  "exact_duplicate_pairs": 1,
+  "near_duplicate_pairs": 141,
+  "cross_split_duplicate_or_near_pairs": 41,
+  "label_conflict_duplicate_or_near_pairs": 9
+}

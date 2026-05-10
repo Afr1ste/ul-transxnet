@@ -41,7 +41,7 @@ warnings.filterwarnings('ignore')
 
 
 class Config:
-    tn5000_root = r"C:\Users\Afr1ste\PycharmProjects\Thyroid\TN5000_forReview"
+    tn5000_root = r"<LOCAL_THYROID_ROOT>\TN5000_forReview"
     output_root = "tn5000_roi_runs_compare_5models_3seed"
 
     model_family = "custom"   # custom / timm

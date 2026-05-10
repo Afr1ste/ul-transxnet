@@ -3,10 +3,12 @@ package com.afriste.tn5000ortdemo
 import ai.onnxruntime.OnnxTensor
 import ai.onnxruntime.OrtEnvironment
 import ai.onnxruntime.OrtSession
+import ai.onnxruntime.providers.NNAPIFlags
 import android.content.Context
 import android.content.res.AssetManager
 import android.graphics.Bitmap
 import java.nio.FloatBuffer
+import java.util.EnumSet
 import kotlin.math.exp
 import kotlin.system.measureNanoTime
 
@@ -15,7 +17,9 @@ class Tn5000OrtEngine(
 ) : AutoCloseable {
 
     private data class LoadedSession(
+        val cacheKey: String,
         val assetName: String,
+        val runtimeProfile: OrtRuntimeProfile,
         val session: OrtSession,
         val sizeBytes: Long,
         val initialLoadMs: Double,
@@ -23,13 +27,9 @@ class Tn5000OrtEngine(
 
     private val environment: OrtEnvironment = OrtEnvironment.getEnvironment()
     private val sessionCache = linkedMapOf<String, LoadedSession>()
-    private val sessionOptions = OrtSession.SessionOptions().apply {
-        setOptimizationLevel(OrtSession.SessionOptions.OptLevel.ALL_OPT)
-    }
     private val labels = arrayOf("benign (0)", "malignant (1)")
 
-    val inputSize: Int = 256
-    val inputShape = longArrayOf(1, 3, inputSize.toLong(), inputSize.toLong())
+    val defaultInputSize: Int = 256
 
     fun availableAssetNames(): List<String> = context.assets.list("")?.toList().orEmpty()
 
@@ -38,7 +38,7 @@ class Tn5000OrtEngine(
         return DeploymentMode.entries.joinToString(separator = "\n") { mode ->
             val missing = mode.assetNames.filterNot { assets.contains(it) }
             if (missing.isEmpty()) {
-                "${mode.title}: ready (${mode.assetNames.joinToString()})"
+                "${mode.title}: ready (${mode.runtimeProfile.label}; ${mode.assetNames.joinToString()})"
             } else {
                 "${mode.title}: missing ${missing.joinToString()}"
             }
@@ -53,7 +53,8 @@ class Tn5000OrtEngine(
         }
 
         val stats = mode.assetNames.map { assetName ->
-            val cached = sessionCache[assetName]
+            val cacheKey = sessionCacheKey(assetName, mode.runtimeProfile)
+            val cached = sessionCache[cacheKey]
             if (cached != null) {
                 ModelAssetStat(
                     assetName = assetName,
@@ -62,7 +63,7 @@ class Tn5000OrtEngine(
                     newlyLoaded = false,
                 )
             } else {
-                loadSession(assetName)
+                loadSession(assetName, mode.runtimeProfile)
             }
         }
         return PreparedMode(mode = mode, assets = stats)
@@ -78,6 +79,7 @@ class Tn5000OrtEngine(
         options: InferenceOptions,
     ): InferenceResult {
         val preparedMode = prepareMode(options.mode)
+        val inputSize = options.mode.inputSize
 
         var originalBitmap: Bitmap? = null
         var flippedBitmap: Bitmap? = null
@@ -100,11 +102,11 @@ class Tn5000OrtEngine(
         var passCount = 0
         val inferenceNs = measureNanoTime {
             preparedMode.assetNames.forEach { assetName ->
-                val session = requireNotNull(sessionCache[assetName])
-                addLogits(accumulated, runSession(session.session, originalChw))
+                val session = requireNotNull(sessionCache[sessionCacheKey(assetName, options.mode.runtimeProfile)])
+                addLogits(accumulated, runSession(session.session, originalChw, inputSize))
                 passCount += 1
                 if (flippedChw != null) {
-                    addLogits(accumulated, runSession(session.session, flippedChw!!))
+                    addLogits(accumulated, runSession(session.session, flippedChw!!, inputSize))
                     passCount += 1
                 }
             }
@@ -130,19 +132,23 @@ class Tn5000OrtEngine(
         )
     }
 
-    private fun loadSession(assetName: String): ModelAssetStat {
+    private fun loadSession(assetName: String, runtimeProfile: OrtRuntimeProfile): ModelAssetStat {
         val bytes = context.assets.open(assetName).use { it.readBytes() }
         var session: OrtSession? = null
         val elapsedNs = measureNanoTime {
-            session = environment.createSession(bytes, sessionOptions)
+            createSessionOptions(runtimeProfile).use { sessionOptions ->
+                session = environment.createSession(bytes, sessionOptions)
+            }
         }
         val loaded = LoadedSession(
+            cacheKey = sessionCacheKey(assetName, runtimeProfile),
             assetName = assetName,
+            runtimeProfile = runtimeProfile,
             session = requireNotNull(session),
             sizeBytes = bytes.size.toLong(),
             initialLoadMs = elapsedNs / 1_000_000.0,
         )
-        sessionCache[assetName] = loaded
+        sessionCache[loaded.cacheKey] = loaded
         return ModelAssetStat(
             assetName = assetName,
             sizeBytes = loaded.sizeBytes,
@@ -151,7 +157,30 @@ class Tn5000OrtEngine(
         )
     }
 
-    private fun runSession(session: OrtSession, chw: FloatArray): FloatArray {
+    private fun sessionCacheKey(assetName: String, runtimeProfile: OrtRuntimeProfile): String {
+        return "${runtimeProfile.name}::$assetName"
+    }
+
+    private fun createSessionOptions(runtimeProfile: OrtRuntimeProfile): OrtSession.SessionOptions {
+        return OrtSession.SessionOptions().apply {
+            setOptimizationLevel(OrtSession.SessionOptions.OptLevel.ALL_OPT)
+            runtimeProfile.intraOpThreads?.let { setIntraOpNumThreads(it) }
+            runtimeProfile.interOpThreads?.let { setInterOpNumThreads(it) }
+            if (runtimeProfile.useXnnpack) {
+                val threads = runtimeProfile.intraOpThreads?.toString() ?: "4"
+                addXnnpack(mapOf("intra_op_num_threads" to threads))
+            }
+            if (runtimeProfile.useNnapi) {
+                val flags = EnumSet.noneOf(NNAPIFlags::class.java)
+                if (runtimeProfile.nnapiUseFp16) flags.add(NNAPIFlags.USE_FP16)
+                if (runtimeProfile.nnapiUseNchw) flags.add(NNAPIFlags.USE_NCHW)
+                addNnapi(flags)
+            }
+        }
+    }
+
+    private fun runSession(session: OrtSession, chw: FloatArray, inputSize: Int): FloatArray {
+        val inputShape = longArrayOf(1, 3, inputSize.toLong(), inputSize.toLong())
         val inputTensor = OnnxTensor.createTensor(environment, FloatBuffer.wrap(chw), inputShape)
         inputTensor.use { tensor ->
             session.run(mapOf("image" to tensor)).use { outputs ->

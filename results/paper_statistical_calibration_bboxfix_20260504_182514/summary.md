@@ -1,6 +1,6 @@
 # Statistical and calibration supplement
 
-Output directory: `C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\paper_statistical_calibration_bboxfix_20260504_182514`
+Output directory: `<LOCAL_THYROID_ROOT>\eval_reports\paper_statistical_calibration_bboxfix_20260504_182514`
 
 ## Main UL-TransXNet uncertainty/calibration
 - TN5000: AUC 0.9483 [0.9475, 0.9488], BalAcc 0.8726 [0.8662, 0.8771], ECE 0.0220, Brier 0.0741
