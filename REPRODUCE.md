@@ -83,6 +83,23 @@ It can be regenerated from the private local experiment workspace with:
 python scripts/build_provenance_release.py --thyroid-root <LOCAL_THYROID_ROOT>
 ```
 
+After the release files are present, manuscript benchmark tables must be
+recomputed from prediction probabilities plus the frozen paper-log label
+snapshot. Do not reuse the `true_label` columns embedded in historical
+prediction CSVs, because some old logs came from earlier label snapshots.
+
+```powershell
+python scripts/recompute_paperlog_label_metrics.py --thyroid-root <LOCAL_THYROID_ROOT>
+python scripts/update_paperlog_complexity_figures.py
+python scripts/update_manifest.py
+```
+
+The recomputed tables and label-mismatch audit are written to:
+
+```text
+results/provenance_release_20260510/predictions/recomputed_paperlog_labels/
+```
+
 External users should treat the checked-in CSVs as the release artifact; the
 command above requires the local private experiment tree and does not download
 or redistribute image data.

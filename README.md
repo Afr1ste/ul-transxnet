@@ -34,6 +34,7 @@ These restrictions avoid redistributing third-party dataset images and large mod
 - `MODEL_SELECTION_PROTOCOL.md`: validation-only selection rule, selected row, and source-checksum index.
 - `RESULTS_PROVENANCE.md`: table/figure provenance map.
 - `results/provenance_release_20260510/`: public label snapshot, per-case predictions, ROI robustness predictions, BUSI duplicate audit, Android two-device repeat, and release-level SHA256 manifest.
+- `results/provenance_release_20260510/predictions/recomputed_paperlog_labels/`: manuscript benchmark tables recomputed from prediction probabilities plus the frozen paper-log labels, including a label-mismatch audit for historical logs.
 - `results/no_retrain_revision_20260505/`: no-retrain revision tables and model-selection source index.
 - `results/high_roi_no_retrain_20260505/`: TN5000 oracle/automatic/full-image probe, localization-robustness probes, case-level diagnostic statistics, and reliability-diagram source bins.
 - `results/frozen_source_logs/`: copied source CSVs from frozen completed-result logs.
@@ -41,7 +42,7 @@ These restrictions avoid redistributing third-party dataset images and large mod
 
 ## Provenance Boundary
 
-The 2026-05-10 release uses a frozen paper-log analysis-label snapshot. The public case manifest and prediction CSVs are in `results/provenance_release_20260510/`. Dataset images, generated ROI folders, model checkpoints, detector weights, ONNX exports, APKs, and raw training logs are not redistributed. The package supports table regeneration and provenance audit, not full dataset mirroring.
+The 2026-05-10 release uses a frozen paper-log analysis-label snapshot. The public case manifest and prediction CSVs are in `results/provenance_release_20260510/`. Manuscript benchmark values are recomputed by `scripts/recompute_paperlog_label_metrics.py`, which overrides historical prediction-file labels with the frozen snapshot and writes an explicit mismatch audit. Dataset images, generated ROI folders, model checkpoints, detector weights, ONNX exports, APKs, and raw training logs are not redistributed. The package supports table regeneration and provenance audit, not full dataset mirroring.
 
 ## Reproduction Entry Points
 

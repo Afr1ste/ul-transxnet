@@ -180,7 +180,7 @@ Models are trained with the same ROI construction, label mapping, metric computa
 
 The detector-derived ROI condition uses diagnosis-agnostic one-class YOLO11n lesion detectors trained only to localize lesion boxes. TN5000 detectors are trained on the official train split for three seeds, with validation on the official validation split and final localization/classification evaluation on the official test split. BUSI and AUL use one detector per training fold and evaluate detector boxes on the fixed held-out test set. Detector training uses 80 epochs, 640-pixel detector input, the best validation checkpoint, confidence threshold 0.001 at inference, IoU/NMS threshold 0.7 for the TN5000 pipeline, and the highest-confidence predicted box. If no box is returned, the auto-ROI evaluator records a no-detection case and falls back to the full image for the downstream crop. Detector weights are used only as an auxiliary front end; they are not presented as a detection-method contribution.
 
-The main metrics are AUC, balanced accuracy (BalAcc), macro F1, accuracy, sensitivity, specificity, PPV, NPV, calibration error, and Brier score. For new robustness, mobile, and cross-protocol analyses, we use a frozen file-level analysis-label snapshot associated with the final reported runs and report confidence intervals by bootstrap resampling over test cases. This snapshot is kept separate from the descriptive dataset-statistics counts in Table~\ref{tab:datasets}. Because BUSI/AUL reuse a fixed held-out test set across five training folds and TN5000 repeated runs use the same official test set, the seed/fold standard deviations in benchmark tables quantify training-run variability on a fixed test population rather than independent outer-fold uncertainty. Strong ImageNet initialization, EMA, checkpoint averaging, and TTA can further reduce repeated-run AUC variance; case-level confidence intervals are therefore reported separately. The release package is organized around manifest files rather than aggregate counts: each case record contains the relative image path, original label, analysis label, split or fold, lesion box coordinates where available, exclusion flag, and the manifest hash used by the corresponding result table. Per-case prediction CSV files are linked to the same identifiers so that table metrics can be regenerated from case-level outputs.
+The main metrics are AUC, balanced accuracy (BalAcc), macro F1, accuracy, sensitivity, specificity, PPV, NPV, calibration error, and Brier score. All current benchmark, robustness, mobile, and cross-protocol analyses use a frozen file-level analysis-label snapshot associated with the final reported runs, and confidence intervals are reported by bootstrap resampling over test cases where appropriate. Historical prediction CSVs are used for probabilities and predictions, but their embedded label columns are not treated as authoritative when they differ from the frozen snapshot; those differences are recorded in the public mismatch audit. This snapshot is kept separate from the descriptive dataset-statistics counts in Table~\ref{tab:datasets}. Because BUSI/AUL reuse a fixed held-out test set across five training folds and TN5000 repeated runs use the same official test set, the seed/fold standard deviations in benchmark tables quantify training-run variability on a fixed test population rather than independent outer-fold uncertainty. Strong ImageNet initialization, EMA, checkpoint averaging, and TTA can further reduce repeated-run AUC variance; case-level confidence intervals are therefore reported separately. The release package is organized around manifest files rather than aggregate counts: each case record contains the relative image path, original label, analysis label, split or fold, lesion box coordinates where available, exclusion flag, and the manifest hash used by the corresponding result table. Per-case prediction CSV files are linked to the same identifiers so that table metrics can be regenerated from case-level outputs.
 
 \subsection{Compared protocols}
 
@@ -218,7 +218,7 @@ The experiments are grouped into four evidence blocks. First, full-factorial TN5
 
 \subsection{Dataset-specific benchmark and model-family context}
 
-Table~\ref{tab:main_benchmark} summarizes the dataset-specific benchmark results that motivate the later robustness and deployment analyses. The result should be read as multi-organ public benchmark evidence under dataset-specific training, not as zero-shot transfer. On TN5000, ConvNeXt-Tiny remains slightly stronger at the validation-selected operating point. On BUSI and AUL, the TransXNet-family model gives clearer gains over the strongest comparison baseline in this reporting set.
+Table~\ref{tab:main_benchmark} summarizes the dataset-specific benchmark results that motivate the later robustness and deployment analyses. The result should be read as multi-organ public benchmark evidence under dataset-specific training, not as zero-shot transfer. Under the frozen paper-log analysis-label snapshot, UL-TransXNet is slightly ahead of the strongest comparison baseline on TN5000 and BUSI, whereas Swin-T remains stronger on AUL. This mixed result is important: the teacher family is useful for the robustness and distillation analysis, but it is not a universal winner on every organ-specific benchmark.
 
 \begin{table}[!htbp]
     \centering
@@ -230,20 +230,20 @@ Table~\ref{tab:main_benchmark} summarizes the dataset-specific benchmark results
         \toprule
         Dataset & Method & AUC & BalAcc & F1 & Acc \\
         \midrule
-        TN5000 & UL-TransXNet & 0.9483 $\pm$ 0.0006 & 0.8726 $\pm$ 0.0046 & 0.8503 $\pm$ 0.0123 & 0.8790 $\pm$ 0.0140 \\
-        TN5000 & ConvNeXt-Tiny & \textbf{0.9508 $\pm$ 0.0020} & \textbf{0.8794 $\pm$ 0.0023} & \textbf{0.8731 $\pm$ 0.0066} & \textbf{0.8957 $\pm$ 0.0065} \\
+        TN5000 & UL-TransXNet & \textbf{0.9532 $\pm$ 0.0027} & \textbf{0.8851 $\pm$ 0.0113} & \textbf{0.8752 $\pm$ 0.0055} & \textbf{0.8967 $\pm$ 0.0068} \\
+        TN5000 & ConvNeXt-Tiny & 0.9508 $\pm$ 0.0020 & 0.8794 $\pm$ 0.0023 & 0.8731 $\pm$ 0.0066 & 0.8957 $\pm$ 0.0065 \\
         \midrule
-        BUSI & UL-TransXNet & \textbf{0.8998 $\pm$ 0.0116} & \textbf{0.7961 $\pm$ 0.0104} & \textbf{0.8018 $\pm$ 0.0119} & \textbf{0.8140 $\pm$ 0.0130} \\
+        BUSI & UL-TransXNet & \textbf{0.8485 $\pm$ 0.0030} & \textbf{0.7851 $\pm$ 0.0118} & \textbf{0.7695 $\pm$ 0.0190} & \textbf{0.7984 $\pm$ 0.0214} \\
         BUSI & Swin-T & 0.8190 $\pm$ 0.0091 & 0.7137 $\pm$ 0.0095 & 0.6896 $\pm$ 0.0300 & 0.7194 $\pm$ 0.0445 \\
         \midrule
-        AUL & UL-TransXNet & \textbf{0.8767 $\pm$ 0.0009} & \textbf{0.8200 $\pm$ 0.0487} & 0.7462 $\pm$ 0.0405 & 0.7685 $\pm$ 0.0418 \\
-        AUL & Swin-T & 0.8319 $\pm$ 0.0117 & 0.7783 $\pm$ 0.0325 & \textbf{0.7589 $\pm$ 0.0243} & \textbf{0.7717 $\pm$ 0.0211} \\
+        AUL & UL-TransXNet & 0.8248 $\pm$ 0.0043 & 0.7407 $\pm$ 0.0479 & 0.7215 $\pm$ 0.0630 & 0.7323 $\pm$ 0.0688 \\
+        AUL & Swin-T & \textbf{0.8319 $\pm$ 0.0117} & \textbf{0.7783 $\pm$ 0.0325} & \textbf{0.7589 $\pm$ 0.0243} & \textbf{0.7717 $\pm$ 0.0211} \\
         \bottomrule
     \end{tabular}
     \end{adjustbox}
 \end{table}
 
-Because the method is built from the TransXNet family, Table~\ref{tab:original_transxnet_delta} reports the direct comparison with the original TransXNet under the same dataset-specific protocol. The final model is not a TN5000 AUC improvement over original TransXNet; its value is the broader multi-dataset and operating-point behavior, especially on BUSI and AUL. This is why the later analysis treats the teacher as a design space rather than as a single monotonic upgrade.
+Because the method is built from the TransXNet family, Table~\ref{tab:original_transxnet_delta} reports the direct comparison with the original TransXNet under the same dataset-specific protocol. After recomputing all rows against the frozen paper-log labels, UL-TransXNet improves AUC over original TransXNet on all three datasets and improves BalAcc on TN5000 and BUSI, but AUL BalAcc is slightly lower. This is why the later analysis treats the teacher as a design space rather than as a single monotonic upgrade.
 
 \begin{table}[!htbp]
     \centering
@@ -257,9 +257,9 @@ Because the method is built from the TransXNet family, Table~\ref{tab:original_t
         \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
         & AUC & BalAcc & AUC & BalAcc & AUC & BalAcc \\
         \midrule
-        TN5000 & 0.9495 & 0.8697 & 0.9483 & 0.8726 & -0.0012 & +0.0028 \\
-        BUSI & 0.7227 & 0.6560 & 0.8998 & 0.7961 & +0.1770 & +0.1401 \\
-        AUL & 0.6582 & 0.6263 & 0.8767 & 0.8200 & +0.2186 & +0.1937 \\
+        TN5000 & 0.9483 & 0.8726 & 0.9532 & 0.8851 & +0.0049 & +0.0125 \\
+        BUSI & 0.7910 & 0.7149 & 0.8485 & 0.7851 & +0.0575 & +0.0702 \\
+        AUL & 0.7934 & 0.7444 & 0.8248 & 0.7407 & +0.0313 & -0.0037 \\
         \bottomrule
     \end{tabular}
     \end{adjustbox}
@@ -339,7 +339,7 @@ Table~\ref{tab:mobile} reports the mobile results. The TransXNet-family teacher 
         \midrule
         EfficientFormer-L1+KD & 0.9614 [0.9489, 0.9721] & 0.8800 [0.8600, 0.8998] & \textbf{0.9634} & \textbf{32.690} & \textbf{55.954} & 44.303 \\
         EfficientFormer-L1+ECA+KD & 0.9609 [0.9485, 0.9719] & \textbf{0.8883 [0.8662, 0.9102]} & 0.9576 & 34.853 & 56.159 & 44.304 \\
-        GGG-MCA teacher & 0.9483 & 0.8726 & 0.9433 & 130.551 & 168.450 & 53.458 \\
+        GGG-MCA teacher & 0.9532 & 0.8851 & 0.9433 & 130.551 & 168.450 & 53.458 \\
         \bottomrule
     \end{tabular}
     \end{adjustbox}

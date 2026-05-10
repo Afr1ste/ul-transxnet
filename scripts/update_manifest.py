@@ -40,6 +40,27 @@ def include(path: Path) -> bool:
 
 
 def main() -> None:
+    release_root = ROOT / "results" / "provenance_release_20260510"
+    if release_root.exists():
+        release_rows = []
+        for path in sorted(release_root.rglob("*")):
+            if not path.is_file() or path.name == "release_manifest.csv":
+                continue
+            release_rows.append(
+                {
+                    "path": path.relative_to(release_root).as_posix(),
+                    "size_bytes": path.stat().st_size,
+                    "sha256": sha256(path),
+                }
+            )
+        with (release_root / "release_manifest.csv").open(
+            "w", newline="", encoding="utf-8"
+        ) as f:
+            writer = csv.DictWriter(f, fieldnames=["path", "size_bytes", "sha256"])
+            writer.writeheader()
+            writer.writerows(release_rows)
+        print(f"Wrote release_manifest.csv with {len(release_rows)} files")
+
     rows = []
     for path in sorted(ROOT.rglob("*")):
         if not path.is_file() or not include(path):

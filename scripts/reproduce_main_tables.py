@@ -22,6 +22,8 @@ TABLE_GROUPS = {
     "busi_aul_auto_roi": ROOT / "results/busi_aul_closed_loop_auto_roi_bboxfix_20260504_182516",
     "android": ROOT / "results/android_paper_batch_20260501_162525",
     "provenance_release": ROOT / "results/provenance_release_20260510",
+    "recomputed_paperlog_labels": ROOT
+    / "results/provenance_release_20260510/predictions/recomputed_paperlog_labels",
 }
 
 

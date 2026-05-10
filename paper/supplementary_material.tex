@@ -63,12 +63,12 @@ The comparison pool uses the same ROI construction, augmentation family, validat
         MobileNetV3-Large & 256 & 4.86M & 0.28G & 3.17 & 0.8282 & 0.7947 & 0.7357 & 0.7862 & 0.7183 \\
         EfficientNet-B0 & 256 & 4.66M & 0.50G & 6.53 & 0.7856 & 0.7659 & 0.6099 & 0.7205 & 0.6682 \\
         EfficientFormer-L1 & 224 & 11.62M & 1.31G & 3.41 & 0.9249 & 0.7917 & 0.7196 & 0.8121 & 0.7330 \\
-        RepViT-M1.1 & 256 & 8.04M & 1.80G & 5.19 & 0.8403 & 0.8028 & 0.6797 & 0.7743 & 0.7020 \\
-        UL-TransXNet & 256 & 14.37M & 2.36G & 30.23 & 0.9483 & \textbf{0.8998} & \textbf{0.8767} & \textbf{0.9083} & \textbf{0.8296} \\
+        RepViT-M1.1 & 256 & 8.04M & 1.80G & 5.19 & 0.8403 & 0.8028 & 0.6797 & 0.7742 & 0.7020 \\
+        UL-TransXNet & 256 & 14.37M & 2.36G & 30.23 & \textbf{0.9532} & \textbf{0.8485} & 0.8248 & \textbf{0.8755} & \textbf{0.8037} \\
         DenseNet121 & 256 & 7.48M & 3.70G & 7.19 & 0.9360 & 0.8154 & 0.6729 & 0.8081 & 0.7401 \\
         ResNet50 & 256 & 24.56M & 5.40G & 3.25 & 0.6531 & 0.7519 & 0.5481 & 0.6510 & 0.6190 \\
-        ConvNeXt-Tiny & 256 & 28.21M & 5.82G & 3.30 & \textbf{0.9508} & 0.8050 & 0.8274 & 0.8611 & 0.7651 \\
-        Swin-T & 256 & 27.91M & 7.11G & 6.32 & 0.9497 & 0.8190 & 0.8319 & 0.8669 & 0.7901 \\
+        ConvNeXt-Tiny & 256 & 28.21M & 5.82G & 3.30 & 0.9508 & 0.8050 & 0.8274 & 0.8611 & 0.7651 \\
+        Swin-T & 256 & 27.91M & 7.11G & 6.32 & 0.9497 & 0.8190 & \textbf{0.8319} & 0.8669 & 0.7901 \\
         \bottomrule
     \end{tabular}
     \end{adjustbox}
@@ -98,19 +98,19 @@ The comparison pool uses the same ROI construction, augmentation family, validat
 \begin{table}[!htbp]
     \centering
     \small
-    \caption{Offline paired statistical comparison between UL-TransXNet and the strongest comparison baseline in the main benchmark table. These are repeated-run stability checks, not large-sample clinical significance tests.}
+    \caption{Offline paired statistical comparison between UL-TransXNet and the strongest comparison baseline in the main benchmark table after recomputation with the frozen paper-log labels. These are repeated-run stability checks, not large-sample clinical significance tests.}
     \label{tab:s_paired_stats}
     \begin{adjustbox}{max width=\textwidth}
     \begin{tabular}{lllcccc}
         \toprule
-        Dataset & Baseline & Metric & n & $\Delta$ & 95\% CI & p \\
+        Dataset & Baseline & Metric & n & $\Delta$ & Run-delta range & p \\
         \midrule
-        TN5000 & ConvNeXt-Tiny & AUC & 3 & -0.0025 & [-0.0040, -0.0006] & 0.2500 \\
-        TN5000 & ConvNeXt-Tiny & BalAcc & 3 & -0.0068 & [-0.0104, -0.0022] & 0.2500 \\
-        BUSI & Swin-T & AUC & 5 & +0.0807 & [0.0697, 0.0918] & 0.0625 \\
-        BUSI & Swin-T & BalAcc & 5 & +0.0823 & [0.0647, 0.0961] & 0.0625 \\
-        AUL & Swin-T & AUC & 5 & +0.0449 & [0.0375, 0.0574] & 0.0625 \\
-        AUL & Swin-T & BalAcc & 5 & +0.0417 & [0.0160, 0.0674] & 0.0625 \\
+        TN5000 & ConvNeXt-Tiny & AUC & 3 & +0.0024 & [-0.0024, +0.0051] & 1.0000 \\
+        TN5000 & ConvNeXt-Tiny & BalAcc & 3 & +0.0058 & [-0.0023, +0.0215] & 1.0000 \\
+        BUSI & Swin-T & AUC & 5 & +0.0294 & [+0.0179, +0.0422] & 0.0625 \\
+        BUSI & Swin-T & BalAcc & 5 & +0.0714 & [+0.0460, +0.0989] & 0.0625 \\
+        AUL & Swin-T & AUC & 5 & -0.0071 & [-0.0189, +0.0203] & 0.3750 \\
+        AUL & Swin-T & BalAcc & 5 & -0.0376 & [-0.1117, +0.0869] & 0.3750 \\
         \bottomrule
     \end{tabular}
     \end{adjustbox}
@@ -148,12 +148,12 @@ The comparison pool uses the same ROI construction, augmentation family, validat
         \toprule
         Dataset & Input & AUC & BalAcc & F1 & Acc \\
         \midrule
-        BUSI & oracle & 0.8998 & 0.7961 & 0.8018 & 0.8140 \\
-        BUSI & auto & 0.8725 & 0.7839 & 0.7893 & 0.8031 \\
-        BUSI & full & 0.7737 & 0.6982 & 0.6915 & 0.7023 \\
-        AUL & oracle & 0.8767 & 0.8200 & 0.7462 & 0.7685 \\
-        AUL & auto & 0.8507 & 0.7593 & 0.6908 & 0.7165 \\
-        AUL & full & 0.7441 & 0.6805 & 0.6787 & 0.7512 \\
+        BUSI & oracle & 0.8485 & 0.7851 & 0.7695 & 0.7984 \\
+        BUSI & auto & 0.8393 & 0.7809 & 0.7667 & 0.7969 \\
+        BUSI & full & 0.7575 & 0.7064 & 0.6710 & 0.6961 \\
+        AUL & oracle & 0.8248 & 0.7407 & 0.7215 & 0.7323 \\
+        AUL & auto & 0.8094 & 0.7358 & 0.7124 & 0.7244 \\
+        AUL & full & 0.7104 & 0.6268 & 0.6307 & 0.6866 \\
         \bottomrule
     \end{tabular}
     \end{adjustbox}
@@ -197,16 +197,16 @@ The comparison pool uses the same ROI construction, augmentation family, validat
 \begin{table}[!htbp]
     \centering
     \small
-    \caption{Seed/fold-level uncertainty and calibration summary for UL-TransXNet on the original main test sets. ECE uses 10 confidence bins.}
+    \caption{Case-level uncertainty and calibration summary for seed/fold-averaged UL-TransXNet predictions recomputed with the frozen paper-log labels. ECE uses 10 confidence bins.}
     \label{tab:s_calibration_uncertainty}
     \begin{adjustbox}{max width=\textwidth}
     \begin{tabular}{lcccc}
         \toprule
         Dataset & AUC 95\% CI & BalAcc 95\% CI & ECE & Brier \\
         \midrule
-        TN5000 & 0.9483 [0.9475, 0.9488] & 0.8726 [0.8662, 0.8771] & 0.0220 & 0.0741 \\
-        BUSI & 0.8998 [0.8880, 0.9067] & 0.7961 [0.7865, 0.8045] & 0.0696 & 0.1358 \\
-        AUL & 0.8767 [0.8759, 0.8776] & 0.8200 [0.7755, 0.8599] & 0.1283 & 0.1597 \\
+        TN5000 & 0.960 [0.946, 0.973] & 0.909 [0.892, 0.930] & 0.0226 & 0.0662 \\
+        BUSI & 0.850 [0.756, 0.932] & 0.800 [0.746, 0.884] & 0.0538 & 0.1770 \\
+        AUL & 0.826 [0.733, 0.903] & 0.832 [0.760, 0.902] & 0.1474 & 0.1979 \\
         \bottomrule
     \end{tabular}
     \end{adjustbox}
@@ -222,9 +222,9 @@ The comparison pool uses the same ROI construction, augmentation family, validat
         \toprule
         Dataset & AUC & Sens. & Spec. & PPV & NPV & ECE/Brier \\
         \midrule
-        TN5000 & 0.9540 [0.9381, 0.9676] & 0.8750 & 0.8828 & 0.9559 & 0.7085 & 0.024/0.068 \\
-        BUSI & 0.9023 [0.8429, 0.9494] & 0.7115 & 0.8961 & 0.8222 & 0.8214 & 0.104/0.132 \\
-        AUL & 0.8752 [0.8114, 0.9276] & 0.7660 & 1.0000 & 1.0000 & 0.6000 & 0.104/0.156 \\
+        TN5000 & 0.960 [0.946, 0.973] & 0.893 & 0.925 & 0.968 & 0.772 & 0.023/0.066 \\
+        BUSI & 0.850 [0.756, 0.932] & 0.711 & 0.890 & 0.730 & 0.880 & 0.054/0.177 \\
+        AUL & 0.826 [0.733, 0.903] & 0.892 & 0.773 & 0.881 & 0.791 & 0.147/0.198 \\
         \bottomrule
     \end{tabular}
     \end{adjustbox}

@@ -1,55 +1,27 @@
 # BUSI/AUL closed-loop ROI classification summary
 
-## BUSI
-### oracle
-- auc: 0.8998 +/- 0.0129
-- bal_acc: 0.7961 +/- 0.0116
-- f1_macro: 0.8018 +/- 0.0133
-- acc: 0.8140 +/- 0.0145
-- recall_0: 0.8883 +/- 0.0407
-- recall_1: 0.7038 +/- 0.0375
+This directory preserves the historical closed-loop prediction CSVs. The
+current manuscript does not use the embedded labels in those CSVs directly.
+Metrics are recomputed with the frozen paper-log analysis-label snapshot by:
 
-### auto
-- auc: 0.8725 +/- 0.0177
-- bal_acc: 0.7839 +/- 0.0201
-- f1_macro: 0.7893 +/- 0.0197
-- acc: 0.8031 +/- 0.0187
-- recall_0: 0.8831 +/- 0.0511
-- recall_1: 0.6846 +/- 0.0661
+```text
+scripts/recompute_paperlog_label_metrics.py
+```
 
-### full
-- auc: 0.7737 +/- 0.0049
-- bal_acc: 0.6982 +/- 0.0265
-- f1_macro: 0.6915 +/- 0.0422
-- acc: 0.7023 +/- 0.0467
-- recall_0: 0.7195 +/- 0.1413
-- recall_1: 0.6769 +/- 0.1012
+Authoritative recomputed outputs:
 
-## AUL
-### oracle
-- auc: 0.8767 +/- 0.0011
-- bal_acc: 0.8200 +/- 0.0545
-- f1_macro: 0.7462 +/- 0.0453
-- acc: 0.7685 +/- 0.0468
-- recall_0: 0.9273 +/- 0.1463
-- recall_1: 0.7128 +/- 0.0851
+```text
+results/provenance_release_20260510/predictions/recomputed_paperlog_labels/auto_roi_recomputed.csv
+results/provenance_release_20260510/predictions/recomputed_paperlog_labels/auto_roi_label_mismatch_audit.csv
+```
 
-### auto
-- auc: 0.8507 +/- 0.0248
-- bal_acc: 0.7593 +/- 0.0323
-- f1_macro: 0.6908 +/- 0.0627
-- acc: 0.7165 +/- 0.0797
-- recall_0: 0.8485 +/- 0.1469
-- recall_1: 0.6702 +/- 0.1523
+Current manuscript rows:
 
-### full
-- auc: 0.7441 +/- 0.0124
-- bal_acc: 0.6805 +/- 0.0239
-- f1_macro: 0.6787 +/- 0.0227
-- acc: 0.7512 +/- 0.0213
-- recall_0: 0.5333 +/- 0.0550
-- recall_1: 0.8277 +/- 0.0331
-
-## Outputs
-- per-fold CSV: `<LOCAL_THYROID_ROOT>\eval_reports\busi_aul_closed_loop_auto_roi_bboxfix_20260504_182516\closed_loop_per_fold.csv`
-- aggregate CSV: `<LOCAL_THYROID_ROOT>\eval_reports\busi_aul_closed_loop_auto_roi_bboxfix_20260504_182516\closed_loop_aggregate.csv`
+| Dataset | Input | AUC | BalAcc | F1 | Acc |
+|---|---|---:|---:|---:|---:|
+| BUSI | Oracle ROI | 0.8485 | 0.7851 | 0.7695 | 0.7984 |
+| BUSI | Detector ROI | 0.8393 | 0.7809 | 0.7667 | 0.7969 |
+| BUSI | Full image | 0.7575 | 0.7064 | 0.6710 | 0.6961 |
+| AUL | Oracle ROI | 0.8248 | 0.7407 | 0.7215 | 0.7323 |
+| AUL | Detector ROI | 0.8094 | 0.7358 | 0.7124 | 0.7244 |
+| AUL | Full image | 0.7104 | 0.6268 | 0.6307 | 0.6866 |

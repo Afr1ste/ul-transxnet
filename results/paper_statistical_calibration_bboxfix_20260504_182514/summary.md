@@ -1,14 +1,21 @@
 # Statistical and calibration supplement
 
-Output directory: `<LOCAL_THYROID_ROOT>\eval_reports\paper_statistical_calibration_bboxfix_20260504_182514`
+This directory preserves historical statistical-calibration artifacts. The
+current manuscript values are recomputed with the frozen paper-log
+analysis-label snapshot instead of trusting embedded labels in older prediction
+CSVs.
 
-## Main UL-TransXNet uncertainty/calibration
-- TN5000: AUC 0.9483 [0.9475, 0.9488], BalAcc 0.8726 [0.8662, 0.8771], ECE 0.0220, Brier 0.0741
-- BUSI: AUC 0.8998 [0.8880, 0.9067], BalAcc 0.7961 [0.7865, 0.8045], ECE 0.0696, Brier 0.1358
-- AUL: AUC 0.8767 [0.8759, 0.8776], BalAcc 0.8200 [0.7755, 0.8599], ECE 0.1283, Brier 0.1597
+Authoritative recomputed outputs:
 
-## Automatic ROI key paired deltas
-- BUSI auto-full: delta AUC 0.0988 [0.0833, 0.1100], delta BalAcc 0.0857 [0.0592, 0.1099]
-- BUSI auto-oracle: delta AUC -0.0273 [-0.0321, -0.0224], delta BalAcc -0.0122 [-0.0323, 0.0121]
-- AUL auto-full: delta AUC 0.1066 [0.0866, 0.1287], delta BalAcc 0.0789 [0.0621, 0.0981]
-- AUL auto-oracle: delta AUC -0.0260 [-0.0447, -0.0066], delta BalAcc -0.0607 [-0.0842, -0.0337]
+```text
+results/provenance_release_20260510/predictions/recomputed_paperlog_labels/calibration_uncertainty_recomputed.csv
+results/provenance_release_20260510/predictions/recomputed_paperlog_labels/case_level_ul_diagnostics_recomputed.csv
+```
+
+Current case-level calibration rows:
+
+| Dataset | AUC 95% CI | BalAcc 95% CI | ECE | Brier |
+|---|---|---|---:|---:|
+| TN5000 | 0.960 [0.946, 0.973] | 0.909 [0.892, 0.930] | 0.0226 | 0.0662 |
+| BUSI | 0.850 [0.756, 0.932] | 0.800 [0.746, 0.884] | 0.0538 | 0.1770 |
+| AUL | 0.826 [0.733, 0.903] | 0.832 [0.760, 0.902] | 0.1474 | 0.1979 |
