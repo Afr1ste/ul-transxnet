@@ -1,4 +1,0 @@
-seed,val_map50,val_map50_95,test_map50,test_map50_95,best_weights,auto_roi_eval_dir
-17,0.96123,0.65434,0.943,0.629,C:\Users\Afr1ste\PycharmProjects\Thyroid\tn5000_roi_detector_runs\yolo11n_tn5000_lesion_3seed_s17_20260502_130557\weights\best.pt,C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\tn5000_auto_roi_yolo11n_3seed_s17_20260502_130557
-27,0.96164,0.65232,0.961,0.645,C:\Users\Afr1ste\PycharmProjects\Thyroid\tn5000_roi_detector_runs\yolo11n_tn5000_lesion_3seed_s27_20260502_130557\weights\best.pt,C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\tn5000_auto_roi_yolo11n_3seed_s27_20260502_130557
-37,0.95178,0.65511,0.952,0.638,C:\Users\Afr1ste\PycharmProjects\Thyroid\tn5000_roi_detector_runs\yolo11n_tn5000_lesion_3seed_s37_20260502_130557\weights\best.pt,C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\tn5000_auto_roi_yolo11n_3seed_s37_20260502_130557

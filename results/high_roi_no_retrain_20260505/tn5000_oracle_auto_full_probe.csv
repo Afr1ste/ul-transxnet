@@ -1,4 +1,0 @@
-input,mode,auc,bal_acc,f1_macro,acc,sensitivity,specificity,threshold,source
-Oracle ROI,oracle,0.9464203209005376,0.8724798387096775,0.8298548094373865,0.856,0.8387096774193549,0.90625,0.84,C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\tn5000_auto_roi_bboxjitter_20260502_165253\auto_roi_classification_metrics.csv
-Automatic ROI,auto,0.9391302293346775,0.8674815188172043,0.8320408476658476,0.86,0.8521505376344086,0.8828125,0.77,C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\tn5000_auto_roi_bboxjitter_20260502_165253\auto_roi_classification_metrics.csv
-Full image,full,0.6490124117943549,0.599651377688172,0.5865121704047879,0.654,0.7110215053763441,0.48828125,0.57,C:\Users\Afr1ste\PycharmProjects\Thyroid\eval_reports\tn5000_auto_roi_bboxjitter_20260502_165253\auto_roi_classification_metrics.csv

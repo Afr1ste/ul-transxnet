@@ -1,4 +1,0 @@
-Place ONNX files here:
-- tn5000_current_mainline.onnx
-- tn5000_epoch060_bal_acc_0.9195.onnx
-- tn5000_epoch054_bal_acc_0.9169.onnx
