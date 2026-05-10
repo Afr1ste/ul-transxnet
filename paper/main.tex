@@ -218,12 +218,12 @@ The experiments are grouped into four evidence blocks. First, full-factorial TN5
 
 \subsection{Dataset-specific benchmark and model-family context}
 
-Table~\ref{tab:main_benchmark} summarizes the dataset-specific benchmark results that motivate the later robustness and deployment analyses. The result should be read as multi-organ public benchmark evidence under dataset-specific training, not as zero-shot transfer. Under the frozen paper-log analysis-label snapshot, UL-TransXNet is slightly ahead of the strongest comparison baseline on TN5000 and BUSI, whereas Swin-T remains stronger on AUL. This mixed result is important: the teacher family is useful for the robustness and distillation analysis, but it is not a universal winner on every organ-specific benchmark.
+Table~\ref{tab:main_benchmark} is retained only as an interim label-consistency audit while the strict paper-log-label rerun is in progress. These rows were recomputed from historical prediction probabilities after replacing stale embedded labels with the frozen paper-log analysis-label snapshot; they must not be treated as final benchmark evidence until the corresponding training, validation-threshold selection, and test evaluation have all been rerun from the same label snapshot. The final manuscript should replace this table with strict-rerun outputs.
 
 \begin{table}[!htbp]
     \centering
     \small
-    \caption{Main dataset-specific benchmark summary. Values are mean $\pm$ standard deviation over TN5000 seeds or BUSI/AUL training folds evaluated on the fixed held-out test sets. F1 denotes macro F1.}
+    \caption{Interim audit-only dataset-specific benchmark summary. Values are recomputed from historical prediction CSVs after applying the frozen paper-log labels and are placeholders pending a strict end-to-end rerun. F1 denotes macro F1.}
     \label{tab:main_benchmark}
     \begin{adjustbox}{max width=\columnwidth}
     \begin{tabular}{llcccc}
@@ -243,12 +243,12 @@ Table~\ref{tab:main_benchmark} summarizes the dataset-specific benchmark results
     \end{adjustbox}
 \end{table}
 
-Because the method is built from the TransXNet family, Table~\ref{tab:original_transxnet_delta} reports the direct comparison with the original TransXNet under the same dataset-specific protocol. After recomputing all rows against the frozen paper-log labels, UL-TransXNet improves AUC over original TransXNet on all three datasets and improves BalAcc on TN5000 and BUSI, but AUL BalAcc is slightly lower. This is why the later analysis treats the teacher as a design space rather than as a single monotonic upgrade.
+Because the method is built from the TransXNet family, Table~\ref{tab:original_transxnet_delta} records the corresponding interim audit for the original TransXNet comparison. This table has the same limitation as Table~\ref{tab:main_benchmark}: it checks label-source consistency in historical predictions, but it is not a replacement for strict end-to-end retraining on the frozen label snapshot.
 
 \begin{table}[!htbp]
     \centering
     \small
-    \caption{Original TransXNet versus UL-TransXNet under the same dataset-specific reporting protocol. $\Delta$ denotes UL-TransXNet minus TransXNet.}
+    \caption{Interim audit-only Original TransXNet versus UL-TransXNet comparison. $\Delta$ denotes UL-TransXNet minus TransXNet. Final values require strict end-to-end reruns from the frozen paper-log labels.}
     \label{tab:original_transxnet_delta}
     \begin{adjustbox}{max width=\columnwidth}
     \begin{tabular}{lcccccc}

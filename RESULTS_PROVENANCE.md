@@ -2,13 +2,34 @@
 
 This file records where the manuscript numbers were taken from during the 2026-05-04 consistency-refresh pass and the 2026-05-10 CMPB/provenance refresh. It is intended as an audit trail for revision and rebuttal work.
 
+## 2026-05-10 strict paper-log rerun
+
+The recomputed historical-prediction values generated on 2026-05-10 are now
+classified as audit-only. They are useful for proving which old prediction CSVs
+carried stale embedded labels, but they are not valid final benchmark evidence
+because the models were not trained, validated, and threshold-selected under the
+same frozen label snapshot.
+
+A strict rerun was therefore started in the private experiment workspace with
+`PAPER_LOG_LABEL_CSV` set to the frozen paper-log manifest for every child
+training process. The public manuscript tables must be replaced only after that
+rerun finishes and its provenance package is exported.
+
+Private rerun status surfaces:
+
+- Queue status: `<LOCAL_THYROID_ROOT>\paperlog_strict_main_rerun_queue_logs\paperlog_strict_main_rerun_queue_latest.status.json`
+- Queue checker: `<LOCAL_THYROID_ROOT>\check_paperlog_strict_main_rerun_status.py`
+- Label snapshot: `<LOCAL_THYROID_ROOT>\eval_reports\paper_log_label_reconstruction_20260505\paper_log_case_labels.csv`
+- Label snapshot SHA256: `4c5bffe475b89ba9c52ae1c19fd6558f2c6c3124719807828c936c1a18139bb1`
+
 ## 2026-05-10 CMPB/provenance refresh
 
-Critical label-source rule: all current manuscript benchmark rows that reuse
-historical prediction CSVs are recomputed from prediction probabilities plus
-the frozen paper-log analysis-label snapshot. The embedded `true_label` columns
-inside some old prediction CSVs are treated as audit inputs only, because they
-come from earlier label snapshots. The recomputation script and outputs are:
+Critical label-source rule: all manuscript benchmark rows must ultimately come
+from training, validation-threshold selection, and test evaluation performed
+under the same frozen paper-log analysis-label snapshot. Historical prediction
+CSVs recomputed with that snapshot are retained only as audit inputs; the
+embedded `true_label` columns inside some old prediction CSVs came from earlier
+label snapshots. The audit script and outputs are:
 `scripts/recompute_paperlog_label_metrics.py` and
 `results/provenance_release_20260510/predictions/recomputed_paperlog_labels/`.
 
