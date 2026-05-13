@@ -1,0 +1,3 @@
+protocol,tn5000_auc,busi_auc,aul_auc
+Joint multi-organ,0.9212 ? 0.0065,0.8324 ? 0.0192,0.7984 ? 0.0367
+LODO zero-shot,0.6261 ? 0.0557,0.7339 ? 0.0428,0.5936 ? 0.0344

@@ -1,0 +1,9 @@
+variant,mca,mudd,da,auc,bal_acc
+TransXNet-base,0,0,0,0.9456,0.8769
+TransXNet-DA,0,0,1,0.9447,0.8785
+TransXNet-MUDD,0,1,0,0.9511,0.8857
+TransXNet-MUDD+DA,0,1,1,0.9579,0.8901
+TransXNet-MCA,1,0,0,0.9465,0.8802
+TransXNet-MCA+DA,1,0,1,0.9441,0.8747
+TransXNet-MCA+MUDD,1,1,0,0.9555,0.8834
+UL-TransXNet,1,1,1,0.9522,0.8754

@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-05-05T21:23:59",
+  "snapshot_sha256_original_private_csv": "4C5BFFE475B89BA9C52AE1C19FD6558F2C6C3124719807828C936C1A18139BB1",
+  "public_snapshot_file": "analysis_label_snapshot.csv",
+  "source_file_count": 19,
+  "label_observation_count": 10140,
+  "unique_case_count": 6282,
+  "conflict_count": 0,
+  "expected_totals": {
+    "TN5000": {
+      "0": 1435,
+      "1": 3565
+    },
+    "BUSI": {
+      "0": 435,
+      "1": 212
+    },
+    "AUL": {
+      "0": 183,
+      "1": 452
+    }
+  },
+  "privacy_note": "Absolute local image paths and source log path lists were removed from the public CSV."
+}
