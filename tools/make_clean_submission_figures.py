@@ -9,14 +9,14 @@ matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
-from matplotlib.patches import FancyBboxPatch
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "paper"
 
 
-def box(ax, x, y, w, h, text, fc="#f7f7f7", ec="#222222", fs=8, lw=1.0):
+def box(ax, x, y, w, h, text, fc="#f7f7f7", ec="#222222", fs=8, lw=1.0, weight="normal"):
     patch = FancyBboxPatch(
         (x, y),
         w,
@@ -27,74 +27,150 @@ def box(ax, x, y, w, h, text, fc="#f7f7f7", ec="#222222", fs=8, lw=1.0):
         facecolor=fc,
     )
     ax.add_patch(patch)
-    ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=fs)
+    ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=fs, weight=weight)
     return patch
 
 
-def arrow(ax, x1, y1, x2, y2):
-    ax.annotate(
-        "",
-        xy=(x2, y2),
-        xytext=(x1, y1),
-        arrowprops=dict(arrowstyle="-|>", lw=1.6, color="#222222", shrinkA=2, shrinkB=2),
+def arrow(ax, x1, y1, x2, y2, color="#2b2b2b", lw=1.25, style="-|>", rad=0.0):
+    patch = FancyArrowPatch(
+        (x1, y1),
+        (x2, y2),
+        arrowstyle=style,
+        mutation_scale=10,
+        linewidth=lw,
+        color=color,
+        shrinkA=2,
+        shrinkB=2,
+        connectionstyle=f"arc3,rad={rad}",
     )
+    ax.add_patch(patch)
+    return patch
+
+
+def panel(ax, x, y, w, h, title, fc="#fbfbfb", ec="#d5d9de"):
+    patch = FancyBboxPatch(
+        (x, y),
+        w,
+        h,
+        boxstyle="round,pad=0.035,rounding_size=0.06",
+        linewidth=0.9,
+        edgecolor=ec,
+        facecolor=fc,
+    )
+    ax.add_patch(patch)
+    ax.text(x + 0.18, y + h - 0.22, title, ha="left", va="center", fontsize=8.5, weight="bold")
+    return patch
+
+
+def small_bar(ax, x, y, w, n, color):
+    gap = 0.025
+    bw = (w - gap * (n - 1)) / n
+    for i in range(n):
+        box(ax, x + i * (bw + gap), y, bw, 0.08, "", fc=color, ec=color, lw=0.2)
 
 
 def architecture() -> None:
-    fig, ax = plt.subplots(figsize=(11.2, 3.55))
-    ax.set_xlim(0, 14.75)
-    ax.set_ylim(0, 4.4)
+    plt.rcParams.update(
+        {
+            "font.family": "DejaVu Sans",
+            "axes.linewidth": 0.8,
+            "pdf.fonttype": 42,
+            "ps.fonttype": 42,
+        }
+    )
+    fig, ax = plt.subplots(figsize=(11.6, 4.9))
+    ax.set_xlim(0, 16.0)
+    ax.set_ylim(0, 7.2)
     ax.axis("off")
 
-    ax.text(0.25, 4.10, "Backbone flow", fontsize=9, weight="bold", ha="left", va="center")
-    box(ax, 0.25, 2.85, 1.2, 0.68, "ROI crop\n3 x 256 x 256", fc="#ffffff", fs=7.5)
-    arrow(ax, 1.48, 3.19, 1.90, 3.19)
+    blue = "#2f6f9f"
+    green = "#3f7d4a"
+    orange = "#b66b2d"
+    purple = "#7c5aa6"
+    gray = "#4a4a4a"
+
+    panel(ax, 0.25, 5.15, 15.45, 1.78, "A  ROI teacher backbone", fc="#f8fbfd")
+    box(ax, 0.58, 5.82, 1.25, 0.48, "Expanded\nROI crop", fc="#ffffff", ec="#6f7f8f", fs=7.2, lw=0.9, weight="bold")
+    ax.text(1.20, 5.62, "3 x 256 x 256", ha="center", va="center", fontsize=6.6, color=gray)
+    arrow(ax, 1.86, 6.06, 2.25, 6.06, color=gray, lw=1.1)
+    box(ax, 2.28, 5.73, 1.05, 0.64, "Patch\nembed", fc="#fff5e7", ec="#c88b4a", fs=7.0, lw=0.9)
+    arrow(ax, 3.35, 6.06, 3.72, 6.06, color=gray, lw=1.1)
 
     stages = [
-        ("Stage 1", "C=48, s=4", "4 blocks"),
-        ("Stage 2", "C=96, s=8", "4 blocks"),
-        ("Stage 3", "C=224, s=16", "15 blocks"),
-        ("Stage 4", "C=448, s=32", "4 blocks"),
+        ("Stage 1", "C=48", "stride 4", "4 blocks", "#e8f1fb"),
+        ("Stage 2", "C=96", "stride 8", "4 blocks", "#e8f6ef"),
+        ("Stage 3", "C=224", "stride 16", "15 blocks", "#fff3e8"),
+        ("Stage 4", "C=448", "stride 32", "4 blocks", "#f1ecfb"),
     ]
-    x = 1.95
-    for i, (title, dim, depth) in enumerate(stages):
-        box(ax, x, 2.62, 1.75, 1.08, "", fc="#fbfbfb", ec="#333333", lw=1.0)
-        ax.text(x + 0.875, 3.47, title, ha="center", va="center", fontsize=8.6, weight="bold")
-        ax.text(x + 0.875, 3.17, dim, ha="center", va="center", fontsize=7.6)
-        ax.text(x + 0.875, 2.89, depth, ha="center", va="center", fontsize=7.4, color="#444444")
+    x = 3.78
+    for i, (title, channels, stride, depth, fc) in enumerate(stages):
+        box(ax, x, 5.58, 1.48, 0.95, "", fc=fc, ec="#66717d", lw=0.9)
+        ax.text(x + 0.74, 6.32, title, ha="center", va="center", fontsize=7.8, weight="bold")
+        ax.text(x + 0.74, 6.08, channels + ", " + stride, ha="center", va="center", fontsize=6.8, color="#333333")
+        ax.text(x + 0.74, 5.84, depth, ha="center", va="center", fontsize=6.7, color="#4d4d4d")
+        small_bar(ax, x + 0.22, 5.66, 1.04, min(6, int(depth.split()[0])), "#5d748c")
         if i < len(stages) - 1:
-            arrow(ax, x + 1.78, 3.19, x + 2.08, 3.19)
-        x += 2.1
+            arrow(ax, x + 1.50, 6.06, x + 1.78, 6.06, color=gray, lw=1.1)
+        x += 1.78
 
-    arrow(ax, 10.38, 3.19, 10.75, 3.19)
-    box(ax, 10.82, 2.88, 0.95, 0.62, "GAP", fc="#dfefff", fs=8)
-    arrow(ax, 11.78, 3.19, 12.10, 3.19)
-    box(ax, 12.12, 2.88, 1.23, 0.62, "1000-D\nprojection", fc="#e9f4ff", fs=7.4)
-    arrow(ax, 13.36, 3.19, 13.63, 3.19)
-    box(ax, 13.66, 2.88, 0.85, 0.62, "MLP\n2-way", fc="#e9f4ff", fs=7.4)
+    arrow(ax, 10.88, 6.06, 11.24, 6.06, color=gray, lw=1.1)
+    box(ax, 11.28, 5.76, 0.76, 0.60, "GAP", fc="#e8f2ff", ec=blue, fs=7.1, lw=0.9)
+    arrow(ax, 12.07, 6.06, 12.37, 6.06, color=gray, lw=1.1)
+    box(ax, 12.42, 5.76, 1.28, 0.60, "1000-D task\nprojection", fc="#e8f2ff", ec=blue, fs=6.7, lw=0.9)
+    arrow(ax, 13.73, 6.06, 14.00, 6.06, color=gray, lw=1.1)
+    box(ax, 14.05, 5.76, 1.28, 0.60, "Binary head\nteacher logits", fc="#e8f2ff", ec=blue, fs=6.4, lw=0.9, weight="bold")
 
-    ax.text(0.25, 1.86, "Representative block and reported adaptations", fontsize=9, weight="bold", ha="left", va="center")
-    box(ax, 0.25, 0.38, 13.45, 1.18, "", fc="#fffdf8", ec="#333333", lw=1.0)
-    block_steps = [
-        (0.75, "Input", "#ffffff"),
-        (1.65, "DPE", "#ffe8d6"),
-        (2.52, "Norm", "#f6f6f6"),
-        (3.38, "Mixer", "#ead7ff"),
-        (4.82, "Residual", "#ffffff"),
-        (5.82, "Norm", "#f6f6f6"),
-        (6.70, "MS-FFN", "#d9edf7"),
-        (7.87, "Output", "#ffffff"),
+    panel(ax, 0.25, 2.53, 15.45, 2.32, "B  Representative block with modular adaptations", fc="#fdfcf9")
+    box(ax, 0.58, 3.50, 0.72, 0.40, "x", fc="#ffffff", ec="#777777", fs=7.8)
+    box(ax, 1.58, 3.43, 0.88, 0.54, "DPE", fc="#fff0de", ec=orange, fs=7.3, lw=0.9)
+    box(ax, 2.78, 3.43, 0.92, 0.54, "Norm", fc="#f3f4f5", ec="#8c8c8c", fs=7.0, lw=0.8)
+    box(ax, 4.02, 3.24, 1.72, 0.92, "Local-global\nmixer", fc="#efe8fb", ec=purple, fs=7.2, lw=0.9, weight="bold")
+    box(ax, 4.28, 3.31, 1.20, 0.22, "DA option", fc="#fff1e4", ec=orange, fs=5.9, lw=0.7)
+    box(ax, 6.20, 3.50, 0.44, 0.40, "+", fc="#ffffff", ec="#777777", fs=8.5)
+    box(ax, 7.05, 3.43, 0.92, 0.54, "Norm", fc="#f3f4f5", ec="#8c8c8c", fs=7.0, lw=0.8)
+    box(ax, 8.30, 3.24, 1.54, 0.92, "MS-FFN", fc="#e8f2ff", ec=blue, fs=7.5, lw=0.9, weight="bold")
+    box(ax, 10.30, 3.50, 0.44, 0.40, "+", fc="#ffffff", ec="#777777", fs=8.5)
+    box(ax, 11.28, 3.50, 0.80, 0.40, "y", fc="#ffffff", ec="#777777", fs=7.8)
+    for x1, x2 in [(1.30, 1.56), (2.46, 2.76), (3.70, 4.00), (5.76, 6.18), (6.66, 7.02), (7.98, 8.28), (9.86, 10.28), (10.76, 11.26)]:
+        arrow(ax, x1, 3.70, x2, 3.70, color=gray, lw=1.0)
+    arrow(ax, 1.34, 3.93, 6.17, 3.93, color="#666666", lw=0.85, style="-", rad=0.0)
+    arrow(ax, 1.34, 3.93, 1.34, 3.72, color="#666666", lw=0.85, style="-", rad=0.0)
+    arrow(ax, 6.17, 3.93, 6.17, 3.73, color="#666666", lw=0.85, style="-|>", rad=0.0)
+    arrow(ax, 6.72, 3.93, 10.27, 3.93, color="#666666", lw=0.85, style="-", rad=0.0)
+    arrow(ax, 6.72, 3.93, 6.72, 3.72, color="#666666", lw=0.85, style="-", rad=0.0)
+    arrow(ax, 10.27, 3.93, 10.27, 3.73, color="#666666", lw=0.85, style="-|>", rad=0.0)
+
+    box(ax, 2.05, 2.82, 2.18, 0.33, "MCA: coordinate refinement", fc="#e8f3ff", ec=blue, fs=6.7, lw=0.8)
+    arrow(ax, 3.16, 3.16, 3.16, 3.42, color=blue, lw=0.9)
+    box(ax, 4.58, 2.82, 2.55, 0.33, "MUDD: stage-local dense reuse", fc="#eaf7ea", ec=green, fs=6.7, lw=0.8)
+    arrow(ax, 5.88, 2.99, 4.80, 3.23, color=green, lw=0.9, rad=-0.15)
+    box(ax, 7.56, 2.82, 2.30, 0.33, "DA: differential attention", fc="#fff1e4", ec=orange, fs=6.7, lw=0.8)
+    arrow(ax, 8.70, 3.00, 5.35, 3.35, color=orange, lw=0.9, rad=0.14)
+    box(ax, 12.85, 3.22, 2.30, 0.92, "Validation-fixed\nvariant analysis", fc="#ffffff", ec="#6f7f8f", fs=7.1, lw=0.9)
+    arrow(ax, 12.10, 3.70, 12.82, 3.70, color=gray, lw=1.0)
+    ax.text(13.99, 2.95, "modules are enabled or disabled\nonly before test evaluation", ha="center", va="center", fontsize=6.3, color="#555555")
+
+    panel(ax, 0.25, 0.28, 15.45, 1.88, "C  Evaluation and deployment pathway", fc="#f9fbf8")
+    workflow = [
+        (0.62, 0.92, 1.58, "Teacher\nvariants", "#ffffff", "#6f7f8f"),
+        (2.60, 0.92, 2.00, "ROI robustness\nGT / noisy / detector", "#fff7ec", orange),
+        (5.08, 0.92, 1.58, "Case-level\npredictions", "#ffffff", "#6f7f8f"),
+        (7.14, 0.92, 1.42, "KD loss\nCE + KL", "#eef6ff", blue),
+        (9.04, 0.92, 2.12, "EfficientFormer-L1\n+ ECA student", "#e9f7ee", green),
+        (11.74, 0.92, 1.70, "ONNX / TFLite\nexport", "#ffffff", "#6f7f8f"),
+        (13.92, 0.92, 1.36, "Android\nlatency", "#eef6ff", blue),
     ]
-    for sx, label, color in block_steps:
-        box(ax, sx, 0.86, 0.82, 0.36, label, fc=color, fs=7.1)
-    for sx in [1.57, 2.44, 3.30, 4.20, 5.64, 6.62, 7.52]:
-        arrow(ax, sx, 1.04, sx + 0.20, 1.04)
+    for wx, wy, ww, text, fc, ec in workflow:
+        box(ax, wx, wy, ww, 0.58, text, fc=fc, ec=ec, fs=6.8, lw=0.85, weight="bold" if "student" in text else "normal")
+    for i in range(len(workflow) - 1):
+        x1 = workflow[i][0] + workflow[i][2]
+        x2 = workflow[i + 1][0]
+        arrow(ax, x1 + 0.03, 1.21, x2 - 0.03, 1.21, color=gray, lw=1.0)
+    ax.text(4.46, 0.62, "analysis claim", ha="center", va="center", fontsize=6.3, color=orange)
+    ax.text(10.10, 0.62, "deployment claim", ha="center", va="center", fontsize=6.3, color=green)
 
-    box(ax, 8.95, 1.02, 3.65, 0.34, "MCA: coordinate-aware refinement", fc="#e8f3ff", fs=7.3, ec="#4077aa")
-    box(ax, 8.95, 0.67, 3.65, 0.34, "MUDD: dynamic dense reuse", fc="#eaf7ea", fs=7.3, ec="#4f8f4f")
-    box(ax, 8.95, 0.32, 3.65, 0.34, "DA: differential attention", fc="#fff1e5", fs=7.3, ec="#bb6b2c")
-    ax.text(13.00, 0.84, "Enabled/disabled\nas model variants", fontsize=7.0, ha="left", va="center", color="#333333")
     fig.savefig(OUT / "fig_architecture_crop.pdf", bbox_inches="tight")
+    fig.savefig(OUT / "fig_architecture_crop.png", bbox_inches="tight", dpi=300)
     plt.close(fig)
 
 

@@ -113,7 +113,7 @@ The teacher is a TransXNet-family hierarchical local--global backbone. It follow
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.93\textwidth]{fig_architecture_crop.pdf}
-    \caption{TransXNet-family ROI teacher used for high-capacity ultrasound lesion classification. The teacher supports modular analysis of coordinate-aware refinement, multi-scale dynamic dense reuse, and differential attention before distillation into an efficient mobile student.}
+    \caption{Overview of the ROI teacher-analysis and mobile-distillation workflow. (A) The TransXNet-family teacher processes expanded lesion ROIs through a four-stage local--global backbone and a binary task head. (B) Modular adaptations are analyzed inside representative blocks under validation-fixed model selection. (C) Teacher variants support ROI-robustness evaluation and distillation into an EfficientFormer-L1+ECA student for Android measurement.}
     \label{fig:architecture}
 \end{figure}
 
