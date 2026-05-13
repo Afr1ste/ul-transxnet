@@ -1,0 +1,6 @@
+input_box,auc,bal_acc,mean_box_iou
+GT ROI,0.9623,0.9036,1.000
+GT ROI + 5% noise,0.9594,0.8969,0.899
+GT ROI + 10% noise,0.9556,0.8842,0.810
+GT ROI + 20% noise,0.9463,0.8665,0.662
+Detector ROI,0.9497,0.8849,0.789

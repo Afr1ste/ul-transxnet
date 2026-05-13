@@ -1,0 +1,4 @@
+dataset,transxnet_auc,transxnet_bal_acc,ul_transxnet_auc,ul_transxnet_bal_acc,delta_auc,delta_bal_acc
+TN5000,0.9467,0.8727,0.9537,0.8865,+0.0070,+0.0138
+BUSI,0.8136,0.7531,0.8494,0.7702,+0.0358,+0.0171
+AUL,0.7899,0.7566,0.8146,0.7611,+0.0247,+0.0045

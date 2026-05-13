@@ -1,0 +1,11 @@
+dataset,split_view,unique_cases,benign,malignant,matches_expected_total
+AUL,all,635,183,452,True
+AUL,trainval,508,139,369,
+AUL,test,127,44,83,
+BUSI,all,647,435,212,True
+BUSI,trainval,518,344,174,
+BUSI,test,129,91,38,
+TN5000,all,5000,1435,3565,True
+TN5000,train,3500,1032,2468,
+TN5000,val,500,122,378,
+TN5000,test,1000,281,719,

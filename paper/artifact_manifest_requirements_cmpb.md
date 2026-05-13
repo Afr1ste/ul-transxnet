@@ -1,0 +1,67 @@
+# Artifact and Manifest Requirements Before Submission
+
+This note records the non-negotiable reproducibility artifacts needed to defend the current manuscript.
+
+## Why this matters
+
+The manuscript reports both descriptive dataset counts and a frozen analysis-label snapshot used by the final robustness, mobile, and cross-protocol analyses. Aggregate counts are not sufficient to defend this distinction. Reviewers must be able to trace each table back to a file-level manifest and per-case predictions.
+
+## Required manifest columns
+
+Each dataset-level manifest should include:
+
+- `case_id`: stable unique identifier used in prediction CSV files.
+- `dataset`: TN5000, BUSI, or AUL.
+- `relative_image_path`: path relative to the dataset root, without redistributing the image itself.
+- `original_label`: label from the source dataset or source annotation.
+- `analysis_label`: label used by the reported analysis snapshot.
+- `split`: train, val, test, trainval, or fold-specific split name.
+- `fold`: fold index or empty for non-folded protocols.
+- `bbox_xmin`, `bbox_ymin`, `bbox_xmax`, `bbox_ymax`: lesion box if available.
+- `roi_expand_ratio`: crop expansion ratio used by the corresponding protocol.
+- `excluded`: true or false.
+- `exclusion_reason`: empty unless a case is excluded.
+- `source_manifest_hash`: hash of the upstream/source manifest or annotation file.
+- `analysis_manifest_hash`: hash of this frozen analysis manifest.
+
+## Required prediction CSV columns
+
+Each table-generating prediction CSV should include:
+
+- `case_id`
+- `dataset`
+- `split`
+- `fold_or_seed`
+- `model_name`
+- `protocol`
+- `y_true`
+- `prob_benign`
+- `prob_malignant`
+- `pred_label`
+- `threshold`
+- `temperature`
+- `checkpoint_id` or `ensemble_member`
+- `manifest_hash`
+
+## Required table provenance
+
+For every reported table, keep a small provenance record with:
+
+- table identifier, e.g. `Table 2`, `Table 5`, `Table 6`.
+- manifest hash.
+- prediction CSV path.
+- metric script path.
+- timestamp.
+- git commit or source archive hash if available.
+- exact label-count summary produced from the manifest.
+
+## Submission gate
+
+Before submission, the corresponding author should be able to regenerate each numerical table from:
+
+1. the file-level manifest,
+2. the prediction CSV files,
+3. the metric aggregation script,
+4. the table-generation script.
+
+If this chain is missing, the manuscript should still be treated as scientifically incomplete even if the PDF is polished.

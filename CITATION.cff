@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+title: "ROI-Robust Ultrasound Lesion Classification"
+message: "If you use this repository, please cite the associated manuscript and the original dataset providers."
+type: software
+authors:
+  - family-names: Li
+    given-names: Zihan
+  - family-names: Yang
+    given-names: Cong
+repository-code: "https://github.com/Afr1ste/ul-transxnet"
+license: "MIT"
+date-released: "2026-05-14"

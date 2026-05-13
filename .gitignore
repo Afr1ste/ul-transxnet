@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# LaTeX build products
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.spl
+*.synctex.gz
+
+# Local / large experiment artifacts
+data/
+datasets/
+checkpoints/
+weights/
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.apk
+logs/
+wandb/
+runs/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/

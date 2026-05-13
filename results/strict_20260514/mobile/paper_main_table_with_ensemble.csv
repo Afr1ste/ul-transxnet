@@ -1,0 +1,4 @@
+﻿Model,AUC_mean_std,BalAcc_mean_std,F1_mean_std,Acc_mean_std,TestEnsemble_AUC,TestEnsemble_BalAcc,TestEnsemble_F1,TestEnsemble_Acc
+EfficientFormer-L1+KD,0.9512 ± 0.0025,0.8681 ± 0.0013,0.8506 ± 0.0049,0.8737 ± 0.0059,0.9586,0.8781,0.8525,0.8730
+EfficientFormer-L1+ECA+KD,0.9502 ± 0.0058,0.8731 ± 0.0065,0.8447 ± 0.0072,0.8653 ± 0.0066,0.9568,0.8816,0.8675,0.8890
+EfficientFormer-L1+ECA,0.8954 ± 0.0408,0.8128 ± 0.0361,0.7854 ± 0.0350,0.8123 ± 0.0314,0.9270,0.8441,0.8121,0.8350

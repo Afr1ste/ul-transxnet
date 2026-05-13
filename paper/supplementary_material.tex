@@ -1,0 +1,233 @@
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{url}
+\usepackage{xurl}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\graphicspath{{./}}
+\hypersetup{hidelinks}
+
+\begin{document}
+
+\begin{frontmatter}
+\title{Supplementary Material for ``A Reproducible ROI-Robust Evaluation and Mobile Distillation Framework for Ultrasound Lesion Classification''}
+\end{frontmatter}
+
+\section*{S1. Result Provenance}
+
+This supplement retains only tables tied to the frozen analysis-label snapshot and removes earlier development tables that mixed earlier dataset labels, current XML labels, and intermediate analysis labels. All quantitative tables retained here use the snapshot below:
+\begin{quote}
+\path{eval_reports/paper_log_label_reconstruction_20260505/paper_log_case_labels.csv}\\
+SHA256: \texttt{4C5BFFE475B89BA9C52AE1C19FD6558F2C6C31247}\\
+\texttt{19807828C936C1A18139BB1}.
+\end{quote}
+The analysis-label counts are TN5000 1435/3565 benign/malignant, BUSI 435/212, and AUL 183/452. These counts are provenance for the reported analyses and do not overwrite the descriptive dataset-statistics counts in the main manuscript.
+
+\begin{table}[!htbp]
+    \centering
+    \small
+    \caption{Primary result sources used by the current manuscript. Internal run directories are archived in the reproducibility package; the manuscript reports functional model names rather than legacy experiment codes.}
+    \label{tab:s_sources}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lll}
+        \toprule
+        Evidence block & Archived source family & Notes \\
+        \midrule
+        Dataset-specific benchmark & Manifest-locked main reruns & TN5000 3 seeds; BUSI/AUL 5 folds \\
+        TransXNet-family module sweep & Manifest-locked TN5000 module reruns & 8 MCA/MUDD/DA combinations \\
+        ROI robustness & Manifest-locked box-noise and detector-ROI report & Same label CSV in run config \\
+        Mobile export/runtime & Manifest-locked TN5000 mobile export and two-device Android reports & Re-exported artifacts \\
+        Cross-organ probe & EfficientFormer joint/LODO aggregate report & 3 seeds \\
+        BUSI duplicate audit & Frozen-manifest duplicate audit & Descriptive only \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
+
+\section*{S2. Full Main Benchmark Context}
+
+\begin{table}[!htbp]
+    \centering
+    \small
+    \caption{Manifest-locked dataset-specific benchmark context. Values are mean $\pm$ standard deviation over TN5000 seeds or BUSI/AUL training folds evaluated on the fixed held-out test sets.}
+    \label{tab:s_main_context}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{llcccc}
+        \toprule
+        Dataset & Method & AUC & BalAcc & F1 & Acc \\
+        \midrule
+        TN5000 & UL-TransXNet & 0.9537 $\pm$ 0.0015 & 0.8865 $\pm$ 0.0064 & 0.8750 $\pm$ 0.0059 & 0.8960 $\pm$ 0.0075 \\
+        TN5000 & ConvNeXt-Tiny & 0.9508 $\pm$ 0.0020 & 0.8794 $\pm$ 0.0023 & 0.8731 $\pm$ 0.0066 & 0.8957 $\pm$ 0.0065 \\
+        TN5000 & Original TransXNet & 0.9467 $\pm$ 0.0009 & 0.8727 $\pm$ 0.0023 & 0.8578 $\pm$ 0.0120 & 0.8803 $\pm$ 0.0137 \\
+        \midrule
+        BUSI & UL-TransXNet & 0.8494 $\pm$ 0.0039 & 0.7702 $\pm$ 0.0076 & 0.7479 $\pm$ 0.0283 & 0.7752 $\pm$ 0.0383 \\
+        BUSI & Swin-T & 0.8190 $\pm$ 0.0091 & 0.7137 $\pm$ 0.0095 & 0.6896 $\pm$ 0.0300 & 0.7194 $\pm$ 0.0445 \\
+        BUSI & Original TransXNet & 0.8136 $\pm$ 0.0239 & 0.7531 $\pm$ 0.0303 & 0.7441 $\pm$ 0.0292 & 0.7814 $\pm$ 0.0304 \\
+        \midrule
+        AUL & UL-TransXNet & 0.8146 $\pm$ 0.0165 & 0.7611 $\pm$ 0.0283 & 0.7589 $\pm$ 0.0307 & 0.7827 $\pm$ 0.0329 \\
+        AUL & Swin-T & 0.8319 $\pm$ 0.0117 & 0.7783 $\pm$ 0.0325 & 0.7589 $\pm$ 0.0243 & 0.7717 $\pm$ 0.0211 \\
+        AUL & Original TransXNet & 0.7899 $\pm$ 0.0090 & 0.7566 $\pm$ 0.0456 & 0.7547 $\pm$ 0.0516 & 0.7795 $\pm$ 0.0539 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
+
+\section*{S3. TransXNet-family Design-space Details}
+
+\begin{table}[!htbp]
+    \centering
+    \small
+    \caption{TN5000 TransXNet-family ablation with seed variability. Values are mean $\pm$ standard deviation over three seeds.}
+    \label{tab:s_factorial_detail}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lcccc}
+        \toprule
+        Variant & AUC & BalAcc & F1 & Acc \\
+        \midrule
+        TransXNet-base & 0.9456 $\pm$ 0.0006 & 0.8769 $\pm$ 0.0014 & 0.8526 $\pm$ 0.0097 & 0.8733 $\pm$ 0.0107 \\
+        TransXNet-DA & 0.9447 $\pm$ 0.0024 & 0.8785 $\pm$ 0.0047 & 0.8732 $\pm$ 0.0075 & 0.8960 $\pm$ 0.0088 \\
+        TransXNet-MUDD & 0.9511 $\pm$ 0.0018 & 0.8857 $\pm$ 0.0071 & 0.8785 $\pm$ 0.0019 & 0.9000 $\pm$ 0.0022 \\
+        TransXNet-MUDD+DA & 0.9579 $\pm$ 0.0002 & 0.8901 $\pm$ 0.0080 & 0.8836 $\pm$ 0.0074 & 0.9043 $\pm$ 0.0063 \\
+        TransXNet-MCA & 0.9465 $\pm$ 0.0046 & 0.8802 $\pm$ 0.0068 & 0.8663 $\pm$ 0.0086 & 0.8880 $\pm$ 0.0085 \\
+        TransXNet-MCA+DA & 0.9441 $\pm$ 0.0040 & 0.8747 $\pm$ 0.0078 & 0.8593 $\pm$ 0.0094 & 0.8817 $\pm$ 0.0103 \\
+        TransXNet-MCA+MUDD & 0.9555 $\pm$ 0.0011 & 0.8834 $\pm$ 0.0013 & 0.8757 $\pm$ 0.0108 & 0.8973 $\pm$ 0.0119 \\
+        UL-TransXNet & 0.9522 $\pm$ 0.0009 & 0.8754 $\pm$ 0.0128 & 0.8652 $\pm$ 0.0004 & 0.8883 $\pm$ 0.0033 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
+
+\section*{S4. ROI Robustness}
+
+\begin{table}[!htbp]
+    \centering
+    \small
+    \caption{TN5000 AUC robustness context across the four models shown in the main robustness figure. The run configuration points to the frozen analysis-label CSV listed in Section S1.}
+    \label{tab:s_roi_robustness}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lccccc}
+        \toprule
+        Model & GT & 5\% noise & 10\% noise & 20\% noise & Detector \\
+        \midrule
+        TransXNet-MUDD+DA & 0.9623 & 0.9594 & 0.9556 & 0.9463 & 0.9497 \\
+        TransXNet-base & 0.9469 & 0.9445 & 0.9392 & 0.9292 & 0.9388 \\
+        ConvNeXt-Tiny & 0.9534 & 0.9533 & 0.9524 & 0.9483 & 0.9511 \\
+        Swin-T & 0.9506 & 0.9509 & 0.9488 & 0.9463 & 0.9481 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
+
+\begin{table}[!htbp]
+    \centering
+    \small
+    \caption{Exact TN5000 ROI robustness metrics for the strongest TransXNet-MUDD+DA teacher.}
+    \label{tab:s_roi_robustness_exact}
+    \begin{tabular}{lccc}
+        \toprule
+        Input box & AUC & BalAcc & Mean box IoU \\
+        \midrule
+        GT ROI & 0.9623 & 0.9036 & 1.000 \\
+        GT ROI + 5\% noise & 0.9594 & 0.8969 & 0.899 \\
+        GT ROI + 10\% noise & 0.9556 & 0.8842 & 0.810 \\
+        GT ROI + 20\% noise & 0.9463 & 0.8665 & 0.662 \\
+        Detector ROI & 0.9497 & 0.8849 & 0.789 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section*{S5. Android Runtime Details}
+
+\begin{table}[!htbp]
+    \centering
+    \small
+    \caption{Two-device Android runtime sweep for exported EfficientFormer artifacts. AUC is computed from exported predictions under the frozen analysis-label snapshot. Hot latency is end-to-end total latency in milliseconds.}
+    \label{tab:s_android_runtime}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{llllccc}
+        \toprule
+        Device & Artifact & Runtime & Android AUC & Hot total ms & Hot inference ms & P95 total ms \\
+        \midrule
+        Xiaomi 24129PN74C & ECA+KD & CPU default & 0.9552 & 31.312 & 30.024 & 34.023 \\
+        Xiaomi 24129PN74C & ECA+KD & CPU-4T & 0.9552 & 31.574 & 30.190 & 33.191 \\
+        Xiaomi 24129PN74C & ECA+KD & XNNPACK-4T & 0.9552 & 42.403 & 40.859 & 48.883 \\
+        Xiaomi 24129PN74C & ECA+KD & NNAPI & 0.9552 & 159.080 & 157.471 & 179.902 \\
+        Samsung SM-X800 & ECA+KD & CPU default & 0.9552 & 56.507 & 55.180 & 58.360 \\
+        Samsung SM-X800 & ECA+KD & CPU-4T & 0.9552 & 56.417 & 55.090 & 58.506 \\
+        Samsung SM-X800 & ECA+KD & XNNPACK-4T & 0.9552 & 107.141 & 105.773 & 112.055 \\
+        Samsung SM-X800 & ECA+KD & NNAPI & 0.9552 & 279.982 & 278.047 & 318.094 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
+
+\begin{table}[!htbp]
+    \centering
+    \small
+    \caption{Exported mobile-student comparison under CPU default runtime. Offline metrics are from the manifest-locked export summary; Android AUC and latency are from the two-device headless run.}
+    \label{tab:s_android_students}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lcccccc}
+        \toprule
+        Model & Offline AUC & Offline BalAcc & Android AUC & Xiaomi hot ms & Samsung hot ms & Threshold \\
+        \midrule
+        EfficientFormer-L1+ECA+KD & 0.9563 & 0.8792 & 0.9552 & 31.312 & 56.507 & 0.87 \\
+        EfficientFormer-L1+KD & 0.9522 & 0.8699 & 0.9511 & 40.364 & 56.477 & 0.83 \\
+        EfficientFormer-L1+ECA & 0.9305 & 0.8400 & 0.9278 & 40.517 & 60.254 & 0.49 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
+
+\section*{S6. Multi-organ Joint and LODO Details}
+
+\begin{table}[!htbp]
+    \centering
+    \small
+    \caption{EfficientFormer-L1 multi-organ probe. Values are mean $\pm$ standard deviation over three seeds.}
+    \label{tab:s_cross_organ_detail}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{llcc}
+        \toprule
+        Protocol & Test domain & AUC & BalAcc \\
+        \midrule
+        Joint multi-organ & TN5000 & 0.9212 $\pm$ 0.0065 & 0.8420 $\pm$ 0.0044 \\
+        Joint multi-organ & BUSI & 0.8324 $\pm$ 0.0192 & 0.7553 $\pm$ 0.0234 \\
+        Joint multi-organ & AUL & 0.7984 $\pm$ 0.0367 & 0.7318 $\pm$ 0.0262 \\
+        LODO zero-shot & TN5000 & 0.6261 $\pm$ 0.0557 & 0.5723 $\pm$ 0.0239 \\
+        LODO zero-shot & BUSI & 0.7339 $\pm$ 0.0428 & 0.6422 $\pm$ 0.0415 \\
+        LODO zero-shot & AUL & 0.5936 $\pm$ 0.0344 & 0.5356 $\pm$ 0.0572 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
+
+\section*{S7. BUSI Duplicate Audit}
+
+BUSI is retained in its public benchmark form for comparability, but we audited exact and near-duplicate candidates because duplicate or label-conflict images can inflate or distort small public ultrasound benchmarks. The audit below is descriptive; it does not change the main benchmark denominator.
+
+\begin{table}[!htbp]
+    \centering
+    \small
+    \caption{Descriptive BUSI duplicate and near-duplicate audit. The audit uses diagnostic labels from the frozen manifest.}
+    \label{tab:s_busi_duplicate_audit}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lcccl}
+        \toprule
+        Rule & Exact groups & Near-duplicate pairs & Label-conflict pairs & Audit artifact \\
+        \midrule
+        Strict ($\leq 2$) & 1 & 88 & 26 & \texttt{busi\_duplicate\_audit\_20260510\_manifestlabels\_threshold2.csv} \\
+        Relaxed ($\leq 5$) & 1 & 141 & 41 & \texttt{busi\_duplicate\_audit\_20260510\_manifestlabels\_threshold5.csv} \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
+
+\section*{S8. Removed Legacy Tables}
+
+This submission package intentionally removes earlier supplementary tables for CUDA trade-off, non-locked Android baselines, BUSI/AUL auto-ROI classification, and calibration. Those tables were useful during development, but they were produced before the final manifest discipline was enforced or before the Android threshold/label loader was fixed. They are not used as manuscript evidence. They should only be restored after regeneration from per-case prediction CSVs that reference the label snapshot and manifest hash in Section S1.
+
+\end{document}
