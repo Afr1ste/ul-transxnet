@@ -4,23 +4,25 @@
 \usepackage{adjustbox}
 \usepackage{url}
 \usepackage{xurl}
-\usepackage{hyperref}
 \usepackage{xcolor}
+\usepackage{float}
+\usepackage{needspace}
 
 \graphicspath{{./}}
-\hypersetup{hidelinks}
+\newcommand{\suppsection}[1]{\Needspace{0.35\textheight}\section*{#1}}
 
 \begin{document}
 
-\begin{frontmatter}
-\title{Supplementary Material for ``A Reproducible ROI-Robust Evaluation and Mobile Distillation Framework for Ultrasound Lesion Classification''}
-\end{frontmatter}
+\begin{center}
+{\Large\bfseries Supplementary Material for ``A Reproducible ROI-Robust Evaluation and Mobile Distillation Framework for Ultrasound Lesion Classification''\par}
+\end{center}
+\vspace{1em}
 
-\section*{S1. Result Provenance}
+\suppsection{S1. Result Provenance}
 
 This supplement retains only tables generated from the final fixed reporting protocol and removes earlier development tables that mixed preliminary data loaders, intermediate exports, and non-final runtime artifacts. The tables below are tied to the strict result folders distributed with the reproducibility package and use the functional model names reported in the main manuscript.
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \small
     \caption{Primary result sources used by the current manuscript. Internal run directories are archived in the reproducibility package; the manuscript reports functional model names rather than legacy experiment codes.}
@@ -41,9 +43,9 @@ This supplement retains only tables generated from the final fixed reporting pro
     \end{adjustbox}
 \end{table}
 
-\section*{S2. Full Main Benchmark Context}
+\suppsection{S2. Full Main Benchmark Context}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \small
     \caption{Dataset-specific benchmark context under the fixed reporting protocol. Values are mean $\pm$ standard deviation over TN5000 seeds or BUSI/AUL training folds evaluated on the fixed held-out test sets.}
@@ -69,9 +71,9 @@ This supplement retains only tables generated from the final fixed reporting pro
     \end{adjustbox}
 \end{table}
 
-\section*{S3. TransXNet-family Design-space Details}
+\suppsection{S3. TransXNet-family Design-space Details}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \small
     \caption{TN5000 TransXNet-family ablation with seed variability. Values are mean $\pm$ standard deviation over three seeds.}
@@ -94,9 +96,9 @@ This supplement retains only tables generated from the final fixed reporting pro
     \end{adjustbox}
 \end{table}
 
-\section*{S4. ROI Robustness}
+\suppsection{S4. ROI Robustness}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \small
     \caption{TN5000 AUC robustness context across the four models shown in the main robustness figure under the fixed reporting protocol.}
@@ -115,7 +117,7 @@ This supplement retains only tables generated from the final fixed reporting pro
     \end{adjustbox}
 \end{table}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \small
     \caption{Exact TN5000 ROI robustness metrics for the strongest TransXNet-MUDD+DA teacher.}
@@ -133,9 +135,9 @@ This supplement retains only tables generated from the final fixed reporting pro
     \end{tabular}
 \end{table}
 
-\section*{S5. Android Runtime Details}
+\suppsection{S5. Android Runtime Details}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \small
     \caption{Two-device Android runtime sweep for exported EfficientFormer artifacts. AUC is computed from exported predictions under the fixed TN5000 test protocol. Hot latency is end-to-end total latency in milliseconds.}
@@ -158,7 +160,7 @@ This supplement retains only tables generated from the final fixed reporting pro
     \end{adjustbox}
 \end{table}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \small
     \caption{Exported mobile-student comparison under CPU default runtime. Offline metrics are from the strict export summary; Android AUC and latency are from the two-device headless run.}
@@ -176,9 +178,9 @@ This supplement retains only tables generated from the final fixed reporting pro
     \end{adjustbox}
 \end{table}
 
-\section*{S6. Multi-organ Joint and LODO Details}
+\suppsection{S6. Multi-organ Joint and LODO Details}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \small
     \caption{EfficientFormer-L1 multi-organ probe. Values are mean $\pm$ standard deviation over three seeds.}
@@ -199,11 +201,11 @@ This supplement retains only tables generated from the final fixed reporting pro
     \end{adjustbox}
 \end{table}
 
-\section*{S7. BUSI Duplicate Audit}
+\suppsection{S7. BUSI Duplicate Audit}
 
 BUSI is retained in its public benchmark form for comparability, but we audited exact and near-duplicate candidates because duplicate or label-conflict images can inflate or distort small public ultrasound benchmarks. The audit below is descriptive; it does not change the main benchmark denominator.
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \small
     \caption{Descriptive BUSI duplicate and near-duplicate audit.}
@@ -220,7 +222,7 @@ BUSI is retained in its public benchmark form for comparability, but we audited 
     \end{adjustbox}
 \end{table}
 
-\section*{S8. Removed Legacy Tables}
+\suppsection{S8. Removed Legacy Tables}
 
 This submission package intentionally removes earlier supplementary tables for CUDA trade-off, non-final Android baselines, BUSI/AUL auto-ROI classification, and calibration. Those tables were useful during development, but they were produced before the final reporting discipline was enforced or before the Android threshold loader was fixed. They are not used as manuscript evidence. They should only be restored after regeneration from case-level prediction files tied to the same fixed split/protocol metadata as the main manuscript.
 
