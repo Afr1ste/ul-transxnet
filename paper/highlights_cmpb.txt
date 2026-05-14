@@ -1,6 +1,5 @@
 ROI ultrasound framework spans thyroid, breast, and liver datasets.
 Manifest-locked analyses use one frozen analysis-label snapshot.
 UL-TransXNet is competitive but not uniformly best across organs.
-Box-noise and detector-ROI tests quantify localization robustness.
-EfficientFormer-L1+ECA+KD reaches 0.9552 Android AUC at 31.3/56.5 ms.
-Joint multi-organ training is feasible; zero-shot LODO transfer remains weak.
+Box-noise, detector-ROI, and full-image tests quantify localization robustness.
+EfficientFormer-L1+ECA+KD reaches 0.9552 Android AUC on two devices.

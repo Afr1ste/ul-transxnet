@@ -44,12 +44,12 @@
             country={China}}
 
 \begin{abstract}
-\textbf{Background and Objective:}
+\textbf{Background and Objectives:}
 Ultrasound lesion classification is sensitive to lesion localization, domain-specific image appearance, and deployment constraints. Annotation-derived region-of-interest (ROI) crops often give strong classifier results, but they can overstate practical feasibility if localization error, model-selection provenance, and real-device latency are not evaluated.
 \textbf{Methods:}
-We present a reproducible ROI-based evaluation and mobile-distillation framework across thyroid, breast, and liver public datasets. The framework uses a TransXNet-family model as a high-capacity teacher and design-space probe, evaluates coordinate-aware refinement, multi-scale dynamic dense reuse, and differential attention under a validation-fixed protocol, and then distills efficient students for Android deployment. We separate oracle ROI, synthetic box perturbation, detector-derived ROI, full-image controls, dataset-specific training, joint multi-organ training, and leave-one-domain-out transfer.
+We present a reproducible ROI-based evaluation and mobile-distillation framework across thyroid, breast, and liver public datasets. A TransXNet-family teacher is used for design-space analysis of coordinate-aware refinement, multi-scale dynamic dense reuse, and differential attention under a validation-fixed protocol. EfficientFormer-L1 students are then distilled for Android deployment. We separate oracle ROI, synthetic box perturbation, detector-derived ROI, full-image controls, dataset-specific training, joint multi-organ training, and leave-one-domain-out transfer.
 \textbf{Results:}
-On TN5000, the manifest-locked dataset-specific analysis gives UL-TransXNet an AUC of 0.9537 and balanced accuracy of 0.8865, slightly above ConvNeXt-Tiny under the same reporting protocol. The same model improves over the original TransXNet on TN5000, BUSI, and AUL, although it does not exceed Swin-T on AUL. Full-factorial TN5000 ablation shows that TransXNet-MUDD+DA is the strongest teacher configuration (mean AUC 0.9579, balanced accuracy 0.8901), while coordinate-aware refinement is dataset-dependent rather than uniformly beneficial. The best robustness variant degrades gradually from GT ROIs to 5\%, 10\%, 20\% perturbed ROIs and detector boxes, with AUCs of 0.9623, 0.9594, 0.9556, 0.9463, and 0.9497, respectively. On Xiaomi and Samsung Android devices, the exported EfficientFormer-L1+ECA+KD student reaches 0.9552 Android TN5000 AUC with 31.3/56.5 ms hot end-to-end latency. Joint multi-organ EfficientFormer training remains feasible, but leave-one-domain-out transfer is weak. A BUSI duplicate audit further shows why the breast results should be interpreted as public-benchmark evidence rather than a cleaned clinical estimate.
+On TN5000, manifest-locked UL-TransXNet reaches AUC 0.9537 and balanced accuracy 0.8865, slightly above ConvNeXt-Tiny. It improves over the original TransXNet on all datasets, although Swin-T remains stronger on AUL. Full-factorial TN5000 ablation identifies TransXNet-MUDD+DA as the strongest teacher configuration (AUC 0.9579, balanced accuracy 0.8901), while coordinate-aware refinement is dataset-dependent. Robustness AUC degrades from 0.9623 with GT ROIs to 0.9463 with 20\% box noise and 0.9497 with detector boxes. On Xiaomi and Samsung Android devices, EfficientFormer-L1+ECA+KD reaches 0.9552 Android TN5000 AUC with 31.3/56.5 ms hot latency. Joint training is feasible, but leave-one-domain-out transfer is weak.
 \textbf{Conclusions:}
 The evidence supports ROI-robust ultrasound classification and a practical teacher-student mobile path, while identifying clear limits for zero-shot cross-organ transfer and clinical deployment readiness.
 \end{abstract}
@@ -113,7 +113,7 @@ The teacher is a TransXNet-family hierarchical local--global backbone. It follow
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.93\textwidth]{fig_architecture_crop.pdf}
-    \caption{Overview of the ROI teacher-analysis and mobile-distillation workflow. (A) The TransXNet-family teacher processes expanded lesion ROIs through a four-stage local--global backbone and a binary task head. (B) Modular adaptations are analyzed inside representative blocks under validation-fixed model selection. (C) Teacher variants support ROI-robustness evaluation and distillation into an EfficientFormer-L1+ECA student for Android measurement.}
+    \caption{Overview of the ROI teacher-analysis and mobile-distillation workflow. (A) The TransXNet-family teacher processes expanded lesion ROIs through a four-stage local--global backbone; each stage lists its spatial resolution, channel width, depth, attention heads, and spatial-reduction ratio. (B) The representative block shows where coordinate-aware refinement, dynamic dense reuse, and differential attention enter the ablated teacher variants. (C) Teacher variants support benchmark, ablation, ROI-robustness, and distillation evidence before Android measurement of the EfficientFormer-L1+ECA student.}
     \label{fig:architecture}
 \end{figure}
 
@@ -348,6 +348,13 @@ Table~\ref{tab:mobile} reports the mobile results after re-export and two-device
     \end{adjustbox}
 \end{table}
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.92\textwidth]{fig_mobile_tradeoff_crop.pdf}
+    \caption{Two-device Android feasibility summary. (a) The CPU-default exported students show the accuracy--latency trade-off on Xiaomi and Samsung devices. (b) For the final EfficientFormer-L1+ECA+KD student, CPU execution is faster than XNNPACK-4T and NNAPI on both measured devices.}
+    \label{fig:mobile_tradeoff}
+\end{figure}
+
 \subsection{Multi-organ joint training and transfer boundary}
 
 Table~\ref{tab:cross_organ} separates joint multi-organ training from true held-out-organ transfer. Joint training trains one shared EfficientFormer-L1 model and evaluates each dataset under its own test protocol. LODO tests whether a model trained without the target organ transfers directly to that held-out organ. Joint training remains feasible, but LODO AUCs of 0.5936--0.7339 show that zero-shot cross-organ generalization is weak. We therefore use the term multi-organ public benchmark evaluation, not cross-organ validation.
@@ -376,7 +383,7 @@ The results support a more defensible story than the initial ``new backbone'' fr
 
 The factorial ablation also changes the interpretation of the modules. MUDD and differential attention provide the most reliable TN5000 gain. MCA is not a universal AUC booster, even though it may still help some operating points and datasets. We therefore treat the TransXNet-family teacher as a design space, not as a single monotonic sequence where every added module improves every metric.
 
-The ROI robustness experiment is the strongest practical evidence in the current package. Detector boxes and moderate synthetic noise preserve much of the GT-ROI performance, suggesting that the classifier can tolerate plausible localization error. The detector-quality tables also show that the localization front end is not uniformly strong across organs, with AUL lower than TN5000 and BUSI. The detector should therefore be read as an auxiliary front end rather than a new detection contribution. A clinical workflow would still require prospective acquisition, failure-mode handling, and explicit human-review logic.
+The ROI robustness experiment is the strongest practical evidence in the current package. Detector boxes and moderate synthetic noise preserve much of the GT-ROI performance, suggesting that the classifier can tolerate plausible localization error. In the strict TN5000 detector-ROI table, the detector-derived boxes reach mean box IoU 0.789 and preserve 0.9497 AUC, but this remains an auxiliary front end rather than a new detection contribution. A clinical workflow would still require prospective acquisition, failure-mode handling, detector validation across sites and organs, and explicit human-review logic.
 
 The Android experiment similarly supports mobile feasibility but not clinical deployment. Measurements were made on one Xiaomi phone and one Samsung tablet, and runtime profile sweeps showed that CPU execution was faster than XNNPACK and NNAPI for the exported EfficientFormer-L1+ECA+KD artifact on both devices. This is important for reproducibility: a small parameter count does not guarantee fast Android inference, and delegate choice can reverse expected rankings.
 

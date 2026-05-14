@@ -66,14 +66,9 @@ def panel(ax, x, y, w, h, title, fc="#fbfbfb", ec="#d5d9de"):
 
 
 def architecture() -> None:
-    """Hand-authored SVG layout for the architecture workflow figure.
+    """Hand-authored SVG layout for the architecture workflow figure."""
 
-    The previous matplotlib layout was too close to a draft sketch.  This
-    routine keeps the diagram deterministic but uses fixed publication-oriented
-    SVG geometry so labels, arrows, and callouts cannot drift into each other.
-    """
-
-    width, height = 1280, 560
+    width, height = 1280, 650
     svg: list[str] = []
 
     def add(s: str) -> None:
@@ -114,10 +109,6 @@ def architecture() -> None:
         rect(x, y, w, h, fill=fill, stroke=stroke, sw=1.8, rx=7)
         text(x + w / 2, y + h / 2, label, size=size, weight=weight, line_gap=size + 3)
 
-    def badge(x, y, label, fill, stroke):
-        add(f'<circle cx="{x}" cy="{y}" r="10" fill="{fill}" stroke="{stroke}" stroke-width="1.5"/>')
-        text(x, y + 0.5, label, size=10, weight=700, color=stroke)
-
     add(
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
         f'viewBox="0 0 {width} {height}">'
@@ -134,7 +125,7 @@ def architecture() -> None:
 </defs>
 """
     )
-    add('<rect x="0" y="0" width="1280" height="560" fill="#ffffff"/>')
+    add(f'<rect x="0" y="0" width="{width}" height="{height}" fill="#ffffff"/>')
 
     blue, blue_fill = "#2b6f9f", "#eaf4ff"
     green, green_fill = "#3b7f4a", "#eaf7ed"
@@ -143,82 +134,84 @@ def architecture() -> None:
     gray_fill, panel_fill = "#f7f9fb", "#fbfcfd"
 
     # A. Teacher backbone.
-    rect(28, 24, 1224, 130, fill=panel_fill, stroke="#d4d9df", sw=1.3, rx=12)
-    title(48, 54, "A", "ROI teacher backbone")
-    y = 82
-    boxes = [
-        (56, y, 96, 48, ["Expanded", "ROI crop"], "#ffffff", "#6b7785", 13, 700),
-        (188, y, 88, 48, ["Patch", "embed"], orange_fill, orange, 13, 500),
-        (314, y - 8, 108, 64, ["Stage 1", "C=48", "4 blocks"], "#eef5fc", "#6b7785", 13, 700),
-        (456, y - 8, 108, 64, ["Stage 2", "C=96", "4 blocks"], "#edf8f1", "#6b7785", 13, 700),
-        (598, y - 8, 108, 64, ["Stage 3", "C=224", "15 blocks"], "#fff5e9", "#6b7785", 13, 700),
-        (740, y - 8, 108, 64, ["Stage 4", "C=448", "4 blocks"], purple_fill, "#6b7785", 13, 700),
-        (892, y, 70, 48, "GAP", blue_fill, blue, 13, 500),
-        (998, y, 122, 48, ["1000-D task", "projection"], blue_fill, blue, 13, 500),
-        (1156, y, 88, 48, ["Binary", "head"], blue_fill, blue, 13, 700),
-    ]
-    for bx, by, bw, bh, label, fill, stroke, size, weight in boxes:
-        box(bx, by, bw, bh, label, fill=fill, stroke=stroke, size=size, weight=weight)
-    text(104, 140, "3 x 256 x 256", size=11, color="#54606d")
-    for x1, x2 in [(154, 186), (278, 312), (424, 454), (566, 596), (708, 738), (850, 890), (964, 996), (1122, 1154)]:
-        line(x1, 106, x2, 106)
-    text(1212, 140, "teacher logits", size=11, color=blue)
+    rect(28, 24, 1224, 188, fill=panel_fill, stroke="#d4d9df", sw=1.3, rx=12)
+    title(48, 55, "A", "Teacher backbone: what each stage changes")
+    text(48, 83, "Input resolution is 256 x 256; spatial size halves after each stage.", size=12, color="#5b6672", anchor="start")
+
+    def stage_box(x, y, label, resolution, channels, depth, heads, sr, fill, stroke):
+        rect(x, y, 138, 86, fill=fill, stroke=stroke, sw=1.7, rx=8)
+        add(f'<line x1="{x}" y1="{y + 26}" x2="{x + 138}" y2="{y + 26}" stroke="{stroke}" stroke-width="1.2" opacity="0.65"/>')
+        text(x + 69, y + 14, label, size=14, weight=700, color="#1f2933")
+        text(x + 69, y + 39, resolution, size=12.5, weight=700, color="#26323d")
+        text(x + 69, y + 59, f"C={channels}  depth={depth}", size=11.5, color="#4d5965")
+        text(x + 69, y + 76, f"heads={heads}  SR={sr}", size=11, color="#6b7480")
+
+    y = 104
+    box(54, y + 8, 100, 62, ["Expanded ROI", "3 x 256 x 256"], fill="#ffffff", stroke="#6b7785", size=12, weight=600)
+    box(184, y + 8, 108, 62, ["Patch embed", "stride 4"], fill=orange_fill, stroke=orange, size=12, weight=600)
+    stage_box(324, y, "Stage 1", "64 x 64", "48", "4", "1", "8", "#eef5fc", blue)
+    stage_box(486, y, "Stage 2", "32 x 32", "96", "4", "2", "4", green_fill, green)
+    stage_box(648, y, "Stage 3", "16 x 16", "224", "15", "4", "2", orange_fill, orange)
+    stage_box(810, y, "Stage 4", "8 x 8", "448", "4", "8", "1", purple_fill, purple)
+    box(992, y + 8, 70, 62, ["Global", "pool"], fill=blue_fill, stroke=blue, size=12, weight=600)
+    box(1088, y + 8, 92, 62, ["1000-D", "task vector"], fill=blue_fill, stroke=blue, size=11.5, weight=600)
+    box(1202, y + 8, 38, 62, ["2", "logits"], fill=blue_fill, stroke=blue, size=11.5, weight=700)
+    for x1, x2 in [(156, 182), (294, 322), (464, 484), (626, 646), (788, 808), (950, 990), (1064, 1086), (1182, 1200)]:
+        line(x1, 143, x2, 143)
 
     # B. Block-level options.
-    rect(28, 176, 1224, 210, fill="#ffffff", stroke="#d4d9df", sw=1.3, rx=12)
-    title(48, 207, "B", "Block template and modular options")
-    by = 252
+    rect(28, 236, 1224, 244, fill="#ffffff", stroke="#d4d9df", sw=1.3, rx=12)
+    title(48, 268, "B", "Representative block: where the optional modules enter")
+    by = 382
+
+    # Stage-local memory is drawn above the main path so arrows do not cross the block sequence.
+    box(54, by - 74, 156, 46, ["Stage-local cache", "previous block features"], fill=green_fill, stroke=green, size=11.5, weight=600)
+    box(238, by - 74, 148, 46, ["MUDD option", "dynamic dense reuse"], fill=green_fill, stroke=green, size=11.5, weight=700)
+    line(212, by - 55, 236, by - 55, color=green)
+    line(312, by - 32, 312, by + 14, color=green)
+
     block_boxes = [
-        (60, by, 48, 36, "x", "#ffffff", "#79838f", 14, 500),
-        (144, by, 72, 36, "DPE", orange_fill, orange, 13, 500),
-        (252, by, 74, 36, "Norm", gray_fill, "#8a939d", 13, 500),
-        (362, by - 10, 126, 56, ["Local-global", "mixer"], purple_fill, purple, 13, 700),
-        (526, by, 38, 36, "+", "#ffffff", "#79838f", 18, 500),
-        (600, by, 74, 36, "Norm", gray_fill, "#8a939d", 13, 500),
-        (710, by - 10, 112, 56, "MS-FFN", blue_fill, blue, 14, 700),
-        (860, by, 38, 36, "+", "#ffffff", "#79838f", 18, 500),
-        (934, by, 48, 36, "y", "#ffffff", "#79838f", 14, 500),
+        (54, by, 50, 40, "input", "#ffffff", "#79838f", 12, 600),
+        (132, by, 78, 40, "DPE", orange_fill, orange, 13, 600),
+        (238, by - 10, 122, 60, ["MCA option", "coordinate-aware", "refinement"], blue_fill, blue, 11, 700),
+        (388, by, 70, 40, "Norm", gray_fill, "#8a939d", 12, 600),
+        (486, by - 12, 148, 64, ["Local-global mixer", "DA option inside", "attention branch"], purple_fill, purple, 11.5, 700),
+        (662, by, 40, 40, "+", "#ffffff", "#79838f", 18, 600),
+        (730, by, 70, 40, "Norm", gray_fill, "#8a939d", 12, 600),
+        (828, by - 8, 108, 56, "MS-FFN", blue_fill, blue, 13, 700),
+        (964, by, 40, 40, "+", "#ffffff", "#79838f", 18, 600),
+        (1032, by, 50, 40, "output", "#ffffff", "#79838f", 11, 600),
     ]
     for bx, by0, bw, bh, label, fill, stroke, size, weight in block_boxes:
         box(bx, by0, bw, bh, label, fill=fill, stroke=stroke, size=size, weight=weight)
-    for x1, x2 in [(110, 142), (218, 250), (328, 360), (490, 524), (566, 598), (676, 708), (824, 858), (900, 932)]:
-        line(x1, 270, x2, 270)
-    badge(300, 244, "1", blue_fill, blue)
-    badge(382, 244, "2", green_fill, green)
-    badge(468, 244, "3", orange_fill, orange)
+    for x1, x2 in [(106, 130), (212, 236), (362, 386), (460, 484), (636, 660), (704, 728), (802, 826), (938, 962), (1006, 1030)]:
+        line(x1, by + 20, x2, by + 20)
 
-    text(430, 328, "Block-level options", size=12, weight=700, color="#3d4650")
-    option_boxes = [
-        (184, 342, 170, 30, "1  MCA: coordinate refinement", blue_fill, blue),
-        (388, 342, 220, 30, "2  MUDD: stage-local dense reuse", green_fill, green),
-        (642, 342, 190, 30, "3  DA: differential attention", orange_fill, orange),
-    ]
-    for bx, by0, bw, bh, label, fill, stroke in option_boxes:
-        box(bx, by0, bw, bh, label, fill=fill, stroke=stroke, size=11, weight=500)
-
-    box(1028, 228, 172, 74, ["Validation-fixed", "variant analysis"], fill="#ffffff", stroke="#6b7785", size=13, weight=600)
-    line(984, 270, 1026, 270)
-    text(1114, 330, ["Modules are toggled", "before test evaluation"], size=11, color="#596571", line_gap=14)
+    box(1112, by - 48, 108, 40, ["Validation", "selection"], fill="#ffffff", stroke="#6b7785", size=11.5, weight=700)
+    box(1112, by + 20, 108, 40, ["Fixed test", "reporting"], fill="#ffffff", stroke="#6b7785", size=11.5, weight=700)
+    line(1084, by + 20, 1110, by - 28)
+    line(1166, by - 6, 1166, by + 18)
+    text(638, 456, "Options are toggled independently: MCA = coordinate recalibration; MUDD = same-stage reuse; DA = differential attention.", size=11.3, color="#596571")
 
     # C. Evaluation and deployment path.
-    rect(28, 408, 1224, 128, fill="#fbfdfb", stroke="#d4d9df", sw=1.3, rx=12)
-    title(48, 439, "C", "Evaluation and deployment pathway")
-    cy = 470
+    rect(28, 504, 1224, 122, fill="#fbfdfb", stroke="#d4d9df", sw=1.3, rx=12)
+    title(48, 534, "C", "Evidence pathway: analysis teacher to mobile student")
+    cy = 562
     path_boxes = [
-        (58, cy, 108, 42, ["Teacher", "variants"], "#ffffff", "#6b7785", 12, 500),
-        (206, cy, 148, 42, ["ROI robustness", "GT / noisy / detector"], orange_fill, orange, 12, 500),
-        (396, cy, 124, 42, ["Case-level", "predictions"], "#ffffff", "#6b7785", 12, 500),
-        (562, cy, 104, 42, ["KD loss", "CE + KL"], blue_fill, blue, 12, 500),
-        (708, cy, 176, 42, ["EfficientFormer-L1", "+ ECA student"], green_fill, green, 12, 700),
-        (926, cy, 132, 42, ["ONNX / TFLite", "export"], "#ffffff", "#6b7785", 12, 500),
-        (1100, cy, 104, 42, ["Android", "latency"], blue_fill, blue, 12, 500),
+        (54, cy, 124, 42, ["Frozen manifest", "and labels"], "#ffffff", "#6b7785", 11.5, 600),
+        (218, cy, 130, 42, ["Teacher-family", "variants"], "#ffffff", "#6b7785", 11.5, 600),
+        (388, cy, 152, 42, ["Benchmark, ablation", "and ROI robustness"], orange_fill, orange, 11.5, 600),
+        (580, cy, 112, 42, ["Teacher logits", "for KD"], blue_fill, blue, 11.5, 600),
+        (732, cy, 166, 42, ["EfficientFormer-L1", "+ ECA student"], green_fill, green, 11.5, 700),
+        (938, cy, 116, 42, ["ONNX Runtime", "export"], "#ffffff", "#6b7785", 11.5, 600),
+        (1094, cy, 126, 42, ["Two Android", "devices"], blue_fill, blue, 11.5, 700),
     ]
     for bx, by0, bw, bh, label, fill, stroke, size, weight in path_boxes:
         box(bx, by0, bw, bh, label, fill=fill, stroke=stroke, size=size, weight=weight)
-    for x1, x2 in [(168, 204), (356, 394), (522, 560), (668, 706), (886, 924), (1060, 1098)]:
-        line(x1, 491, x2, 491)
-    text(280, 524, "analysis evidence", size=11, color=orange)
-    text(796, 524, "deployment evidence", size=11, color=green)
+    for x1, x2 in [(180, 216), (350, 386), (542, 578), (694, 730), (900, 936), (1056, 1092)]:
+        line(x1, cy + 21, x2, cy + 21)
+    text(464, 614, "analysis evidence", size=11, color=orange)
+    text(846, 614, "deployment evidence", size=11, color=green)
 
     add("</svg>")
     svg_text = "\n".join(svg)
@@ -228,6 +221,73 @@ def architecture() -> None:
     svg_path.write_text(svg_text, encoding="utf-8")
     cairosvg.svg2pdf(bytestring=svg_text.encode("utf-8"), write_to=str(pdf_path))
     cairosvg.svg2png(bytestring=svg_text.encode("utf-8"), write_to=str(png_path), output_width=2400)
+
+
+def mobile_tradeoff() -> None:
+    src = ROOT / "results" / "strict_20260514" / "manuscript_tables" / "table7_mobile.csv"
+    rows: list[dict[str, str]] = []
+    with src.open("r", encoding="utf-8", newline="") as f:
+        rows.extend(csv.DictReader(f))
+
+    cpu_rows = [r for r in rows if r["runtime"] == "CPU default"]
+    eca_rows = [r for r in rows if r["model"] == "EfficientFormer-L1+ECA+KD"]
+    colors = {
+        "EfficientFormer-L1+ECA+KD": "#0072B2",
+        "EfficientFormer-L1+KD": "#009E73",
+        "EfficientFormer-L1+ECA": "#D55E00",
+    }
+    runtime_colors = {"CPU default": "#0072B2", "XNNPACK-4T": "#E69F00", "NNAPI": "#CC79A7"}
+
+    plt.rcParams.update({"font.size": 8, "axes.titlesize": 9, "axes.labelsize": 8.5, "legend.fontsize": 7})
+    fig, (ax1, ax2) = plt.subplots(
+        1,
+        2,
+        figsize=(8.3, 2.55),
+        gridspec_kw={"width_ratios": [1.05, 1.0], "wspace": 0.35},
+    )
+
+    for row in cpu_rows:
+        model = row["model"]
+        y = float(row["android_auc"])
+        xiaomi = float(row["xiaomi_ms"])
+        samsung = float(row["samsung_ms"])
+        ax1.scatter(xiaomi, y, marker="o", s=46, color=colors[model], edgecolor="white", linewidth=0.7)
+        ax1.scatter(samsung, y, marker="s", s=46, color=colors[model], edgecolor="white", linewidth=0.7)
+        ax1.plot([xiaomi, samsung], [y, y], color=colors[model], linewidth=1.1, alpha=0.45)
+        label = model.replace("EfficientFormer-L1+", "")
+        ax1.text(samsung + 1.8, y, label, fontsize=7.2, va="center", color=colors[model])
+    ax1.set_xlabel("Hot end-to-end latency (ms)")
+    ax1.set_ylabel("Android AUC")
+    ax1.set_title("(a) Student accuracy-latency trade-off", fontsize=9)
+    ax1.grid(axis="both", alpha=0.22, linewidth=0.7)
+    ax1.set_xlim(24, 74)
+    ax1.set_ylim(0.918, 0.962)
+    ax1.scatter([], [], marker="o", color="#555555", label="Xiaomi")
+    ax1.scatter([], [], marker="s", color="#555555", label="Samsung")
+    ax1.legend(frameon=False, loc="lower right", fontsize=7)
+
+    runtimes = ["CPU default", "XNNPACK-4T", "NNAPI"]
+    x = [0, 1]
+    devices = ["Xiaomi", "Samsung"]
+    width_bar = 0.22
+    for i, runtime in enumerate(runtimes):
+        row = next(r for r in eca_rows if r["runtime"] == runtime)
+        values = [float(row["xiaomi_ms"]), float(row["samsung_ms"])]
+        positions = [v + (i - 1) * width_bar for v in x]
+        ax2.bar(positions, values, width=width_bar, color=runtime_colors[runtime], label=runtime)
+        for px, value in zip(positions, values):
+            ax2.text(px, value + 5, f"{value:.0f}", ha="center", va="bottom", fontsize=7)
+    ax2.set_xticks(x)
+    ax2.set_xticklabels(devices)
+    ax2.set_ylabel("Hot end-to-end latency (ms)")
+    ax2.set_title("(b) Runtime backend sweep for ECA+KD", fontsize=9)
+    ax2.set_ylim(0, 315)
+    ax2.grid(axis="y", alpha=0.22, linewidth=0.7)
+    ax2.legend(frameon=False, fontsize=7, loc="upper left")
+
+    fig.savefig(OUT / "fig_mobile_tradeoff_crop.pdf", bbox_inches="tight")
+    fig.savefig(OUT / "fig_mobile_tradeoff_crop.png", bbox_inches="tight", dpi=350)
+    plt.close(fig)
 
 
 def roi_robustness() -> None:
@@ -303,6 +363,7 @@ def roi_robustness() -> None:
 
 def main() -> None:
     architecture()
+    mobile_tradeoff()
     roi_robustness()
 
 
