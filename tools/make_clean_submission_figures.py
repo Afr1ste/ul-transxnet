@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import csv
 from pathlib import Path
+from xml.sax.saxutils import escape
+
+import cairosvg
 
 import matplotlib
 
@@ -62,116 +65,169 @@ def panel(ax, x, y, w, h, title, fc="#fbfbfb", ec="#d5d9de"):
     return patch
 
 
-def small_bar(ax, x, y, w, n, color):
-    gap = 0.025
-    bw = (w - gap * (n - 1)) / n
-    for i in range(n):
-        box(ax, x + i * (bw + gap), y, bw, 0.08, "", fc=color, ec=color, lw=0.2)
-
-
 def architecture() -> None:
-    plt.rcParams.update(
-        {
-            "font.family": "DejaVu Sans",
-            "axes.linewidth": 0.8,
-            "pdf.fonttype": 42,
-            "ps.fonttype": 42,
-        }
+    """Hand-authored SVG layout for the architecture workflow figure.
+
+    The previous matplotlib layout was too close to a draft sketch.  This
+    routine keeps the diagram deterministic but uses fixed publication-oriented
+    SVG geometry so labels, arrows, and callouts cannot drift into each other.
+    """
+
+    width, height = 1280, 560
+    svg: list[str] = []
+
+    def add(s: str) -> None:
+        svg.append(s)
+
+    def rect(x, y, w, h, fill="#ffffff", stroke="#6b7785", sw=1.6, rx=8, cls=""):
+        add(
+            f'<rect class="{cls}" x="{x}" y="{y}" width="{w}" height="{h}" rx="{rx}" '
+            f'fill="{fill}" stroke="{stroke}" stroke-width="{sw}"/>'
+        )
+
+    def line(x1, y1, x2, y2, color="#46515c", sw=1.8, marker=True, dash=""):
+        marker_attr = ' marker-end="url(#arrow)"' if marker else ""
+        dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
+        add(
+            f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{color}" '
+            f'stroke-width="{sw}" stroke-linecap="round"{marker_attr}{dash_attr}/>'
+        )
+
+    def text(x, y, lines, size=15, weight=400, color="#202833", anchor="middle", line_gap=18):
+        if isinstance(lines, str):
+            lines = [lines]
+        escaped = [escape(str(t)) for t in lines]
+        y0 = y - line_gap * (len(escaped) - 1) / 2
+        add(
+            f'<text x="{x}" y="{y0}" text-anchor="{anchor}" dominant-baseline="middle" '
+            f'font-size="{size}" font-weight="{weight}" fill="{color}">'
+        )
+        for i, item in enumerate(escaped):
+            dy = 0 if i == 0 else line_gap
+            add(f'<tspan x="{x}" dy="{dy}">{item}</tspan>')
+        add("</text>")
+
+    def title(x, y, letter, label):
+        text(x, y, f"{letter}  {label}", size=18, weight=700, anchor="start", color="#111820")
+
+    def box(x, y, w, h, label, fill="#ffffff", stroke="#6b7785", size=14, weight=500):
+        rect(x, y, w, h, fill=fill, stroke=stroke, sw=1.8, rx=7)
+        text(x + w / 2, y + h / 2, label, size=size, weight=weight, line_gap=size + 3)
+
+    def badge(x, y, label, fill, stroke):
+        add(f'<circle cx="{x}" cy="{y}" r="10" fill="{fill}" stroke="{stroke}" stroke-width="1.5"/>')
+        text(x, y + 0.5, label, size=10, weight=700, color=stroke)
+
+    add(
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
+        f'viewBox="0 0 {width} {height}">'
     )
-    fig, ax = plt.subplots(figsize=(11.6, 4.9))
-    ax.set_xlim(0, 16.0)
-    ax.set_ylim(0, 7.2)
-    ax.axis("off")
+    add(
+        """
+<defs>
+  <marker id="arrow" markerWidth="9" markerHeight="9" refX="7.8" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 Z" fill="#46515c"/>
+  </marker>
+  <style>
+    text { font-family: Arial, Helvetica, sans-serif; }
+  </style>
+</defs>
+"""
+    )
+    add('<rect x="0" y="0" width="1280" height="560" fill="#ffffff"/>')
 
-    blue = "#2f6f9f"
-    green = "#3f7d4a"
-    orange = "#b66b2d"
-    purple = "#7c5aa6"
-    gray = "#4a4a4a"
+    blue, blue_fill = "#2b6f9f", "#eaf4ff"
+    green, green_fill = "#3b7f4a", "#eaf7ed"
+    orange, orange_fill = "#b86a2a", "#fff2e4"
+    purple, purple_fill = "#7256a3", "#f1ebfb"
+    gray_fill, panel_fill = "#f7f9fb", "#fbfcfd"
 
-    panel(ax, 0.25, 5.15, 15.45, 1.78, "A  ROI teacher backbone", fc="#f8fbfd")
-    box(ax, 0.58, 5.82, 1.25, 0.48, "Expanded\nROI crop", fc="#ffffff", ec="#6f7f8f", fs=7.2, lw=0.9, weight="bold")
-    ax.text(1.20, 5.62, "3 x 256 x 256", ha="center", va="center", fontsize=6.6, color=gray)
-    arrow(ax, 1.86, 6.06, 2.25, 6.06, color=gray, lw=1.1)
-    box(ax, 2.28, 5.73, 1.05, 0.64, "Patch\nembed", fc="#fff5e7", ec="#c88b4a", fs=7.0, lw=0.9)
-    arrow(ax, 3.35, 6.06, 3.72, 6.06, color=gray, lw=1.1)
-
-    stages = [
-        ("Stage 1", "C=48", "stride 4", "4 blocks", "#e8f1fb"),
-        ("Stage 2", "C=96", "stride 8", "4 blocks", "#e8f6ef"),
-        ("Stage 3", "C=224", "stride 16", "15 blocks", "#fff3e8"),
-        ("Stage 4", "C=448", "stride 32", "4 blocks", "#f1ecfb"),
+    # A. Teacher backbone.
+    rect(28, 24, 1224, 130, fill=panel_fill, stroke="#d4d9df", sw=1.3, rx=12)
+    title(48, 54, "A", "ROI teacher backbone")
+    y = 82
+    boxes = [
+        (56, y, 96, 48, ["Expanded", "ROI crop"], "#ffffff", "#6b7785", 13, 700),
+        (188, y, 88, 48, ["Patch", "embed"], orange_fill, orange, 13, 500),
+        (314, y - 8, 108, 64, ["Stage 1", "C=48", "4 blocks"], "#eef5fc", "#6b7785", 13, 700),
+        (456, y - 8, 108, 64, ["Stage 2", "C=96", "4 blocks"], "#edf8f1", "#6b7785", 13, 700),
+        (598, y - 8, 108, 64, ["Stage 3", "C=224", "15 blocks"], "#fff5e9", "#6b7785", 13, 700),
+        (740, y - 8, 108, 64, ["Stage 4", "C=448", "4 blocks"], purple_fill, "#6b7785", 13, 700),
+        (892, y, 70, 48, "GAP", blue_fill, blue, 13, 500),
+        (998, y, 122, 48, ["1000-D task", "projection"], blue_fill, blue, 13, 500),
+        (1156, y, 88, 48, ["Binary", "head"], blue_fill, blue, 13, 700),
     ]
-    x = 3.78
-    for i, (title, channels, stride, depth, fc) in enumerate(stages):
-        box(ax, x, 5.58, 1.48, 0.95, "", fc=fc, ec="#66717d", lw=0.9)
-        ax.text(x + 0.74, 6.32, title, ha="center", va="center", fontsize=7.8, weight="bold")
-        ax.text(x + 0.74, 6.08, channels + ", " + stride, ha="center", va="center", fontsize=6.8, color="#333333")
-        ax.text(x + 0.74, 5.84, depth, ha="center", va="center", fontsize=6.7, color="#4d4d4d")
-        small_bar(ax, x + 0.22, 5.66, 1.04, min(6, int(depth.split()[0])), "#5d748c")
-        if i < len(stages) - 1:
-            arrow(ax, x + 1.50, 6.06, x + 1.78, 6.06, color=gray, lw=1.1)
-        x += 1.78
+    for bx, by, bw, bh, label, fill, stroke, size, weight in boxes:
+        box(bx, by, bw, bh, label, fill=fill, stroke=stroke, size=size, weight=weight)
+    text(104, 140, "3 x 256 x 256", size=11, color="#54606d")
+    for x1, x2 in [(154, 186), (278, 312), (424, 454), (566, 596), (708, 738), (850, 890), (964, 996), (1122, 1154)]:
+        line(x1, 106, x2, 106)
+    text(1212, 140, "teacher logits", size=11, color=blue)
 
-    arrow(ax, 10.88, 6.06, 11.24, 6.06, color=gray, lw=1.1)
-    box(ax, 11.28, 5.76, 0.76, 0.60, "GAP", fc="#e8f2ff", ec=blue, fs=7.1, lw=0.9)
-    arrow(ax, 12.07, 6.06, 12.37, 6.06, color=gray, lw=1.1)
-    box(ax, 12.42, 5.76, 1.28, 0.60, "1000-D task\nprojection", fc="#e8f2ff", ec=blue, fs=6.7, lw=0.9)
-    arrow(ax, 13.73, 6.06, 14.00, 6.06, color=gray, lw=1.1)
-    box(ax, 14.05, 5.76, 1.28, 0.60, "Binary head\nteacher logits", fc="#e8f2ff", ec=blue, fs=6.4, lw=0.9, weight="bold")
-
-    panel(ax, 0.25, 2.53, 15.45, 2.32, "B  Representative block with modular adaptations", fc="#fdfcf9")
-    box(ax, 0.58, 3.50, 0.72, 0.40, "x", fc="#ffffff", ec="#777777", fs=7.8)
-    box(ax, 1.58, 3.43, 0.88, 0.54, "DPE", fc="#fff0de", ec=orange, fs=7.3, lw=0.9)
-    box(ax, 2.78, 3.43, 0.92, 0.54, "Norm", fc="#f3f4f5", ec="#8c8c8c", fs=7.0, lw=0.8)
-    box(ax, 4.02, 3.24, 1.72, 0.92, "Local-global\nmixer", fc="#efe8fb", ec=purple, fs=7.2, lw=0.9, weight="bold")
-    box(ax, 4.28, 3.31, 1.20, 0.22, "DA option", fc="#fff1e4", ec=orange, fs=5.9, lw=0.7)
-    box(ax, 6.20, 3.50, 0.44, 0.40, "+", fc="#ffffff", ec="#777777", fs=8.5)
-    box(ax, 7.05, 3.43, 0.92, 0.54, "Norm", fc="#f3f4f5", ec="#8c8c8c", fs=7.0, lw=0.8)
-    box(ax, 8.30, 3.24, 1.54, 0.92, "MS-FFN", fc="#e8f2ff", ec=blue, fs=7.5, lw=0.9, weight="bold")
-    box(ax, 10.30, 3.50, 0.44, 0.40, "+", fc="#ffffff", ec="#777777", fs=8.5)
-    box(ax, 11.28, 3.50, 0.80, 0.40, "y", fc="#ffffff", ec="#777777", fs=7.8)
-    for x1, x2 in [(1.30, 1.56), (2.46, 2.76), (3.70, 4.00), (5.76, 6.18), (6.66, 7.02), (7.98, 8.28), (9.86, 10.28), (10.76, 11.26)]:
-        arrow(ax, x1, 3.70, x2, 3.70, color=gray, lw=1.0)
-    arrow(ax, 1.34, 3.93, 6.17, 3.93, color="#666666", lw=0.85, style="-", rad=0.0)
-    arrow(ax, 1.34, 3.93, 1.34, 3.72, color="#666666", lw=0.85, style="-", rad=0.0)
-    arrow(ax, 6.17, 3.93, 6.17, 3.73, color="#666666", lw=0.85, style="-|>", rad=0.0)
-    arrow(ax, 6.72, 3.93, 10.27, 3.93, color="#666666", lw=0.85, style="-", rad=0.0)
-    arrow(ax, 6.72, 3.93, 6.72, 3.72, color="#666666", lw=0.85, style="-", rad=0.0)
-    arrow(ax, 10.27, 3.93, 10.27, 3.73, color="#666666", lw=0.85, style="-|>", rad=0.0)
-
-    box(ax, 2.05, 2.82, 2.18, 0.33, "MCA: coordinate refinement", fc="#e8f3ff", ec=blue, fs=6.7, lw=0.8)
-    arrow(ax, 3.16, 3.16, 3.16, 3.42, color=blue, lw=0.9)
-    box(ax, 4.58, 2.82, 2.55, 0.33, "MUDD: stage-local dense reuse", fc="#eaf7ea", ec=green, fs=6.7, lw=0.8)
-    arrow(ax, 5.88, 2.99, 4.80, 3.23, color=green, lw=0.9, rad=-0.15)
-    box(ax, 7.56, 2.82, 2.30, 0.33, "DA: differential attention", fc="#fff1e4", ec=orange, fs=6.7, lw=0.8)
-    arrow(ax, 8.70, 3.00, 5.35, 3.35, color=orange, lw=0.9, rad=0.14)
-    box(ax, 12.85, 3.22, 2.30, 0.92, "Validation-fixed\nvariant analysis", fc="#ffffff", ec="#6f7f8f", fs=7.1, lw=0.9)
-    arrow(ax, 12.10, 3.70, 12.82, 3.70, color=gray, lw=1.0)
-    ax.text(13.99, 2.95, "modules are enabled or disabled\nonly before test evaluation", ha="center", va="center", fontsize=6.3, color="#555555")
-
-    panel(ax, 0.25, 0.28, 15.45, 1.88, "C  Evaluation and deployment pathway", fc="#f9fbf8")
-    workflow = [
-        (0.62, 0.92, 1.58, "Teacher\nvariants", "#ffffff", "#6f7f8f"),
-        (2.60, 0.92, 2.00, "ROI robustness\nGT / noisy / detector", "#fff7ec", orange),
-        (5.08, 0.92, 1.58, "Case-level\npredictions", "#ffffff", "#6f7f8f"),
-        (7.14, 0.92, 1.42, "KD loss\nCE + KL", "#eef6ff", blue),
-        (9.04, 0.92, 2.12, "EfficientFormer-L1\n+ ECA student", "#e9f7ee", green),
-        (11.74, 0.92, 1.70, "ONNX / TFLite\nexport", "#ffffff", "#6f7f8f"),
-        (13.92, 0.92, 1.36, "Android\nlatency", "#eef6ff", blue),
+    # B. Block-level options.
+    rect(28, 176, 1224, 210, fill="#ffffff", stroke="#d4d9df", sw=1.3, rx=12)
+    title(48, 207, "B", "Block template and modular options")
+    by = 252
+    block_boxes = [
+        (60, by, 48, 36, "x", "#ffffff", "#79838f", 14, 500),
+        (144, by, 72, 36, "DPE", orange_fill, orange, 13, 500),
+        (252, by, 74, 36, "Norm", gray_fill, "#8a939d", 13, 500),
+        (362, by - 10, 126, 56, ["Local-global", "mixer"], purple_fill, purple, 13, 700),
+        (526, by, 38, 36, "+", "#ffffff", "#79838f", 18, 500),
+        (600, by, 74, 36, "Norm", gray_fill, "#8a939d", 13, 500),
+        (710, by - 10, 112, 56, "MS-FFN", blue_fill, blue, 14, 700),
+        (860, by, 38, 36, "+", "#ffffff", "#79838f", 18, 500),
+        (934, by, 48, 36, "y", "#ffffff", "#79838f", 14, 500),
     ]
-    for wx, wy, ww, text, fc, ec in workflow:
-        box(ax, wx, wy, ww, 0.58, text, fc=fc, ec=ec, fs=6.8, lw=0.85, weight="bold" if "student" in text else "normal")
-    for i in range(len(workflow) - 1):
-        x1 = workflow[i][0] + workflow[i][2]
-        x2 = workflow[i + 1][0]
-        arrow(ax, x1 + 0.03, 1.21, x2 - 0.03, 1.21, color=gray, lw=1.0)
-    ax.text(4.46, 0.62, "analysis claim", ha="center", va="center", fontsize=6.3, color=orange)
-    ax.text(10.10, 0.62, "deployment claim", ha="center", va="center", fontsize=6.3, color=green)
+    for bx, by0, bw, bh, label, fill, stroke, size, weight in block_boxes:
+        box(bx, by0, bw, bh, label, fill=fill, stroke=stroke, size=size, weight=weight)
+    for x1, x2 in [(110, 142), (218, 250), (328, 360), (490, 524), (566, 598), (676, 708), (824, 858), (900, 932)]:
+        line(x1, 270, x2, 270)
+    badge(300, 244, "1", blue_fill, blue)
+    badge(382, 244, "2", green_fill, green)
+    badge(468, 244, "3", orange_fill, orange)
 
-    fig.savefig(OUT / "fig_architecture_crop.pdf", bbox_inches="tight")
-    fig.savefig(OUT / "fig_architecture_crop.png", bbox_inches="tight", dpi=300)
-    plt.close(fig)
+    text(430, 328, "Block-level options", size=12, weight=700, color="#3d4650")
+    option_boxes = [
+        (184, 342, 170, 30, "1  MCA: coordinate refinement", blue_fill, blue),
+        (388, 342, 220, 30, "2  MUDD: stage-local dense reuse", green_fill, green),
+        (642, 342, 190, 30, "3  DA: differential attention", orange_fill, orange),
+    ]
+    for bx, by0, bw, bh, label, fill, stroke in option_boxes:
+        box(bx, by0, bw, bh, label, fill=fill, stroke=stroke, size=11, weight=500)
+
+    box(1028, 228, 172, 74, ["Validation-fixed", "variant analysis"], fill="#ffffff", stroke="#6b7785", size=13, weight=600)
+    line(984, 270, 1026, 270)
+    text(1114, 330, ["Modules are toggled", "before test evaluation"], size=11, color="#596571", line_gap=14)
+
+    # C. Evaluation and deployment path.
+    rect(28, 408, 1224, 128, fill="#fbfdfb", stroke="#d4d9df", sw=1.3, rx=12)
+    title(48, 439, "C", "Evaluation and deployment pathway")
+    cy = 470
+    path_boxes = [
+        (58, cy, 108, 42, ["Teacher", "variants"], "#ffffff", "#6b7785", 12, 500),
+        (206, cy, 148, 42, ["ROI robustness", "GT / noisy / detector"], orange_fill, orange, 12, 500),
+        (396, cy, 124, 42, ["Case-level", "predictions"], "#ffffff", "#6b7785", 12, 500),
+        (562, cy, 104, 42, ["KD loss", "CE + KL"], blue_fill, blue, 12, 500),
+        (708, cy, 176, 42, ["EfficientFormer-L1", "+ ECA student"], green_fill, green, 12, 700),
+        (926, cy, 132, 42, ["ONNX / TFLite", "export"], "#ffffff", "#6b7785", 12, 500),
+        (1100, cy, 104, 42, ["Android", "latency"], blue_fill, blue, 12, 500),
+    ]
+    for bx, by0, bw, bh, label, fill, stroke, size, weight in path_boxes:
+        box(bx, by0, bw, bh, label, fill=fill, stroke=stroke, size=size, weight=weight)
+    for x1, x2 in [(168, 204), (356, 394), (522, 560), (668, 706), (886, 924), (1060, 1098)]:
+        line(x1, 491, x2, 491)
+    text(280, 524, "analysis evidence", size=11, color=orange)
+    text(796, 524, "deployment evidence", size=11, color=green)
+
+    add("</svg>")
+    svg_text = "\n".join(svg)
+    svg_path = OUT / "fig_architecture_crop.svg"
+    pdf_path = OUT / "fig_architecture_crop.pdf"
+    png_path = OUT / "fig_architecture_crop.png"
+    svg_path.write_text(svg_text, encoding="utf-8")
+    cairosvg.svg2pdf(bytestring=svg_text.encode("utf-8"), write_to=str(pdf_path))
+    cairosvg.svg2png(bytestring=svg_text.encode("utf-8"), write_to=str(png_path), output_width=2400)
 
 
 def roi_robustness() -> None:
