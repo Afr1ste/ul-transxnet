@@ -17,7 +17,7 @@ The paper should be judged as a reproducible computing-methods / applied biomedi
 
 - manifest-locked ROI ultrasound lesion-classification evaluation;
 - TransXNet-family teacher design-space analysis;
-- localization robustness under GT, perturbed, detector-derived, and full-image inputs;
+- localization robustness under GT, perturbed, and detector-derived ROI inputs;
 - EfficientFormer-L1 mobile distillation and two-device Android measurement;
 - explicit separation between multi-organ in-domain benchmarking and weak zero-shot leave-one-domain-out transfer.
 

@@ -8,11 +8,12 @@ The repository was rebuilt from an empty public branch on 2026-05-14 to remove s
 
 ## What Is Included
 
-- `paper/`: current LaTeX manuscript, supplementary material, compiled PDFs, submission notes, and final figures.
+- `paper/`: current LaTeX manuscript, supplementary material, compiled PDFs, submission notes, declaration draft, and final figures.
 - `results/strict_20260514/`: compact public CSV/JSON evidence used by the current manuscript.
 - `tools/make_clean_submission_figures.py`: script used to regenerate the cleaned architecture and ROI robustness figures.
 - `scripts/validate_artifact.py`: repository integrity and stale-string checks.
 - `scripts/reproduce_main_tables.py`: copies manuscript table CSVs to a review output folder for quick audit.
+- `scripts/build_cmpb_submission_package.py`: builds a flat source/PDF/result package for review or Editorial Manager upload.
 
 ## What Is Not Included
 
@@ -25,6 +26,7 @@ The public result files are designed for auditability. They preserve table-level
 ```powershell
 python scripts/validate_artifact.py
 python scripts/reproduce_main_tables.py --out-dir reproduced_tables
+python scripts/build_cmpb_submission_package.py
 ```
 
 Expected validation result:

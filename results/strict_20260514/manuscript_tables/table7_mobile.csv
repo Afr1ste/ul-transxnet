@@ -1,6 +1,4 @@
-model,offline_auc,offline_bal_acc,android_auc,xiaomi_ms,samsung_ms,runtime
-EfficientFormer-L1+ECA+KD,0.9563,0.8792,0.9552,31.312,56.507,CPU default
-EfficientFormer-L1+KD,0.9522,0.8699,0.9511,40.364,56.477,CPU default
-EfficientFormer-L1+ECA,0.9305,0.8400,0.9278,40.517,60.254,CPU default
-EfficientFormer-L1+ECA+KD,0.9563,0.8792,0.9552,42.403,107.141,XNNPACK-4T
-EfficientFormer-L1+ECA+KD,0.9563,0.8792,0.9552,159.080,279.982,NNAPI
+model,offline_auc,offline_bal_acc,android_auc,xiaomi_ms,samsung_ms
+EfficientFormer-L1+ECA+KD,0.9568,0.8816,0.9552,31.312,56.507
+EfficientFormer-L1+KD,0.9586,0.8781,0.9511,40.364,56.477
+EfficientFormer-L1+ECA,0.9270,0.8441,0.9278,40.517,60.254

@@ -12,11 +12,13 @@
 - `refs.bib` is copied into this directory.
 - Declarations are included: CRediT, ethics, funding, competing interest, generative AI, and data availability.
 - Manifest/prediction artifact requirements are documented in `artifact_manifest_requirements_cmpb.md`.
+- A flat source package can be built with `python scripts/build_cmpb_submission_package.py`.
 
 ## Before actual upload
 
 - Fill the corresponding author's phone number in the cover letter.
 - Fill the corresponding author's phone number in the title page.
+- Review the included `declaration_of_competing_interest.docx`; replace it with the official Elsevier-generated declaration if Editorial Manager requires that exact output.
 - Confirm all author names, order, affiliations, and email addresses.
 - Confirm whether the public repository URL should be `https://github.com/Afr1ste/ul-transxnet` or another address.
 - Decide whether to submit supplementary figures/tables as a separate file.

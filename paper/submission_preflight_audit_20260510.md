@@ -4,7 +4,7 @@
 
 The manuscript is now in a mature pre-submission state for Computer Methods and Programs in Biomedicine as an Original Research article, subject to final author-side administrative checks and the manifest/prediction artifact gate. I did not find a severe writing-level logic flaw that should block advisor review.
 
-The paper is no longer framed as a new universal medical vision backbone. It is framed as a bounded computing-methods workflow for ROI-robust ultrasound lesion classification, teacher analysis, mobile distillation, and multi-organ protocol separation. This is the right level of claim for the present evidence.
+The paper is framed as a bounded computing-methods workflow for ROI-robust ultrasound lesion classification, teacher analysis, mobile distillation, and multi-organ protocol separation. This is the right level of claim for the present evidence.
 
 ## CMPB Compliance
 
@@ -24,7 +24,7 @@ The paper is no longer framed as a new universal medical vision backbone. It is 
 - Mobile wording is controlled: the TransXNet-family teacher is not claimed as the mobile solution; EfficientFormer distillation is presented as the practical mobile path.
 - ROI dependence is controlled: oracle ROI is treated as a classifier protocol, with detector ROI and box-noise experiments used as robustness evidence rather than full clinical deployment proof.
 - The TransXNet comparison is transparent: the paper reports that UL-TransXNet is not a TN5000 AUC improvement over original TransXNet, while showing stronger BUSI/AUL behavior.
-- The ablation story is no longer monotonic stacking: TransXNet-MUDD+DA is identified as the strongest TN5000 robustness variant, and MCA is described as dataset-dependent.
+- The ablation story is not monotonic stacking: TransXNet-MUDD+DA is identified as the strongest TN5000 robustness variant, and MCA is described as dataset-dependent.
 - The frozen analysis-label snapshot is stated separately from descriptive dataset counts, reducing the risk that Table 1 appears internally inconsistent.
 
 ## Remaining Risks

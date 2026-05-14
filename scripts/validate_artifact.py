@@ -17,13 +17,17 @@ REQUIRED_FILES = [
     "paper/supplementary_material.tex",
     "paper/supplementary_material.pdf",
     "paper/refs.bib",
+    "paper/declaration_of_competing_interest.docx",
     "paper/fig_architecture_crop.pdf",
+    "paper/fig_mobile_tradeoff_crop.pdf",
     "paper/fig_roi_robustness_curve_crop.pdf",
     "results/strict_20260514/analysis_labels/analysis_label_snapshot.csv",
     "results/strict_20260514/analysis_labels/analysis_label_manifest_public.json",
     "results/strict_20260514/manuscript_tables/table3_main_benchmark.csv",
     "results/strict_20260514/manuscript_tables/table8_cross_organ.csv",
     "results/strict_20260514/mobile/strict_two_device_mobile_summary_20260514.csv",
+    "scripts/reproduce_main_tables.py",
+    "tools/make_clean_submission_figures.py",
 ]
 
 STALE_PATTERNS = [
@@ -36,7 +40,10 @@ STALE_PATTERNS = [
 ]
 
 TEXT_EXTENSIONS = {".md", ".tex", ".txt", ".csv", ".json", ".yml", ".yaml", ".cff"}
-PATH_LEAK_RE = re.compile(r"C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid", re.IGNORECASE)
+PATH_LEAK_RE = re.compile(
+    r"(C:\\\\Users\\\\Afr1ste\\\\PycharmProjects|C:\\Users\\Afr1ste\\PycharmProjects|PycharmProjects\\\\Thyroid|PycharmProjects\\Thyroid)",
+    re.IGNORECASE,
+)
 
 
 def iter_public_text_files() -> list[Path]:
@@ -52,7 +59,10 @@ def iter_public_text_files() -> list[Path]:
 def check_required() -> list[str]:
     errors: list[str] = []
     for rel in REQUIRED_FILES:
-        if not (ROOT / rel).exists():
+        candidates = [ROOT / rel]
+        if rel.startswith("paper/"):
+            candidates.append(ROOT / rel.removeprefix("paper/"))
+        if not any(path.exists() for path in candidates):
             errors.append(f"missing required file: {rel}")
     return errors
 

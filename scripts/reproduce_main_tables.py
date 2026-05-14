@@ -26,7 +26,10 @@ def main() -> int:
     for src in sorted(TABLE_DIR.glob("*.csv")):
         dst = out_dir / src.name
         shutil.copy2(src, dst)
-        copied.append(dst.relative_to(ROOT).as_posix())
+        try:
+            copied.append(dst.relative_to(ROOT).as_posix())
+        except ValueError:
+            copied.append(str(dst))
 
     for path in copied:
         print(path)

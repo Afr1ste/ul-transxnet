@@ -20,7 +20,7 @@
 
 This supplement retains only tables tied to the frozen analysis-label snapshot and removes earlier development tables that mixed earlier dataset labels, current XML labels, and intermediate analysis labels. All quantitative tables retained here use the snapshot below:
 \begin{quote}
-\path{eval_reports/paper_log_label_reconstruction_20260505/paper_log_case_labels.csv}\\
+\path{results/strict_20260514/analysis_labels/analysis_label_snapshot.csv}\\
 SHA256: \texttt{4C5BFFE475B89BA9C52AE1C19FD6558F2C6C31247}\\
 \texttt{19807828C936C1A18139BB1}.
 \end{quote}
@@ -228,6 +228,6 @@ BUSI is retained in its public benchmark form for comparability, but we audited 
 
 \section*{S8. Removed Legacy Tables}
 
-This submission package intentionally removes earlier supplementary tables for CUDA trade-off, non-locked Android baselines, BUSI/AUL auto-ROI classification, and calibration. Those tables were useful during development, but they were produced before the final manifest discipline was enforced or before the Android threshold/label loader was fixed. They are not used as manuscript evidence. They should only be restored after regeneration from per-case prediction CSVs that reference the label snapshot and manifest hash in Section S1.
+This submission package intentionally removes earlier supplementary tables for CUDA trade-off, non-locked Android baselines, BUSI/AUL auto-ROI classification, and calibration. Those tables were useful during development, but they were produced before the final manifest discipline was enforced or before the Android threshold/label loader was fixed. They are not used as manuscript evidence. They should only be restored after regeneration from case-level prediction files that reference the label snapshot and manifest hash in Section S1.
 
 \end{document}

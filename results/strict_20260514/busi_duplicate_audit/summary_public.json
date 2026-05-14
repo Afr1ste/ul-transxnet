@@ -1,10 +1,11 @@
 {
-  "root": "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\busi\\busi_voc_v3_square_consistent",
+  "dataset": "BUSI",
+  "audit_root": "public_busi_manifest",
   "n_images": 647,
   "trainval": 518,
   "test": 129,
   "near_threshold": 2,
-  "label_source": "C:\\Users\\Afr1ste\\PycharmProjects\\Thyroid\\busi\\busi_voc_v3_square_consistent\\manifests\\label_manifest.csv",
+  "label_source": "results/strict_20260514/analysis_labels/analysis_label_snapshot.csv",
   "exact_duplicate_pairs": 1,
   "near_duplicate_pairs": 88,
   "cross_split_duplicate_or_near_pairs": 26,

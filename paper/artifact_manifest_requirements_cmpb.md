@@ -1,10 +1,10 @@
 # Artifact and Manifest Requirements Before Submission
 
-This note records the non-negotiable reproducibility artifacts needed to defend the current manuscript.
+This note records the reproducibility artifacts needed to fully defend the current manuscript during review or revision. The lightweight public repository contains compact table-level summaries; the full internal audit package should retain the case-level files listed below.
 
 ## Why this matters
 
-The manuscript reports both descriptive dataset counts and a frozen analysis-label snapshot used by the final robustness, mobile, and cross-protocol analyses. Aggregate counts are not sufficient to defend this distinction. Reviewers must be able to trace each table back to a file-level manifest and per-case predictions.
+The manuscript reports both descriptive dataset counts and a frozen analysis-label snapshot used by the final robustness, mobile, and cross-protocol analyses. Aggregate counts are not sufficient to defend this distinction in a revision or data audit. The corresponding author should be able to trace each table back to a file-level manifest and case-level predictions, even when those files are not redistributed in the lightweight public repository.
 
 ## Required manifest columns
 
@@ -57,7 +57,7 @@ For every reported table, keep a small provenance record with:
 
 ## Submission gate
 
-Before submission, the corresponding author should be able to regenerate each numerical table from:
+Before or during review, the corresponding author should be able to regenerate each numerical table from:
 
 1. the file-level manifest,
 2. the prediction CSV files,

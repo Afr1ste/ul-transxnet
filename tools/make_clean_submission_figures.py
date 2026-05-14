@@ -225,12 +225,15 @@ def architecture() -> None:
 
 def mobile_tradeoff() -> None:
     src = ROOT / "results" / "strict_20260514" / "manuscript_tables" / "table7_mobile.csv"
+    runtime_src = ROOT / "results" / "strict_20260514" / "mobile" / "strict_two_device_mobile_summary_20260514.csv"
     rows: list[dict[str, str]] = []
     with src.open("r", encoding="utf-8", newline="") as f:
         rows.extend(csv.DictReader(f))
 
-    cpu_rows = [r for r in rows if r["runtime"] == "CPU default"]
-    eca_rows = [r for r in rows if r["model"] == "EfficientFormer-L1+ECA+KD"]
+    runtime_rows: list[dict[str, str]] = []
+    with runtime_src.open("r", encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            runtime_rows.append({str(k).strip('\ufeff"'): v for k, v in row.items()})
     colors = {
         "EfficientFormer-L1+ECA+KD": "#0072B2",
         "EfficientFormer-L1+KD": "#009E73",
@@ -246,7 +249,7 @@ def mobile_tradeoff() -> None:
         gridspec_kw={"width_ratios": [1.05, 1.0], "wspace": 0.35},
     )
 
-    for row in cpu_rows:
+    for row in rows:
         model = row["model"]
         y = float(row["android_auc"])
         xiaomi = float(row["xiaomi_ms"])
@@ -271,8 +274,16 @@ def mobile_tradeoff() -> None:
     devices = ["Xiaomi", "Samsung"]
     width_bar = 0.22
     for i, runtime in enumerate(runtimes):
-        row = next(r for r in eca_rows if r["runtime"] == runtime)
-        values = [float(row["xiaomi_ms"]), float(row["samsung_ms"])]
+        values = []
+        for device_prefix in ("Xiaomi", "Samsung"):
+            match = next(
+                r
+                for r in runtime_rows
+                if r["phase"] == "hot"
+                and r["device"].startswith(device_prefix)
+                and r["mode"] == f"EffFormer-L1+ECA+KD{'' if runtime == 'CPU default' else ' ' + runtime}"
+            )
+            values.append(float(match["avg_total_ms_mean"]))
         positions = [v + (i - 1) * width_bar for v in x]
         ax2.bar(positions, values, width=width_bar, color=runtime_colors[runtime], label=runtime)
         for px, value in zip(positions, values):
