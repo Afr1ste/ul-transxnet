@@ -4,7 +4,7 @@ This note records the reproducibility artifacts needed to fully defend the curre
 
 ## Why this matters
 
-The manuscript reports both descriptive dataset counts and a frozen analysis-label snapshot used by the final robustness, mobile, and cross-protocol analyses. Aggregate counts are not sufficient to defend this distinction in a revision or data audit. The corresponding author should be able to trace each table back to a file-level manifest and case-level predictions, even when those files are not redistributed in the lightweight public repository.
+The manuscript reports fixed split/protocol metadata and final aggregate tables for robustness, mobile, and cross-protocol analyses. Aggregate counts alone are not sufficient for a revision or data audit. The corresponding author should be able to trace each table back to a file-level manifest and case-level predictions, even when those files are not redistributed in the lightweight public repository.
 
 ## Required manifest columns
 
@@ -14,7 +14,7 @@ Each dataset-level manifest should include:
 - `dataset`: TN5000, BUSI, or AUL.
 - `relative_image_path`: path relative to the dataset root, without redistributing the image itself.
 - `original_label`: label from the source dataset or source annotation.
-- `analysis_label`: label used by the reported analysis snapshot.
+- `label`: label used by the reported fixed protocol.
 - `split`: train, val, test, trainval, or fold-specific split name.
 - `fold`: fold index or empty for non-folded protocols.
 - `bbox_xmin`, `bbox_ymin`, `bbox_xmax`, `bbox_ymax`: lesion box if available.
@@ -22,7 +22,7 @@ Each dataset-level manifest should include:
 - `excluded`: true or false.
 - `exclusion_reason`: empty unless a case is excluded.
 - `source_manifest_hash`: hash of the upstream/source manifest or annotation file.
-- `analysis_manifest_hash`: hash of this frozen analysis manifest.
+- `manifest_hash`: hash of the fixed split/protocol manifest.
 
 ## Required prediction CSV columns
 

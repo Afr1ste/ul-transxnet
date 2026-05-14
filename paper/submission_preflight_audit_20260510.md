@@ -25,11 +25,11 @@ The paper is framed as a bounded computing-methods workflow for ROI-robust ultra
 - ROI dependence is controlled: oracle ROI is treated as a classifier protocol, with detector ROI and box-noise experiments used as robustness evidence rather than full clinical deployment proof.
 - The TransXNet comparison is transparent: the paper reports that UL-TransXNet is not a TN5000 AUC improvement over original TransXNet, while showing stronger BUSI/AUL behavior.
 - The ablation story is not monotonic stacking: TransXNet-MUDD+DA is identified as the strongest TN5000 robustness variant, and MCA is described as dataset-dependent.
-- The frozen analysis-label snapshot is stated separately from descriptive dataset counts, reducing the risk that Table 1 appears internally inconsistent.
+- The dataset table now uses one descriptive count column and avoids a separate analysis-count column, reducing the risk that Table 1 appears internally inconsistent.
 
 ## Remaining Risks
 
-- The label-snapshot issue remains the main submission risk. The paper now states a manifest-based provenance chain, but the actual release package must contain the split/protocol manifests and per-case prediction CSVs described in `artifact_manifest_requirements_cmpb.md`.
+- Result provenance remains the main submission risk. The paper now states a fixed-protocol provenance chain, but the actual release package must contain the split/protocol manifests and per-case prediction CSVs described in `artifact_manifest_requirements_cmpb.md`.
 - The 1000-D task-projection head is now explained, but a reviewer could still ask for a head ablation. This is not a submission blocker for CMPB.
 - Mobile results are one-device evidence. The manuscript correctly calls this feasibility/prototype evidence, not clinical deployment.
 - LODO cross-organ performance is weak. This is acceptable because the paper treats it as a boundary result rather than a positive claim.

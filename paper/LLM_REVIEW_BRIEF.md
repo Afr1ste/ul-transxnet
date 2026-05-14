@@ -15,7 +15,7 @@ Target journal: Computer Methods and Programs in Biomedicine.
 
 The paper should be judged as a reproducible computing-methods / applied biomedical engineering paper, not as a claim of a fundamentally new vision backbone. The intended contribution is:
 
-- manifest-locked ROI ultrasound lesion-classification evaluation;
+- fixed-protocol ROI ultrasound lesion-classification evaluation;
 - TransXNet-family teacher design-space analysis;
 - localization robustness under GT, perturbed, and detector-derived ROI inputs;
 - EfficientFormer-L1 mobile distillation and two-device Android measurement;

@@ -10,7 +10,7 @@ The public repository was rebuilt after strict-label reruns and manuscript clean
 - Added the current CMPB-oriented manuscript source and PDFs.
 - Added the current supplementary material.
 - Added compact strict result summaries under `results/strict_20260514/`.
-- Added a path-sanitized analysis-label snapshot.
+- Added path-sanitized split/protocol metadata.
 - Added public manuscript table CSVs.
 - Added validation and table-copy scripts.
 - Excluded datasets, checkpoints, ONNX binaries, APKs, and full logs.

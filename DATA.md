@@ -10,17 +10,15 @@ The study uses public ultrasound datasets, but image files are not redistributed
 
 Users should obtain the datasets from their original providers and comply with the corresponding licenses and citation requirements.
 
-## Analysis Labels
+## Split and Protocol Metadata
 
-The current strict analyses use a frozen file-level analysis-label snapshot:
-
-`results/strict_20260514/analysis_labels/analysis_label_snapshot.csv`
+The current strict analyses use fixed split/protocol metadata distributed under `results/strict_20260514/`.
 
 This CSV contains only:
 
 - dataset name
 - case identifier
-- analysis label
+- label
 - label name
 - split
 - observation counts

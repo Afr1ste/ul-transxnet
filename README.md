@@ -4,7 +4,7 @@ This repository is the clean public artifact for the CMPB-oriented manuscript:
 
 **ROI-Robust Ultrasound Lesion Classification: TransXNet-Family Teacher Analysis, Efficient Mobile Distillation, and Multi-Organ Evaluation**
 
-The repository was rebuilt from an empty public branch on 2026-05-14 to remove stale internal experiment names and mixed-label artifacts. It contains the current manuscript package, strict result summaries, a path-sanitized analysis-label snapshot, and lightweight validation scripts.
+The repository was rebuilt from an empty public branch on 2026-05-14 to remove stale internal experiment names and mixed-label artifacts. It contains the current manuscript package, strict result summaries, split/protocol metadata, and lightweight validation scripts.
 
 ## What Is Included
 
@@ -19,7 +19,7 @@ The repository was rebuilt from an empty public branch on 2026-05-14 to remove s
 
 This repository does not redistribute medical image datasets, trained checkpoints, ONNX binaries, APKs, or full training logs. Those files are intentionally excluded because of size and dataset/license constraints.
 
-The public result files are designed for auditability. They preserve table-level evidence and case-level analysis labels, while removing absolute local paths and private source-log path lists.
+The public result files are designed for auditability. They preserve table-level evidence and protocol metadata, while removing absolute local paths and private source-log path lists.
 
 ## Quick Check
 
@@ -37,8 +37,8 @@ OK: artifact validation passed
 
 ## Current Evidence Snapshot
 
-- Analysis-label snapshot: `results/strict_20260514/analysis_labels/analysis_label_snapshot.csv`
-- Snapshot source SHA-256: see `results/strict_20260514/analysis_labels/analysis_label_manifest_public.json`
+- Split/protocol metadata: see `results/strict_20260514/`.
+- Metadata source SHA-256: see `results/strict_20260514/`.
 - Main table CSVs: `results/strict_20260514/manuscript_tables/`
 - ROI robustness CSV: `results/strict_20260514/roi_robustness/roi_robustness_metrics_public.csv`
 - Two-device Android summary: `results/strict_20260514/mobile/strict_two_device_mobile_summary_20260514.csv`

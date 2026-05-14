@@ -1,5 +1,5 @@
-# Frozen analysis-label snapshot
+# Split and Protocol Metadata
 
-This folder contains the public, path-sanitized case-level label snapshot used by the strict manuscript analyses. It does not overwrite or redistribute source dataset labels or images.
+This folder contains public, path-sanitized split/protocol metadata used by the strict manuscript analyses. It does not overwrite or redistribute source dataset labels or images.
 
-`analysis_label_snapshot.csv` removes absolute local paths and private source-log path lists while preserving dataset, case ID, analysis label, split, and observation counts.
+The CSV in this folder removes absolute local paths and private source-log path lists while preserving dataset, case ID, label, split, and observation counts.

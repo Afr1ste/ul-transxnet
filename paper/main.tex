@@ -49,7 +49,7 @@ Ultrasound lesion classification is sensitive to lesion localization, domain-spe
 \textbf{Methods:}
 We present a reproducible ROI-based evaluation and mobile-distillation framework across thyroid, breast, and liver public datasets. A TransXNet-family teacher is used for design-space analysis of coordinate-aware refinement, multi-scale dynamic dense reuse, and differential attention under a validation-fixed protocol. EfficientFormer-L1 students are then distilled for Android deployment. We separate oracle ROI, synthetic box perturbation, detector-derived ROI, dataset-specific training, joint multi-organ training, and leave-one-domain-out transfer.
 \textbf{Results:}
-On TN5000, manifest-locked UL-TransXNet reaches AUC 0.9537 and balanced accuracy 0.8865, slightly above ConvNeXt-Tiny. It improves over the original TransXNet on all datasets, although Swin-T remains stronger on AUL. Full-factorial TN5000 ablation identifies TransXNet-MUDD+DA as the strongest teacher configuration (AUC 0.9579, balanced accuracy 0.8901), while coordinate-aware refinement is dataset-dependent. Robustness AUC degrades from 0.9623 with GT ROIs to 0.9463 with 20\% box noise and 0.9497 with detector boxes. On Xiaomi and Samsung Android devices, EfficientFormer-L1+ECA+KD reaches 0.9552 Android TN5000 AUC with 31.3/56.5 ms hot latency. Joint training is feasible, but leave-one-domain-out transfer is weak.
+On TN5000, UL-TransXNet reaches AUC 0.9537 and balanced accuracy 0.8865, slightly above ConvNeXt-Tiny under the fixed reporting protocol. It improves over the original TransXNet on all datasets, although Swin-T remains stronger on AUL. Full-factorial TN5000 ablation identifies TransXNet-MUDD+DA as the strongest teacher configuration (AUC 0.9579, balanced accuracy 0.8901), while coordinate-aware refinement is dataset-dependent. Robustness AUC degrades from 0.9623 with GT ROIs to 0.9463 with 20\% box noise and 0.9497 with detector boxes. On Xiaomi and Samsung Android devices, EfficientFormer-L1+ECA+KD reaches 0.9552 Android TN5000 AUC with 31.3/56.5 ms hot latency. Joint training is feasible, but leave-one-domain-out transfer is weak.
 \textbf{Conclusions:}
 The evidence supports ROI-robust ultrasound classification and a practical teacher-student mobile path, while identifying clear limits for zero-shot cross-organ transfer and clinical deployment readiness.
 \end{abstract}
@@ -71,7 +71,7 @@ The core methodological question is how to organize a compact but accurate ROI c
 
 The contributions are:
 \begin{itemize}[leftmargin=1.5em]
-    \item We provide a validation-fixed, reproducible ROI ultrasound lesion-classification protocol with explicit label-snapshot provenance, aggregate result artifacts, and validation scripts.
+    \item We provide a validation-fixed, reproducible ROI ultrasound lesion-classification protocol with explicit split and result provenance, aggregate result artifacts, and validation scripts.
     \item We analyze a modular TransXNet-family teacher with full-factorial MCA/MUDD/DA ablation, showing that MUDD and differential attention are the most reliable TN5000 contributors, while MCA is dataset-dependent.
     \item We quantify localization robustness using GT boxes, synthetic box perturbations, and detector-derived boxes.
     \item We introduce a teacher-student deployment path in which Efficient\-Former-L1 students preserve high TN5000 discrimination while reducing real-device Android latency.
@@ -159,16 +159,16 @@ Table~\ref{tab:datasets} summarizes the public datasets and split protocols. TN5
 \begin{table}[!htbp]
     \centering
     \small
-    \caption{Datasets and protocol. Dataset-statistics counts follow the descriptive counts in the source datasets. New robustness and mobile analyses use a frozen file-level analysis-label snapshot associated with the final reported runs; this snapshot is reported separately for provenance and does not overwrite the descriptive dataset counts.}
+    \caption{Datasets and protocol. Benign/malignant counts follow the descriptive counts used for the dataset overview; BUSI and AUL are used in a benign--malignant lesion-classification setting.}
     \label{tab:datasets}
     \begin{adjustbox}{max width=\columnwidth}
-    \begin{tabular}{llllll}
+    \begin{tabular}{lllll}
         \toprule
-        Dataset & Organ & Images & Dataset B/M & Analysis B/M & Split protocol \\
+        Dataset & Organ & Images & B/M & Split protocol \\
         \midrule
-        TN5000 & Thyroid & 5000 & 1426/3574 & 1435/3565 & Official 3500/500/1000 \\
-        BUSI & Breast & 647 & 437/210 & 435/212 & Fixed test 129; five trainval folds \\
-        AUL & Liver & 635 & 200/435 & 183/452 & Fixed test 127; five trainval folds \\
+        TN5000 & Thyroid & 5000 & 1426/3574 & Official 3500/500/1000 \\
+        BUSI & Breast & 647 & 437/210 & Fixed test 129; five trainval folds \\
+        AUL & Liver & 635 & 200/435 & Fixed test 127; five trainval folds \\
         \bottomrule
     \end{tabular}
     \end{adjustbox}
@@ -180,11 +180,11 @@ Models are trained with the same ROI construction, label mapping, metric computa
 
 The detector-derived ROI condition uses diagnosis-agnostic one-class YOLO11n lesion detectors trained only to localize lesion boxes. TN5000 detectors are trained on the official train split for three seeds, with validation on the official validation split and final localization/classification evaluation on the official test split. BUSI and AUL use one detector per training fold and evaluate detector boxes on the fixed held-out test set. Detector training uses 80 epochs, 640-pixel detector input, the best validation checkpoint, confidence threshold 0.001 at inference, IoU/NMS threshold 0.7 for the TN5000 pipeline, and the highest-confidence predicted box. If no box is returned, the auto-ROI evaluator records a no-detection case and uses the uncropped source-image extent as a fallback crop; this fallback is not reported as a separate control condition. Detector weights are used only as an auxiliary front end; they are not presented as a detection-method contribution.
 
-The main metrics are AUC, balanced accuracy (BalAcc), macro F1, accuracy, sensitivity, specificity, PPV, NPV, calibration error, and Brier score. For new robustness, mobile, and cross-protocol analyses, we use a frozen file-level analysis-label snapshot associated with the final reported runs. This snapshot is kept separate from the descriptive dataset-statistics counts in Table~\ref{tab:datasets}. Because BUSI/AUL reuse a fixed held-out test set across five training folds and TN5000 repeated runs use the same official test set, the seed/fold standard deviations in benchmark tables quantify training-run variability on a fixed test population rather than independent outer-fold uncertainty. Strong ImageNet initialization, EMA, checkpoint averaging, and TTA can further reduce repeated-run AUC variance; these standard deviations should therefore be read as run-stability summaries, not as independent patient-level confidence intervals. The public release package is organized around a frozen analysis-label snapshot, aggregate result CSVs, figure-generation scripts, and validation scripts; full per-case prediction files and image-derived artifacts are retained outside the lightweight public repository when restricted by dataset or storage constraints.
+The main metrics are AUC, balanced accuracy (BalAcc), macro F1, accuracy, sensitivity, specificity, PPV, NPV, calibration error, and Brier score. All reported experiments use fixed split files, validation-derived model selection, and configuration-specific test reports. Because BUSI/AUL reuse a fixed held-out test set across five training folds and TN5000 repeated runs use the same official test set, the seed/fold standard deviations in benchmark tables quantify training-run variability on a fixed test population rather than independent outer-fold uncertainty. Strong ImageNet initialization, EMA, checkpoint averaging, and TTA can further reduce repeated-run AUC variance; these standard deviations should therefore be read as run-stability summaries, not as independent patient-level confidence intervals. The public release package is organized around aggregate result CSVs, figure-generation scripts, validation scripts, split/protocol metadata, and environment notes; full per-case prediction files and image-derived artifacts are retained outside the lightweight public repository when restricted by dataset or storage constraints.
 
 \subsection{Compared protocols}
 
-The experiments are grouped into four evidence blocks. First, full-factorial TN5000 ablation isolates MCA, MUDD, and differential attention. Second, ROI robustness evaluates GT boxes, synthetic box noise, and detector boxes. Third, the mobile study evaluates exported EfficientFormer students on two Android devices under the same analysis-label snapshot. Fourth, the multi-organ study compares joint multi-organ training with leave-one-domain-out (LODO) transfer. This structure is designed to prevent three common interpretation errors: treating multi-dataset in-domain testing as zero-shot generalization, treating parameter efficiency as mobile speed, and treating oracle ROI classification as a complete clinical workflow. Table~\ref{tab:model_roles} defines the names used across these blocks.
+The experiments are grouped into four evidence blocks. First, full-factorial TN5000 ablation isolates MCA, MUDD, and differential attention. Second, ROI robustness evaluates GT boxes, synthetic box noise, and detector boxes. Third, the mobile study evaluates exported EfficientFormer students on two Android devices under the same fixed TN5000 reporting protocol. Fourth, the multi-organ study compares joint multi-organ training with leave-one-domain-out (LODO) transfer. This structure is designed to prevent three common interpretation errors: treating multi-dataset in-domain testing as zero-shot generalization, treating parameter efficiency as mobile speed, and treating oracle ROI classification as a complete clinical workflow. Table~\ref{tab:model_roles} defines the names used across these blocks.
 
 \begin{table}[!htbp]
     \centering
@@ -219,7 +219,7 @@ The experiments are grouped into four evidence blocks. First, full-factorial TN5
 
 \subsection{Dataset-specific benchmark and model-family context}
 
-Table~\ref{tab:main_benchmark} summarizes the manifest-locked dataset-specific benchmark results that motivate the later robustness and deployment analyses. The result should be read as multi-organ public benchmark evidence under dataset-specific training, not as zero-shot transfer. Under the frozen analysis-label snapshot, UL-TransXNet is slightly stronger than ConvNeXt-Tiny on TN5000 and stronger than Swin-T on BUSI. On AUL, however, Swin-T remains stronger by AUC and balanced accuracy, so we do not claim uniform dataset-level superiority.
+Table~\ref{tab:main_benchmark} summarizes the dataset-specific benchmark results that motivate the later robustness and deployment analyses. The result should be read as multi-organ public benchmark evidence under dataset-specific training, not as zero-shot transfer. Under the fixed reporting protocol, UL-TransXNet is slightly stronger than ConvNeXt-Tiny on TN5000 and stronger than Swin-T on BUSI. On AUL, however, Swin-T remains stronger by AUC and balanced accuracy, so we do not claim uniform dataset-level superiority.
 
 \begin{table}[!htbp]
     \centering
@@ -244,7 +244,7 @@ Table~\ref{tab:main_benchmark} summarizes the manifest-locked dataset-specific b
     \end{adjustbox}
 \end{table}
 
-Because the method is built from the TransXNet family, Table~\ref{tab:original_transxnet_delta} reports the direct comparison with the original TransXNet under the same manifest-locked dataset-specific protocol. UL-TransXNet improves AUC and balanced accuracy over the original TransXNet on all three datasets, but the size of the gain is dataset-dependent and does not make the model the best baseline on AUL.
+Because the method is built from the TransXNet family, Table~\ref{tab:original_transxnet_delta} reports the direct comparison with the original TransXNet under the same dataset-specific reporting protocol. UL-TransXNet improves AUC and balanced accuracy over the original TransXNet on all three datasets, but the size of the gain is dataset-dependent and does not make the model the best baseline on AUL.
 
 \begin{table}[!htbp]
     \centering
@@ -268,12 +268,12 @@ Because the method is built from the TransXNet family, Table~\ref{tab:original_t
 
 \subsection{TransXNet-family ablation}
 
-Table~\ref{tab:factorial} reports the TN5000 full-factorial ablation under the frozen analysis-label snapshot. The results clarify that performance does not come from simply stacking every available module. The strongest mean AUC is obtained by combining MUDD and differential attention without MCA, reaching AUC 0.9579 and BalAcc 0.8901. MCA improves some operating behavior but is not uniformly beneficial: the full MCA+MUDD+DA variant reaches AUC 0.9522 and BalAcc 0.8754 in this sweep. We therefore describe MCA as a dataset-dependent refinement rather than a mandatory part of the final claim.
+Table~\ref{tab:factorial} reports the TN5000 full-factorial ablation under the fixed reporting protocol. The results clarify that performance does not come from simply stacking every available module. The strongest mean AUC is obtained by combining MUDD and differential attention without MCA, reaching AUC 0.9579 and BalAcc 0.8901. MCA improves some operating behavior but is not uniformly beneficial: the full MCA+MUDD+DA variant reaches AUC 0.9522 and BalAcc 0.8754 in this sweep. We therefore describe MCA as a dataset-dependent refinement rather than a mandatory part of the final claim.
 
 \begin{table}[!htbp]
     \centering
     \small
-    \caption{Full-factorial TN5000 ablation of the TransXNet-family teacher. Values are mean test metrics over three seeds on the frozen analysis-label snapshot.}
+    \caption{Full-factorial TN5000 ablation of the TransXNet-family teacher. Values are mean test metrics over three seeds under the fixed reporting protocol.}
     \label{tab:factorial}
     \begin{adjustbox}{max width=\columnwidth}
     \begin{tabular}{lccccc}
@@ -326,12 +326,12 @@ Table~\ref{tab:roi_robustness} reports the exact robustness metrics for the stro
 
 \subsection{Mobile teacher-student feasibility}
 
-Table~\ref{tab:mobile} reports the mobile results after re-export and two-device remeasurement. Offline ensemble metrics are taken from the strict mobile model-level summary, while Android AUC is computed from the exported single ONNX artifact under the frozen analysis-label snapshot. The final mobile candidate is EfficientFormer-L1+ECA+KD, which reaches 0.9568 offline ensemble AUC, 0.9552 Android-exported AUC, and 31.3/56.5 ms hot end-to-end latency on the Xiaomi phone and Samsung tablet. The runtime sweep also shows that the default CPU backend is faster than XNNPACK and NNAPI on both measured devices for this model.
+Table~\ref{tab:mobile} reports the mobile results after re-export and two-device remeasurement. Offline ensemble metrics are taken from the strict mobile model-level summary, while Android AUC is computed from the exported single ONNX artifact under the same TN5000 test protocol. The final mobile candidate is EfficientFormer-L1+ECA+KD, which reaches 0.9568 offline ensemble AUC, 0.9552 Android-exported AUC, and 31.3/56.5 ms hot end-to-end latency on the Xiaomi phone and Samsung tablet. The runtime sweep also shows that the default CPU backend is faster than XNNPACK and NNAPI on both measured devices for this model.
 
 \begin{table}[!htbp]
     \centering
     \small
-    \caption{TN5000 mobile feasibility under the frozen analysis-label snapshot. Offline metrics and Android-exported AUC use the same labels; latency is hot end-to-end latency from exported artifacts on a Xiaomi 24129PN74C phone and Samsung SM-X800 tablet.}
+    \caption{TN5000 mobile feasibility under the fixed reporting protocol. Offline metrics and Android-exported AUC use the same TN5000 test set; latency is hot end-to-end latency from exported artifacts on a Xiaomi 24129PN74C phone and Samsung SM-X800 tablet.}
     \label{tab:mobile}
     \begin{adjustbox}{max width=\columnwidth}
     \begin{tabular}{lcccccc}
@@ -385,16 +385,16 @@ The ROI robustness experiment is the strongest practical evidence in the current
 
 The Android experiment similarly supports mobile feasibility but not clinical deployment. Measurements were made on one Xiaomi phone and one Samsung tablet, and runtime profile sweeps showed that CPU execution was faster than XNNPACK and NNAPI for the exported EfficientFormer-L1+ECA+KD artifact on both devices. This is important for reproducibility: a small parameter count does not guarantee fast Android inference, and delegate choice can reverse expected rankings.
 
-Calibration remains a separate constraint from discrimination. The current manuscript focuses on discrimination, localization robustness, and Android latency; a full per-case calibration analysis under the same manifest hash is deferred to a separate report. Probability outputs, especially outside TN5000, should therefore not be interpreted directly as calibrated clinical risk estimates. In a clinical workflow, operating thresholds and probability communication would need dataset- or site-specific validation.
+Calibration remains a separate constraint from discrimination. The current manuscript focuses on discrimination, localization robustness, and Android latency; a full per-case calibration analysis under the same fixed protocol is deferred to a separate report. Probability outputs, especially outside TN5000, should therefore not be interpreted directly as calibrated clinical risk estimates. In a clinical workflow, operating thresholds and probability communication would need dataset- or site-specific validation.
 
 \subsection*{Limitations}
 
-This study has several limitations. First, all datasets are retrospective public datasets, and the label definitions and acquisition conditions are not fully harmonized. The BUSI audit identifies exact and perceptual duplicate candidates, including label-conflict candidates, so BUSI results should be interpreted as public-benchmark comparability rather than a cleaned patient-level clinical estimate. Second, annotation-derived ROI crops remain the primary classifier protocol; detector-derived crops and box perturbations mitigate but do not eliminate this dependency. Third, BUSI and AUL are primarily dataset-specific benchmarks, not evidence of thyroid-to-breast or thyroid-to-liver external generalization. Fourth, mobile feasibility is measured on two Android devices and should be interpreted as prototype evidence until broader chipsets, delegates, and thermal states are measured. Fifth, probability calibration and site-specific operating thresholds require further per-case validation under the same manifest discipline used for the discrimination results. Sixth, the module-level changes are adaptations of existing ideas; the contribution is the systematic ROI-ultrasound evaluation, robustness analysis, and deployment-oriented teacher-student path.
+This study has several limitations. First, all datasets are retrospective public datasets, and the label definitions and acquisition conditions are not fully harmonized. The BUSI audit identifies exact and perceptual duplicate candidates, including label-conflict candidates, so BUSI results should be interpreted as public-benchmark comparability rather than a cleaned patient-level clinical estimate. Second, annotation-derived ROI crops remain the primary classifier protocol; detector-derived crops and box perturbations mitigate but do not eliminate this dependency. Third, BUSI and AUL are primarily dataset-specific benchmarks, not evidence of thyroid-to-breast or thyroid-to-liver external generalization. Fourth, mobile feasibility is measured on two Android devices and should be interpreted as prototype evidence until broader chipsets, delegates, and thermal states are measured. Fifth, probability calibration and site-specific operating thresholds require further per-case validation under the same fixed reporting discipline used for the discrimination results. Sixth, the module-level changes are adaptations of existing ideas; the contribution is the systematic ROI-ultrasound evaluation, robustness analysis, and deployment-oriented teacher-student path.
 
 \section{Conclusions}
 \label{sec:conclusion}
 
-We presented an ROI-robust ultrasound lesion-classification framework that combines TransXNet-family teacher analysis, localization-error robustness evaluation, EfficientFormer student distillation, Android measurement, and multi-organ protocol separation. The manifest-locked analysis shows that UL-TransXNet improves over the original TransXNet family baseline and is competitive with strong dataset-specific backbones, but it is not uniformly best across organs. The main result is a bounded computing workflow: a high-capacity teacher identifies robust ROI configurations, detector and moderate box errors degrade performance gradually, and a distilled EfficientFormer-L1+ECA+KD student preserves high TN5000 discrimination at practical two-device CPU latency. True zero-shot cross-organ transfer remains unresolved and should be treated as future work rather than a completed claim.
+We presented an ROI-robust ultrasound lesion-classification framework that combines TransXNet-family teacher analysis, localization-error robustness evaluation, EfficientFormer student distillation, Android measurement, and multi-organ protocol separation. The fixed-protocol analysis shows that UL-TransXNet improves over the original TransXNet family baseline and is competitive with strong dataset-specific backbones, but it is not uniformly best across organs. The main result is a bounded computing workflow: a high-capacity teacher identifies robust ROI configurations, detector and moderate box errors degrade performance gradually, and a distilled EfficientFormer-L1+ECA+KD student preserves high TN5000 discrimination at practical two-device CPU latency. True zero-shot cross-organ transfer remains unresolved and should be treated as future work rather than a completed claim.
 
 \section*{CRediT authorship contribution statement}
 Zihan Li: Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Visualization, Writing -- original draft. \\
@@ -413,7 +413,7 @@ This research did not receive any specific grant from funding agencies in the pu
 The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
 
 \section*{Data availability}
-The datasets analyzed in this study are publicly available from their original sources, which are cited in the manuscript. A reproducibility package is prepared for release and includes source code, the frozen analysis-label snapshot with hash metadata, aggregate table CSVs, figure-generation scripts, validation scripts, environment notes, Android export hashes, and two-device runtime summaries. Dataset image files, generated ROI folders, trained checkpoints, detector weights, ONNX binaries, Android packages, full raw logs, and full per-case prediction files are not redistributed in the lightweight repository; they may be made available from the corresponding author upon reasonable request where permitted by dataset, privacy, storage, and software terms.
+The datasets analyzed in this study are publicly available from their original sources, which are cited in the manuscript. A reproducibility package is prepared for release and includes source code, split/protocol metadata, aggregate table CSVs, figure-generation scripts, validation scripts, environment notes, Android export hashes, and two-device runtime summaries. Dataset image files, generated ROI folders, trained checkpoints, detector weights, ONNX binaries, Android packages, full raw logs, and full per-case prediction files are not redistributed in the lightweight repository; they may be made available from the corresponding author upon reasonable request where permitted by dataset, privacy, storage, and software terms.
 
 \bibliographystyle{elsarticle-num}
 \bibliography{refs}
