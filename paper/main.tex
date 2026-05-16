@@ -18,7 +18,7 @@
 \graphicspath{{./}}
 \hypersetup{
     hidelinks,
-    pdftitle={A Reproducible ROI-Robust Evaluation and Mobile Distillation Framework for Ultrasound Lesion Classification},
+    pdftitle={Localization-Robust Teacher-Student Learning for Mobile Ultrasound Lesion Classification},
     pdfauthor={Zihan Li and Cong Yang}
 }
 \pdfstringdefDisableCommands{%
@@ -30,7 +30,7 @@
 
 \begin{frontmatter}
 
-\title{A Reproducible ROI-Robust Evaluation and Mobile Distillation Framework for Ultrasound Lesion Classification}
+\title{Localization-Robust Teacher-Student Learning for Mobile Ultrasound Lesion Classification}
 
 \author[inst1]{Zihan Li}
 \author[inst1]{Cong Yang\corref{cor1}}
@@ -45,17 +45,17 @@
 
 \begin{abstract}
 \textbf{Background and Objectives:}
-Ultrasound lesion classification is sensitive to lesion localization, domain-specific image appearance, and deployment constraints. Annotation-derived region-of-interest (ROI) crops often give strong classifier results, but they can overstate practical feasibility if localization error, model-selection provenance, and real-device latency are not evaluated.
+Ultrasound lesion classifiers are usually trained and reported on annotation-derived region-of-interest (ROI) crops, but mobile use depends on imperfect localization. A deployment-oriented classifier should therefore be selected not only by clean-ROI accuracy, but also by the performance loss caused by plausible ROI errors.
 \textbf{Methods:}
-We present a reproducible ROI-based evaluation and mobile-distillation framework across thyroid, breast, and liver public datasets. A TransXNet-family teacher is used for design-space analysis of coordinate-aware refinement, multi-scale dynamic dense reuse, and differential attention under a validation-fixed protocol. EfficientFormer-L1 students are then distilled for Android deployment. We separate oracle ROI, synthetic box perturbation, detector-derived ROI, dataset-specific training, joint multi-organ training, and leave-one-domain-out transfer.
+We propose a localization-robust teacher-student pipeline for ultrasound lesion classification. A controlled ROI perturbation protocol first evaluates high-capacity TransXNet-family teachers under ground-truth boxes, synthetic box noise, detector-derived boxes, and full-image inputs. The selected teacher then supervises EfficientFormer-L1 students through knowledge distillation, and the resulting students are re-evaluated under the same localization-stress protocol before Android deployment. Experiments use TN5000 thyroid nodules as the primary benchmark, with BUSI breast and AUL liver datasets used as additional public in-domain benchmarks and for multi-organ boundary analysis.
 \textbf{Results:}
-On TN5000, UL-TransXNet reaches AUC 0.9537 and balanced accuracy 0.8865, slightly above ConvNeXt-Tiny under the fixed reporting protocol. It improves over the original TransXNet on all datasets, although Swin-T remains stronger on AUL. Full-factorial TN5000 ablation identifies TransXNet-MUDD+DA as the strongest teacher configuration (AUC 0.9579, balanced accuracy 0.8901), while coordinate-aware refinement is dataset-dependent. Robustness AUC degrades from 0.9623 with GT ROIs to 0.9463 with 20\% box noise and 0.9497 with detector boxes. On Xiaomi and Samsung Android devices, EfficientFormer-L1+ECA+KD reaches 0.9552 Android TN5000 AUC with 31.3/56.5 ms hot latency. Joint training is feasible, but leave-one-domain-out transfer is weak.
+On TN5000, UL-TransXNet reaches AUC 0.9537 and balanced accuracy 0.8865, slightly above ConvNeXt-Tiny under the fixed protocol. Full-factorial ablation identifies TransXNet-MUDD+DA as the strongest teacher configuration (AUC 0.9579, balanced accuracy 0.8901), while coordinate-aware refinement is dataset-dependent. Under the unified localization-stress protocol, the MUDD+DA teacher obtains GT-ROI AUC 0.9623, 20\% box-noise AUC 0.9463, and detector-ROI AUC 0.9497. The distilled EfficientFormer-L1+KD student obtains GT-ROI AUC 0.9585, 20\% box-noise AUC 0.9529, and detector-ROI AUC 0.9534, showing that distillation does not amplify localization sensitivity. The EfficientFormer-L1+ECA+KD Android artifact reaches 0.9552 TN5000 AUC with 31.3/56.5 ms hot latency on Xiaomi and Samsung devices. Joint multi-organ training is feasible, but leave-one-domain-out transfer remains weak.
 \textbf{Conclusions:}
-The evidence supports ROI-robust ultrasound classification and a practical teacher-student mobile path, while identifying clear limits for zero-shot cross-organ transfer and clinical deployment readiness.
+Localization-stress testing provides a useful bridge between ROI teacher analysis and mobile distillation. The resulting evidence supports a bounded mobile ultrasound classification workflow: choose teachers by clean-ROI accuracy and localization robustness, distill compact students, and verify that the student preserves robustness before claiming deployment feasibility.
 \end{abstract}
 
 \begin{keyword}
-Ultrasound image classification \sep Region of interest \sep Localization robustness \sep Reproducible evaluation \sep Knowledge distillation \sep Mobile inference
+Ultrasound image classification \sep Region of interest \sep Localization robustness \sep Teacher-student learning \sep Knowledge distillation \sep Mobile inference
 \end{keyword}
 
 \end{frontmatter}
@@ -63,19 +63,21 @@ Ultrasound image classification \sep Region of interest \sep Localization robust
 \section{Introduction}
 \label{sec:introduction}
 
-Ultrasound is widely used for screening, follow-up, and diagnostic support because it is inexpensive, radiation-free, portable, and suitable for repeated acquisition. These advantages also create a difficult computer-aided diagnosis setting. Speckle noise, weak lesion boundaries, low contrast, operator dependency, and device-dependent appearance shifts can obscure benign--malignant cues. Deep learning has improved ultrasound classification, but practical lesion classifiers still face three linked problems: they often depend on annotation-derived ROI crops, they can be tuned to one dataset protocol, and their reported efficiency may not translate to real-device latency.
+Ultrasound is widely used for screening, follow-up, and diagnostic support because it is inexpensive, radiation-free, portable, and suitable for repeated acquisition. These advantages also create a difficult computer-aided diagnosis setting. Speckle noise, weak lesion boundaries, low contrast, operator dependency, and device-dependent appearance shifts can obscure benign--malignant cues. Deep learning has improved ultrasound classification, but practical lesion classifiers still face a specific deployment gap: many models are optimized and reported on annotation-derived ROI crops, whereas mobile use must tolerate imperfect lesion localization.
 
-This paper targets that gap from a computing-methods perspective. Rather than presenting a new universal medical vision backbone, we study an ROI-robust ultrasound lesion-classification framework that connects controlled ROI classification, localization-error analysis, model-selection provenance, and Android feasibility. TN5000 thyroid nodules are used as the primary benchmark~\cite{Zhang_2025}, while BUSI breast lesions~\cite{Al_Dhabyani_2020} and the Annotated Ultrasound Liver (AUL) dataset~\cite{aul_dataset} provide additional public in-domain benchmarks from different organs. These datasets differ in anatomy, acquisition appearance, annotation protocol, and class prevalence, so they should not be treated as automatic evidence of zero-shot cross-organ generalization.
+This paper targets that gap from a computing-methods perspective. Rather than presenting a new universal medical vision backbone, we ask how ROI localization stress can guide the construction of a mobile ultrasound classifier. The intended workflow is sequential: first evaluate high-capacity teachers under controlled ROI errors, then choose a teacher that remains reliable under those errors, then distill a compact student, and finally verify that the student has not lost the same localization robustness before real-device measurement. In this framing, robustness evaluation is not a diagnostic table added after the fact; it is the link between teacher analysis and mobile student deployment.
 
-The core methodological question is how to organize a compact but accurate ROI classifier when lesion crops may be imperfect. We use a TransXNet-family teacher~\cite{transxnet} as a high-capacity ROI model and study three adaptations: coordinate-aware feature refinement inspired by coordinate attention~\cite{hou2021coordinate}, multi-scale dynamic dense reuse, and differential attention adapted from the Differential Transformer formulation~\cite{ye2024differential}. We then decouple the accuracy-oriented teacher analysis from deployment by distilling EfficientFormer-L1 students~\cite{li2022efficientformer} and measuring them on a real Android device.
+TN5000 thyroid nodules are used as the primary benchmark~\cite{Zhang_2025}, while BUSI breast lesions~\cite{Al_Dhabyani_2020} and the Annotated Ultrasound Liver (AUL) dataset~\cite{aul_dataset} provide additional public in-domain benchmarks from different organs. These datasets differ in anatomy, acquisition appearance, annotation protocol, and class prevalence, so they should not be treated as automatic evidence of zero-shot cross-organ generalization. We use a TransXNet-family teacher~\cite{transxnet} as a high-capacity ROI model and study three adaptations: coordinate-aware feature refinement inspired by coordinate attention~\cite{hou2021coordinate}, multi-scale dynamic dense reuse, and differential attention adapted from the Differential Transformer formulation~\cite{ye2024differential}. We then distill EfficientFormer-L1 students~\cite{li2022efficientformer} and measure exported artifacts on real Android devices.
+
+The paper is organized around three research questions. First, which TransXNet-family teacher remains accurate when ROI boxes are perturbed or replaced by detector-derived boxes? Second, after distillation, does an EfficientFormer student retain the same localization robustness rather than merely reproduce clean-ROI accuracy? Third, under what public-dataset conditions do the resulting models remain useful, and where do multi-organ or mobile claims stop?
 
 The contributions are:
 \begin{itemize}[leftmargin=1.5em]
-    \item We provide a validation-fixed, reproducible ROI ultrasound lesion-classification protocol with explicit split and result provenance, aggregate result artifacts, and validation scripts.
-    \item We analyze a modular TransXNet-family teacher with full-factorial MCA/MUDD/DA ablation, showing that MUDD and differential attention are the most reliable TN5000 contributors, while MCA is dataset-dependent.
-    \item We quantify localization robustness using GT boxes, synthetic box perturbations, and detector-derived boxes.
-    \item We introduce a teacher-student deployment path in which Efficient\-Former-L1 students preserve high TN5000 discrimination while reducing real-device Android latency.
-    \item We distinguish multi-organ joint training from leave-one-domain-out transfer, showing that the former is feasible but true zero-shot cross-organ generalization remains limited.
+    \item We formulate a localization-stress protocol for ROI ultrasound classification that evaluates GT boxes, synthetic box perturbations, detector-derived boxes, and full-image inputs under a fixed validation-derived operating point.
+    \item We use this protocol to analyze TransXNet-family teachers, showing through full-factorial MCA/MUDD/DA ablation that MUDD and differential attention provide the most reliable TN5000 teacher configuration.
+    \item We evaluate the same localization-stress protocol after distillation and show that EfficientFormer-L1 KD students preserve high TN5000 AUC and smaller 20\% box-noise degradation than the high-capacity teachers.
+    \item We deploy the selected student artifacts on Xiaomi and Samsung Android devices, linking robustness-aware student selection to measured mobile latency rather than to parameter count alone.
+    \item We report BUSI/AUL in-domain benchmarks and joint/leave-one-domain-out probes to define the boundary between multi-dataset evaluation and true cross-organ generalization.
 \end{itemize}
 \FloatBarrier
 
@@ -184,7 +186,7 @@ The main metrics are AUC, balanced accuracy (BalAcc), macro F1, accuracy, sensit
 
 \subsection{Compared protocols}
 
-The experiments are grouped into four evidence blocks. First, full-factorial TN5000 ablation isolates MCA, MUDD, and differential attention. Second, ROI robustness evaluates GT boxes, synthetic box noise, and detector boxes. Third, the mobile study evaluates exported EfficientFormer students on two Android devices under the same fixed TN5000 reporting protocol. Fourth, the multi-organ study compares joint multi-organ training with leave-one-domain-out (LODO) transfer. This structure is designed to prevent three common interpretation errors: treating multi-dataset in-domain testing as zero-shot generalization, treating parameter efficiency as mobile speed, and treating oracle ROI classification as a complete clinical workflow. Table~\ref{tab:model_roles} defines the names used across these blocks.
+The experiments follow the teacher-student chain used by the method. First, the dataset-specific benchmark establishes the clean-ROI accuracy context. Second, full-factorial TN5000 ablation identifies a robust high-capacity TransXNet-family teacher. Third, the localization-stress protocol evaluates both teacher and student models under GT boxes, synthetic box noise, detector boxes, and full-image input. Fourth, exported students are measured on two Android devices. A final multi-organ study compares joint multi-organ training with leave-one-domain-out (LODO) transfer to define the boundary of public-dataset generalization. This structure is designed to prevent three common interpretation errors: treating multi-dataset in-domain testing as zero-shot generalization, treating parameter efficiency as mobile speed, and treating oracle ROI classification as a complete clinical workflow. Table~\ref{tab:model_roles} defines the names used across these blocks.
 
 \begin{table}[!htbp]
     \centering
@@ -197,9 +199,9 @@ The experiments are grouped into four evidence blocks. First, full-factorial TN5
         Name & Structure & Primary role & Main evidence \\
         \midrule
         UL-TransXNet & MCA+MUDD+DA teacher & Dataset-specific benchmark & Tables~\ref{tab:main_benchmark}--\ref{tab:original_transxnet_delta} \\
-        TransXNet-MUDD+DA & MUDD+DA teacher & Robustness teacher & Tables~\ref{tab:factorial}--\ref{tab:roi_robustness} \\
-        EfficientFormer-L1+KD & Distilled student & Mobile comparison & Table~\ref{tab:mobile} \\
-        EfficientFormer-L1+ECA+KD & Distilled ECA student & Final mobile candidate & Table~\ref{tab:mobile} \\
+        TransXNet-MUDD+DA & MUDD+DA teacher & Robustness-selected teacher & Tables~\ref{tab:factorial}--\ref{tab:teacher_student_robustness} \\
+        EfficientFormer-L1+KD & Distilled student & Student robustness comparison & Tables~\ref{tab:teacher_student_robustness}--\ref{tab:mobile} \\
+        EfficientFormer-L1+ECA+KD & Distilled ECA student & Final mobile candidate & Tables~\ref{tab:teacher_student_robustness}--\ref{tab:mobile} \\
         EfficientFormer-L1 & Lightweight shared model & Joint/LODO multi-organ probe & Table~\ref{tab:cross_organ} \\
         \bottomrule
     \end{tabular}
@@ -293,25 +295,25 @@ Table~\ref{tab:factorial} reports the TN5000 full-factorial ablation under the f
     \end{adjustbox}
 \end{table}
 
-\subsection{ROI localization robustness}
+\subsection{Localization-stress transfer from teacher to student}
 
-Table~\ref{tab:roi_robustness} reports the exact robustness metrics for the strongest TransXNet-MUDD+DA teacher, and Fig.~\ref{fig:roi_robustness} compares its AUC degradation against three reference backbones. Performance degrades gradually as the input crop moves from GT boxes to synthetic noise and detector-derived boxes. For TransXNet-MUDD+DA, AUC decreases from 0.9623 under GT boxes to 0.9463 under 20\% box noise, while detector boxes recover 0.9497 AUC and 0.8849 BalAcc. This supports a practical claim that the ROI classifier is not brittle to moderate localization error. It does not mean that the system is deployment-ready without further detector validation.
+Table~\ref{tab:teacher_student_robustness} applies the same TN5000 localization-stress protocol to the two TransXNet-family teachers and the three EfficientFormer-L1 students. This table is the main bridge between teacher analysis and mobile distillation. The MUDD+DA teacher remains the best clean-ROI model in this block (GT AUC 0.9623), but it loses 0.0160 AUC under 20\% box noise. UL-TransXNet loses 0.0224 AUC under the same perturbation. In contrast, the KD students preserve most of their clean-ROI performance: EfficientFormer-L1+KD obtains GT AUC 0.9585, 20\% box-noise AUC 0.9529, and detector-ROI AUC 0.9534; EfficientFormer-L1+ECA+KD obtains GT AUC 0.9557, 20\% box-noise AUC 0.9513, and detector-ROI AUC 0.9523. The non-KD EfficientFormer-L1+ECA student is substantially weaker on clean ROIs, showing that the retained performance is not merely a property of the lightweight backbone. Full-image AUCs remain far below ROI-based AUCs, confirming that the pipeline still depends on lesion localization.
 
 \begin{table}[!htbp]
     \centering
     \small
-    \caption{TN5000 ROI localization robustness for the strongest TransXNet-MUDD+DA teacher variant.}
-    \label{tab:roi_robustness}
+    \caption{TN5000 teacher-student localization-stress test. All rows use the same validation-derived operating point per model. Drop@20\% is GT-ROI AUC minus 20\% box-noise AUC.}
+    \label{tab:teacher_student_robustness}
     \begin{adjustbox}{max width=\columnwidth}
-    \begin{tabular}{lccc}
+    \begin{tabular}{lccccc}
         \toprule
-        Input box & AUC & BalAcc & Mean box IoU \\
+        Model & GT ROI AUC & 20\% noise AUC & Drop@20\% & Detector ROI AUC & Full-image AUC \\
         \midrule
-        GT ROI & 0.9623 & 0.9036 & 1.000 \\
-        GT ROI + 5\% noise & 0.9594 & 0.8969 & 0.899 \\
-        GT ROI + 10\% noise & 0.9556 & 0.8842 & 0.810 \\
-        GT ROI + 20\% noise & 0.9463 & 0.8665 & 0.662 \\
-        Detector ROI & 0.9497 & 0.8849 & 0.789 \\
+        UL-TransXNet teacher & 0.9600 & 0.9376 & 0.0224 & 0.9487 & 0.6556 \\
+        TransXNet-MUDD+DA teacher & \textbf{0.9623} & 0.9463 & 0.0160 & 0.9497 & 0.6869 \\
+        EfficientFormer-L1+ECA student & 0.9280 & 0.9258 & \textbf{0.0021} & 0.9308 & 0.7165 \\
+        EfficientFormer-L1+KD student & 0.9585 & \textbf{0.9529} & 0.0056 & \textbf{0.9534} & 0.7063 \\
+        EfficientFormer-L1+ECA+KD student & 0.9557 & 0.9513 & 0.0043 & 0.9523 & \textbf{0.7111} \\
         \bottomrule
     \end{tabular}
     \end{adjustbox}
@@ -320,7 +322,7 @@ Table~\ref{tab:roi_robustness} reports the exact robustness metrics for the stro
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.90\textwidth]{fig_roi_robustness_curve_crop.pdf}
-    \caption{AUC robustness under GT boxes, synthetic perturbations, and detector-derived boxes. The left panel compares absolute AUC; the right panel shows degradation from each model's GT-ROI AUC.}
+    \caption{Teacher-side AUC robustness under GT boxes, synthetic perturbations, and detector-derived boxes. The left panel compares absolute AUC; the right panel shows degradation from each model's GT-ROI AUC.}
     \label{fig:roi_robustness}
 \end{figure}
 
@@ -377,15 +379,15 @@ Table~\ref{tab:cross_organ} separates joint multi-organ training from true held-
 \section{Discussion}
 \label{sec:discussion}
 
-The results support a more defensible story than the initial ``new backbone'' framing. High-capacity TransXNet-family models are useful for ROI classification and robustness analysis, but the most deployable model is a distilled EfficientFormer student. Likewise, multi-organ joint training is feasible, but zero-shot transfer across organs remains limited. These distinctions matter because medical imaging AI papers can look stronger than they are if oracle ROIs, dataset-specific training, threshold selection, and mobile latency are mixed into one broad claim.
+The central result is not that one backbone is uniformly best. It is that localization-stress evaluation can organize the teacher-student pipeline. Clean-ROI benchmarking identifies high-capacity candidates, full-factorial ablation shows which TransXNet-family teacher is most reliable, and the same perturbation protocol then checks whether a compact student preserves performance when lesion boxes are imperfect. This sequence is more useful than reporting a teacher and a mobile model as unrelated experiments, because it asks whether deployment compression changes the model's sensitivity to the very ROI error that motivated the framework.
 
-The factorial ablation also changes the interpretation of the modules. MUDD and differential attention provide the most reliable TN5000 gain. MCA is not a universal AUC booster, even though it may still help some operating points and datasets. We therefore treat the TransXNet-family teacher as a design space, not as a single monotonic sequence where every added module improves every metric.
+The factorial ablation also changes the interpretation of the modules. MUDD and differential attention provide the most reliable TN5000 teacher gain. MCA is not a universal AUC booster, even though it may still help some operating points and datasets. We therefore treat the TransXNet-family model as a teacher design space, not as a monotonic sequence where every added module improves every metric. This distinction is important for the paper's claim: the teacher is selected for analysis and distillation, not presented as a universally superior backbone.
 
-The ROI robustness experiment is the strongest practical evidence in the current package. Detector boxes and moderate synthetic noise preserve much of the GT-ROI performance, suggesting that the classifier can tolerate plausible localization error. In the strict TN5000 detector-ROI table, the detector-derived boxes reach mean box IoU 0.789 and preserve 0.9497 AUC, but this remains an auxiliary front end rather than a new detection contribution. A clinical workflow would still require prospective acquisition, failure-mode handling, detector validation across sites and organs, and explicit human-review logic.
+The teacher-student localization-stress table is the strongest practical evidence in the current package. The MUDD+DA teacher gives the best clean-ROI AUC in the robustness block, but the distilled EfficientFormer-L1 students show smaller AUC degradation under 20\% synthetic box noise and detector-derived boxes. This does not prove that students are inherently more robust; lower-capacity models can also be less sensitive to crop perturbations because they rely on coarser features. The relevant finding is narrower and stronger: distillation did not amplify localization sensitivity, and the exported student remains close to the teacher under detector-derived ROI inputs. Full-image AUC remains much lower than ROI-based AUC, so the workflow still requires a lesion-localization step.
 
-The Android experiment similarly supports mobile feasibility but not clinical deployment. Measurements were made on one Xiaomi phone and one Samsung tablet, and runtime profile sweeps showed that CPU execution was faster than XNNPACK and NNAPI for the exported EfficientFormer-L1+ECA+KD artifact on both devices. This is important for reproducibility: a small parameter count does not guarantee fast Android inference, and delegate choice can reverse expected rankings.
+The Android experiment then completes the pipeline rather than serving as a separate demo. The student selected by accuracy, robustness, and exportability reaches 0.9552 Android AUC with 31.3/56.5 ms hot latency on the Xiaomi phone and Samsung tablet. Runtime profile sweeps showed that CPU execution was faster than XNNPACK and NNAPI for the exported EfficientFormer-L1+ECA+KD artifact on both devices. This reinforces the reason to separate teacher and student roles: a teacher can be valuable for robust representation analysis without being the right endpoint for mobile inference.
 
-Calibration remains a separate constraint from discrimination. The current manuscript focuses on discrimination, localization robustness, and Android latency; a full per-case calibration analysis under the same fixed protocol is deferred to a separate report. Probability outputs, especially outside TN5000, should therefore not be interpreted directly as calibrated clinical risk estimates. In a clinical workflow, operating thresholds and probability communication would need dataset- or site-specific validation.
+The multi-organ results define a second boundary. BUSI and AUL are useful public in-domain benchmarks from different organs, but LODO performance remains weak. The framework should therefore be read as a mobile ROI-classification workflow evaluated across multiple public datasets, not as a universal cross-organ ultrasound classifier. Calibration remains a separate constraint from discrimination: the current manuscript focuses on discrimination, localization robustness, and Android latency, while probability outputs and operating thresholds require site-specific validation before clinical use.
 
 \subsection*{Limitations}
 
@@ -394,7 +396,7 @@ This study has several limitations. First, all datasets are retrospective public
 \section{Conclusions}
 \label{sec:conclusion}
 
-We presented an ROI-robust ultrasound lesion-classification framework that combines TransXNet-family teacher analysis, localization-error robustness evaluation, EfficientFormer student distillation, Android measurement, and multi-organ protocol separation. The fixed-protocol analysis shows that UL-TransXNet improves over the original TransXNet family baseline and is competitive with strong dataset-specific backbones, but it is not uniformly best across organs. The main result is a bounded computing workflow: a high-capacity teacher identifies robust ROI configurations, detector and moderate box errors degrade performance gradually, and a distilled EfficientFormer-L1+ECA+KD student preserves high TN5000 discrimination at practical two-device CPU latency. True zero-shot cross-organ transfer remains unresolved and should be treated as future work rather than a completed claim.
+We presented a localization-robust teacher-student workflow for mobile ultrasound lesion classification. The key idea is to use ROI perturbation as a selection and verification tool: high-capacity TransXNet-family teachers are first evaluated under controlled localization errors, then EfficientFormer students are distilled and tested under the same stress conditions before Android deployment. On TN5000, the MUDD+DA teacher provides the strongest clean-ROI teacher evidence, while KD students preserve high AUC under 20\% box noise and detector-derived boxes and run at practical two-device CPU latency after export. The result is a bounded workflow for mobile ROI classification, not a claim of clinical deployment readiness or universal cross-organ generalization.
 
 \section*{CRediT authorship contribution statement}
 Zihan Li: Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Visualization, Writing -- original draft. \\

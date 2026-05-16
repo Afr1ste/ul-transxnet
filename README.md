@@ -1,8 +1,8 @@
-# ROI-Robust Ultrasound Lesion Classification
+# Localization-Robust Teacher-Student Ultrasound Classification
 
 This repository is the clean public artifact for the CMPB-oriented manuscript:
 
-**ROI-Robust Ultrasound Lesion Classification: TransXNet-Family Teacher Analysis, Efficient Mobile Distillation, and Multi-Organ Evaluation**
+**Localization-Robust Teacher-Student Learning for Mobile Ultrasound Lesion Classification**
 
 The repository was rebuilt from an empty public branch on 2026-05-14 to remove stale internal experiment names and mixed-label artifacts. It contains the current manuscript package, strict result summaries, split/protocol metadata, and lightweight validation scripts.
 
@@ -40,10 +40,11 @@ OK: artifact validation passed
 - Split/protocol metadata: see `results/strict_20260514/`.
 - Metadata source SHA-256: see `results/strict_20260514/`.
 - Main table CSVs: `results/strict_20260514/manuscript_tables/`
-- ROI robustness CSV: `results/strict_20260514/roi_robustness/roi_robustness_metrics_public.csv`
+- Teacher-student ROI stress summary: `results/strict_20260514/teacher_student_roi_robustness/teacher_student_roi_drop_summary.csv`
+- Teacher-side ROI robustness CSV: `results/strict_20260514/roi_robustness/roi_robustness_metrics_public.csv`
 - Two-device Android summary: `results/strict_20260514/mobile/strict_two_device_mobile_summary_20260514.csv`
 - Cross-organ summary: `results/strict_20260514/cross_organ/aggregate_metrics_by_domain.csv`
 
 ## Scope
 
-This is a review and reproducibility package, not a dataset mirror. The manuscript makes bounded claims: ROI robustness, validation-fixed reporting, mobile feasibility on two Android devices, and limits of zero-shot cross-organ transfer.
+This is a review and reproducibility package, not a dataset mirror. The manuscript makes bounded claims: localization-stress teacher selection, robustness-preserving student distillation, mobile feasibility on two Android devices, and limits of zero-shot cross-organ transfer.

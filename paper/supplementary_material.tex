@@ -14,7 +14,7 @@
 \begin{document}
 
 \begin{center}
-{\Large\bfseries Supplementary Material for ``A Reproducible ROI-Robust Evaluation and Mobile Distillation Framework for Ultrasound Lesion Classification''\par}
+{\Large\bfseries Supplementary Material for ``Localization-Robust Teacher-Student Learning for Mobile Ultrasound Lesion Classification''\par}
 \end{center}
 \vspace{1em}
 
@@ -34,7 +34,7 @@ This supplement retains only tables generated from the final fixed reporting pro
         \midrule
         Dataset-specific benchmark & Strict main reruns & TN5000 3 seeds; BUSI/AUL 5 folds \\
         TransXNet-family module sweep & Strict TN5000 module reruns & 8 MCA/MUDD/DA combinations \\
-        ROI robustness & Strict box-noise and detector-ROI report & GT, noisy, and detector-derived boxes \\
+        Teacher-student localization stress & Strict box-noise, detector-ROI, and full-image report & Teachers and mobile students under matched inputs \\
         Mobile export/runtime & Strict TN5000 mobile export and two-device Android reports & Re-exported artifacts \\
         Cross-organ probe & EfficientFormer joint/LODO aggregate report & 3 seeds \\
         BUSI duplicate audit & BUSI duplicate audit & Descriptive only \\
@@ -101,7 +101,27 @@ This supplement retains only tables generated from the final fixed reporting pro
 \begin{table}[H]
     \centering
     \small
-    \caption{TN5000 AUC robustness context across the four models shown in the main robustness figure under the fixed reporting protocol.}
+    \caption{TN5000 teacher-student localization-stress summary. Drop@20\% is GT-ROI AUC minus 20\% box-noise AUC.}
+    \label{tab:s_teacher_student_robustness}
+    \begin{adjustbox}{max width=\columnwidth}
+    \begin{tabular}{lccccc}
+        \toprule
+        Model & GT ROI & 20\% noise & Drop@20\% & Detector ROI & Full image \\
+        \midrule
+        UL-TransXNet teacher & 0.9600 & 0.9376 & 0.0224 & 0.9487 & 0.6556 \\
+        TransXNet-MUDD+DA teacher & 0.9623 & 0.9463 & 0.0160 & 0.9497 & 0.6869 \\
+        EfficientFormer-L1+ECA student & 0.9280 & 0.9258 & 0.0021 & 0.9308 & 0.7165 \\
+        EfficientFormer-L1+KD student & 0.9585 & 0.9529 & 0.0056 & 0.9534 & 0.7063 \\
+        EfficientFormer-L1+ECA+KD student & 0.9557 & 0.9513 & 0.0043 & 0.9523 & 0.7111 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Teacher-side TN5000 AUC robustness context across the four models shown in the main robustness figure under the fixed reporting protocol.}
     \label{tab:s_roi_robustness}
     \begin{adjustbox}{max width=\columnwidth}
     \begin{tabular}{lccccc}

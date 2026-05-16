@@ -1,7 +1,7 @@
 # Title Page
 
 Manuscript title:
-A Reproducible ROI-Robust Evaluation and Mobile Distillation Framework for Ultrasound Lesion Classification
+Localization-Robust Teacher-Student Learning for Mobile Ultrasound Lesion Classification
 
 Article type:
 Original Research
