@@ -1,5 +1,5 @@
-UltraDrill links ROI preprocessing, distillation, and edge verification.
-Localization stress guides robust teacher optimization before distillation.
+UltraDrill couples stress-guided distillation with edge verification.
+Localization stress guides teacher selection before student distillation.
 KD students preserve AUC under 20% box noise and detector ROIs.
 Fixed post-processing supports two-device Android runtime reporting.
 Full-image controls confirm that lesion localization remains necessary.

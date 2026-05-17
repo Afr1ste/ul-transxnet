@@ -133,31 +133,38 @@ def architecture() -> None:
     purple, purple_fill = "#7256a3", "#f1ebfb"
     gray_fill, panel_fill = "#f7f9fb", "#fbfcfd"
 
-    # A. UltraDrill framework first: the four modules are the contribution.
+    # A. UltraDrill framework first: two components are the contribution.
     rect(28, 24, 1224, 268, fill=panel_fill, stroke="#d4d9df", sw=1.3, rx=12)
-    title(48, 55, "A", "UltraDrill framework: one ROI-stress criterion from teacher selection to edge verification")
-    text(48, 83, "The same localization-stress protocol is used before and after distillation, so deployment compression is checked against the error source that motivates the framework.", size=12, color="#5b6672", anchor="start")
+    title(48, 55, "A", "UltraDrill framework: stress-guided optimization plus edge verification")
+    text(48, 83, "The contribution is compressed into two coupled components; ROI stress is the selection criterion before distillation and the verification criterion after distillation.", size=12, color="#5b6672", anchor="start")
 
-    module_y = 118
-    modules = [
-        (62, module_y, 250, 106, ["Module 1", "ROI preprocessing", "and stress inputs", "GT / 5-20% noise", "detector ROI / full image"], orange_fill, orange),
-        (348, module_y, 250, 106, ["Module 2", "Robust teacher", "optimization and selection", "TransXNet-family", "clean AUC + stress drop"], green_fill, green),
-        (634, module_y, 250, 106, ["Module 3", "Student distillation", "and compression", "EfficientFormer-L1", "same-stress retest"], purple_fill, purple),
-        (920, module_y, 250, 106, ["Module 4", "Post-processing", "and edge verification", "fixed threshold / export", "Xiaomi + Samsung"], blue_fill, blue),
+    component_y = 116
+    rect(62, component_y, 720, 118, fill="#fbfdfb", stroke=green, sw=2.1, rx=10)
+    text(422, component_y + 18, "Component 1", size=12, weight=700, color=green)
+    text(422, component_y + 42, "Localization-stress-guided teacher--student optimization", size=14.2, weight=700)
+    inner = [
+        (92, component_y + 64, 180, 44, ["ROI stress inputs", "GT / noise / detector / full"], orange_fill, orange),
+        (302, component_y + 64, 180, 44, ["Teacher selection", "clean AUC + stress drop"], green_fill, green),
+        (512, component_y + 64, 180, 44, ["Student distillation", "KD and same-stress retest"], purple_fill, purple),
     ]
-    for mx, my, mw, mh, label, fill, stroke in modules:
-        rect(mx, my, mw, mh, fill=fill, stroke=stroke, sw=2.0, rx=9)
-        text(mx + mw / 2, my + 18, label[0], size=12, weight=700, color=stroke)
-        text(mx + mw / 2, my + 42, label[1:3], size=14, weight=700, line_gap=16)
-        text(mx + mw / 2, my + 78, label[3:], size=11.3, color="#4d5965", line_gap=14)
-    for x1, x2 in [(314, 346), (600, 632), (886, 918)]:
-        line(x1, module_y + 53, x2, module_y + 53)
-    add(f'<line x1="90" y1="252" x2="1140" y2="252" stroke="#7a8490" stroke-width="1.2" stroke-dasharray="6 6"/>')
-    text(615, 266, "validation-fixed ROI-stress protocol reused across teacher and student", size=11.8, color="#596571")
+    for bx, by0, bw, bh, label, fill, stroke in inner:
+        rect(bx, by0, bw, bh, fill=fill, stroke=stroke, sw=1.6, rx=7)
+        text(bx + bw / 2, by0 + 17, label[0], size=11.6, weight=700)
+        text(bx + bw / 2, by0 + 33, label[1], size=9.8, color="#4d5965")
+    for x1, x2 in [(274, 300), (484, 510)]:
+        line(x1, component_y + 86, x2, component_y + 86)
 
-    # B. Module 2 detail is smaller than the framework overview.
+    rect(850, component_y, 320, 118, fill=blue_fill, stroke=blue, sw=2.1, rx=10)
+    text(1010, component_y + 18, "Component 2", size=12, weight=700, color=blue)
+    text(1010, component_y + 42, ["Edge-ready post-processing", "and verification"], size=14.2, weight=700, line_gap=16)
+    text(1010, component_y + 82, ["fixed threshold / calibration / export", "Xiaomi + Samsung measurement"], size=10.7, color="#4d5965", line_gap=14)
+    line(784, component_y + 59, 848, component_y + 59)
+    add(f'<line x1="90" y1="252" x2="1140" y2="252" stroke="#7a8490" stroke-width="1.2" stroke-dasharray="6 6"/>')
+    text(615, 266, "same validation-fixed ROI-stress protocol drives both optimization and verification", size=11.8, color="#596571")
+
+    # B. Component 1 detail is smaller than the framework overview.
     rect(28, 314, 590, 160, fill="#ffffff", stroke="#d4d9df", sw=1.3, rx=12)
-    title(48, 344, "B", "Module 2 detail: teacher design space")
+    title(48, 344, "B", "Component 1 detail: teacher design space")
     detail_y = 378
     detail_boxes = [
         (54, detail_y, 82, 42, ["ROI", "crop"], "#ffffff", "#79838f", 11.5, 600),

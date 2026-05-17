@@ -47,4 +47,4 @@ OK: artifact validation passed
 
 ## Scope
 
-This is a review and reproducibility package, not a dataset mirror. The manuscript makes bounded claims around UltraDrill: ROI preprocessing and localization-stress construction, robustness-aware teacher optimization, student distillation, fixed edge post-processing, two-device Android feasibility, and limits of zero-shot cross-organ transfer.
+This is a review and reproducibility package, not a dataset mirror. The manuscript makes bounded claims around UltraDrill: localization-stress-guided teacher--student optimization, fixed edge post-processing and verification, two-device Android feasibility, and limits of zero-shot cross-organ transfer.

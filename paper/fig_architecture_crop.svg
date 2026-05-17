@@ -12,69 +12,61 @@
 <rect x="0" y="0" width="1280" height="500" fill="#ffffff"/>
 <rect class="" x="28" y="24" width="1224" height="268" rx="12" fill="#fbfcfd" stroke="#d4d9df" stroke-width="1.3"/>
 <text x="48" y="55.0" text-anchor="start" dominant-baseline="middle" font-size="18" font-weight="700" fill="#111820">
-<tspan x="48" dy="0">A  UltraDrill framework: one ROI-stress criterion from teacher selection to edge verification</tspan>
+<tspan x="48" dy="0">A  UltraDrill framework: stress-guided optimization plus edge verification</tspan>
 </text>
 <text x="48" y="83.0" text-anchor="start" dominant-baseline="middle" font-size="12" font-weight="400" fill="#5b6672">
-<tspan x="48" dy="0">The same localization-stress protocol is used before and after distillation, so deployment compression is checked against the error source that motivates the framework.</tspan>
+<tspan x="48" dy="0">The contribution is compressed into two coupled components; ROI stress is the selection criterion before distillation and the verification criterion after distillation.</tspan>
 </text>
-<rect class="" x="62" y="118" width="250" height="106" rx="9" fill="#fff2e4" stroke="#b86a2a" stroke-width="2.0"/>
-<text x="187.0" y="136.0" text-anchor="middle" dominant-baseline="middle" font-size="12" font-weight="700" fill="#b86a2a">
-<tspan x="187.0" dy="0">Module 1</tspan>
+<rect class="" x="62" y="116" width="720" height="118" rx="10" fill="#fbfdfb" stroke="#3b7f4a" stroke-width="2.1"/>
+<text x="422" y="134.0" text-anchor="middle" dominant-baseline="middle" font-size="12" font-weight="700" fill="#3b7f4a">
+<tspan x="422" dy="0">Component 1</tspan>
 </text>
-<text x="187.0" y="152.0" text-anchor="middle" dominant-baseline="middle" font-size="14" font-weight="700" fill="#202833">
-<tspan x="187.0" dy="0">ROI preprocessing</tspan>
-<tspan x="187.0" dy="16">and stress inputs</tspan>
+<text x="422" y="158.0" text-anchor="middle" dominant-baseline="middle" font-size="14.2" font-weight="700" fill="#202833">
+<tspan x="422" dy="0">Localization-stress-guided teacher--student optimization</tspan>
 </text>
-<text x="187.0" y="189.0" text-anchor="middle" dominant-baseline="middle" font-size="11.3" font-weight="400" fill="#4d5965">
-<tspan x="187.0" dy="0">GT / 5-20% noise</tspan>
-<tspan x="187.0" dy="14">detector ROI / full image</tspan>
+<rect class="" x="92" y="180" width="180" height="44" rx="7" fill="#fff2e4" stroke="#b86a2a" stroke-width="1.6"/>
+<text x="182.0" y="197.0" text-anchor="middle" dominant-baseline="middle" font-size="11.6" font-weight="700" fill="#202833">
+<tspan x="182.0" dy="0">ROI stress inputs</tspan>
 </text>
-<rect class="" x="348" y="118" width="250" height="106" rx="9" fill="#eaf7ed" stroke="#3b7f4a" stroke-width="2.0"/>
-<text x="473.0" y="136.0" text-anchor="middle" dominant-baseline="middle" font-size="12" font-weight="700" fill="#3b7f4a">
-<tspan x="473.0" dy="0">Module 2</tspan>
+<text x="182.0" y="213.0" text-anchor="middle" dominant-baseline="middle" font-size="9.8" font-weight="400" fill="#4d5965">
+<tspan x="182.0" dy="0">GT / noise / detector / full</tspan>
 </text>
-<text x="473.0" y="152.0" text-anchor="middle" dominant-baseline="middle" font-size="14" font-weight="700" fill="#202833">
-<tspan x="473.0" dy="0">Robust teacher</tspan>
-<tspan x="473.0" dy="16">optimization and selection</tspan>
+<rect class="" x="302" y="180" width="180" height="44" rx="7" fill="#eaf7ed" stroke="#3b7f4a" stroke-width="1.6"/>
+<text x="392.0" y="197.0" text-anchor="middle" dominant-baseline="middle" font-size="11.6" font-weight="700" fill="#202833">
+<tspan x="392.0" dy="0">Teacher selection</tspan>
 </text>
-<text x="473.0" y="189.0" text-anchor="middle" dominant-baseline="middle" font-size="11.3" font-weight="400" fill="#4d5965">
-<tspan x="473.0" dy="0">TransXNet-family</tspan>
-<tspan x="473.0" dy="14">clean AUC + stress drop</tspan>
+<text x="392.0" y="213.0" text-anchor="middle" dominant-baseline="middle" font-size="9.8" font-weight="400" fill="#4d5965">
+<tspan x="392.0" dy="0">clean AUC + stress drop</tspan>
 </text>
-<rect class="" x="634" y="118" width="250" height="106" rx="9" fill="#f1ebfb" stroke="#7256a3" stroke-width="2.0"/>
-<text x="759.0" y="136.0" text-anchor="middle" dominant-baseline="middle" font-size="12" font-weight="700" fill="#7256a3">
-<tspan x="759.0" dy="0">Module 3</tspan>
+<rect class="" x="512" y="180" width="180" height="44" rx="7" fill="#f1ebfb" stroke="#7256a3" stroke-width="1.6"/>
+<text x="602.0" y="197.0" text-anchor="middle" dominant-baseline="middle" font-size="11.6" font-weight="700" fill="#202833">
+<tspan x="602.0" dy="0">Student distillation</tspan>
 </text>
-<text x="759.0" y="152.0" text-anchor="middle" dominant-baseline="middle" font-size="14" font-weight="700" fill="#202833">
-<tspan x="759.0" dy="0">Student distillation</tspan>
-<tspan x="759.0" dy="16">and compression</tspan>
+<text x="602.0" y="213.0" text-anchor="middle" dominant-baseline="middle" font-size="9.8" font-weight="400" fill="#4d5965">
+<tspan x="602.0" dy="0">KD and same-stress retest</tspan>
 </text>
-<text x="759.0" y="189.0" text-anchor="middle" dominant-baseline="middle" font-size="11.3" font-weight="400" fill="#4d5965">
-<tspan x="759.0" dy="0">EfficientFormer-L1</tspan>
-<tspan x="759.0" dy="14">same-stress retest</tspan>
+<line x1="274" y1="202" x2="300" y2="202" stroke="#46515c" stroke-width="1.8" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="484" y1="202" x2="510" y2="202" stroke="#46515c" stroke-width="1.8" stroke-linecap="round" marker-end="url(#arrow)"/>
+<rect class="" x="850" y="116" width="320" height="118" rx="10" fill="#eaf4ff" stroke="#2b6f9f" stroke-width="2.1"/>
+<text x="1010" y="134.0" text-anchor="middle" dominant-baseline="middle" font-size="12" font-weight="700" fill="#2b6f9f">
+<tspan x="1010" dy="0">Component 2</tspan>
 </text>
-<rect class="" x="920" y="118" width="250" height="106" rx="9" fill="#eaf4ff" stroke="#2b6f9f" stroke-width="2.0"/>
-<text x="1045.0" y="136.0" text-anchor="middle" dominant-baseline="middle" font-size="12" font-weight="700" fill="#2b6f9f">
-<tspan x="1045.0" dy="0">Module 4</tspan>
+<text x="1010" y="150.0" text-anchor="middle" dominant-baseline="middle" font-size="14.2" font-weight="700" fill="#202833">
+<tspan x="1010" dy="0">Edge-ready post-processing</tspan>
+<tspan x="1010" dy="16">and verification</tspan>
 </text>
-<text x="1045.0" y="152.0" text-anchor="middle" dominant-baseline="middle" font-size="14" font-weight="700" fill="#202833">
-<tspan x="1045.0" dy="0">Post-processing</tspan>
-<tspan x="1045.0" dy="16">and edge verification</tspan>
+<text x="1010" y="191.0" text-anchor="middle" dominant-baseline="middle" font-size="10.7" font-weight="400" fill="#4d5965">
+<tspan x="1010" dy="0">fixed threshold / calibration / export</tspan>
+<tspan x="1010" dy="14">Xiaomi + Samsung measurement</tspan>
 </text>
-<text x="1045.0" y="189.0" text-anchor="middle" dominant-baseline="middle" font-size="11.3" font-weight="400" fill="#4d5965">
-<tspan x="1045.0" dy="0">fixed threshold / export</tspan>
-<tspan x="1045.0" dy="14">Xiaomi + Samsung</tspan>
-</text>
-<line x1="314" y1="171" x2="346" y2="171" stroke="#46515c" stroke-width="1.8" stroke-linecap="round" marker-end="url(#arrow)"/>
-<line x1="600" y1="171" x2="632" y2="171" stroke="#46515c" stroke-width="1.8" stroke-linecap="round" marker-end="url(#arrow)"/>
-<line x1="886" y1="171" x2="918" y2="171" stroke="#46515c" stroke-width="1.8" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="784" y1="175" x2="848" y2="175" stroke="#46515c" stroke-width="1.8" stroke-linecap="round" marker-end="url(#arrow)"/>
 <line x1="90" y1="252" x2="1140" y2="252" stroke="#7a8490" stroke-width="1.2" stroke-dasharray="6 6"/>
 <text x="615" y="266.0" text-anchor="middle" dominant-baseline="middle" font-size="11.8" font-weight="400" fill="#596571">
-<tspan x="615" dy="0">validation-fixed ROI-stress protocol reused across teacher and student</tspan>
+<tspan x="615" dy="0">same validation-fixed ROI-stress protocol drives both optimization and verification</tspan>
 </text>
 <rect class="" x="28" y="314" width="590" height="160" rx="12" fill="#ffffff" stroke="#d4d9df" stroke-width="1.3"/>
 <text x="48" y="344.0" text-anchor="start" dominant-baseline="middle" font-size="18" font-weight="700" fill="#111820">
-<tspan x="48" dy="0">B  Module 2 detail: teacher design space</tspan>
+<tspan x="48" dy="0">B  Component 1 detail: teacher design space</tspan>
 </text>
 <rect class="" x="54" y="378" width="82" height="42" rx="7" fill="#ffffff" stroke="#79838f" stroke-width="1.8"/>
 <text x="95.0" y="391.75" text-anchor="middle" dominant-baseline="middle" font-size="11.5" font-weight="600" fill="#202833">
