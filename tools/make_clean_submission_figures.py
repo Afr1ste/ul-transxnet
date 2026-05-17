@@ -158,7 +158,7 @@ def architecture() -> None:
     # B. Module 2 detail is smaller than the framework overview.
     rect(28, 314, 590, 160, fill="#ffffff", stroke="#d4d9df", sw=1.3, rx=12)
     title(48, 344, "B", "Module 2 detail: teacher design space")
-    detail_y = 380
+    detail_y = 378
     detail_boxes = [
         (54, detail_y, 82, 42, ["ROI", "crop"], "#ffffff", "#79838f", 11.5, 600),
         (158, detail_y, 82, 42, ["patch", "embed"], orange_fill, orange, 11.5, 600),
@@ -170,10 +170,10 @@ def architecture() -> None:
         box(bx, by0, bw, bh, label, fill=fill, stroke=stroke, size=size, weight=weight)
     for x1, x2 in [(138, 156), (242, 260), (346, 364), (450, 468)]:
         line(x1, detail_y + 21, x2, detail_y + 21)
-    box(132, 430, 92, 28, "MCA", fill=blue_fill, stroke=blue, size=11.5, weight=700)
-    box(250, 430, 92, 28, "MUDD", fill=green_fill, stroke=green, size=11.5, weight=700)
-    box(368, 430, 92, 28, "DA", fill=purple_fill, stroke=purple, size=11.5, weight=700)
-    text(324, 458, "Validation-fixed MCA/MUDD/DA ablation selects the teacher.", size=10.8, color="#596571")
+    add('<rect x="206" y="430" width="256" height="34" rx="8" fill="#fbfcfd" stroke="#c9d0d8" stroke-width="1.1" stroke-dasharray="5 4"/>')
+    box(218, 435, 64, 24, "MCA", fill=blue_fill, stroke=blue, size=10.5, weight=700)
+    box(302, 435, 64, 24, "MUDD", fill=green_fill, stroke=green, size=10.5, weight=700)
+    box(386, 435, 64, 24, "DA", fill=purple_fill, stroke=purple, size=10.5, weight=700)
 
     # C. Outputs and claim boundary.
     rect(650, 314, 602, 160, fill="#fbfdfb", stroke="#d4d9df", sw=1.3, rx=12)
