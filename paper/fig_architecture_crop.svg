@@ -12,10 +12,10 @@
 <rect x="0" y="0" width="1280" height="650" fill="#ffffff"/>
 <rect class="" x="28" y="24" width="1224" height="188" rx="12" fill="#fbfcfd" stroke="#d4d9df" stroke-width="1.3"/>
 <text x="48" y="55.0" text-anchor="start" dominant-baseline="middle" font-size="18" font-weight="700" fill="#111820">
-<tspan x="48" dy="0">A  Teacher backbone: what each stage changes</tspan>
+<tspan x="48" dy="0">A  UltraDrill module 2: teacher optimization</tspan>
 </text>
 <text x="48" y="83.0" text-anchor="start" dominant-baseline="middle" font-size="12" font-weight="400" fill="#5b6672">
-<tspan x="48" dy="0">Input resolution is 256 x 256; spatial size halves after each stage.</tspan>
+<tspan x="48" dy="0">The high-capacity TransXNet-family teacher is optimized after fixed ROI preprocessing.</tspan>
 </text>
 <rect class="" x="54" y="112" width="100" height="62" rx="7" fill="#ffffff" stroke="#6b7785" stroke-width="1.8"/>
 <text x="104.0" y="135.5" text-anchor="middle" dominant-baseline="middle" font-size="12" font-weight="600" fill="#202833">
@@ -108,7 +108,7 @@
 <line x1="1182" y1="143" x2="1200" y2="143" stroke="#46515c" stroke-width="1.8" stroke-linecap="round" marker-end="url(#arrow)"/>
 <rect class="" x="28" y="236" width="1224" height="244" rx="12" fill="#ffffff" stroke="#d4d9df" stroke-width="1.3"/>
 <text x="48" y="268.0" text-anchor="start" dominant-baseline="middle" font-size="18" font-weight="700" fill="#111820">
-<tspan x="48" dy="0">B  Representative block: where the optional modules enter</tspan>
+<tspan x="48" dy="0">B  Teacher design space: optional modules before distillation</tspan>
 </text>
 <rect class="" x="54" y="308" width="156" height="46" rx="7" fill="#eaf7ed" stroke="#3b7f4a" stroke-width="1.8"/>
 <text x="132.0" y="323.75" text-anchor="middle" dominant-baseline="middle" font-size="11.5" font-weight="600" fill="#202833">
@@ -182,32 +182,32 @@
 </text>
 <rect class="" x="1112" y="402" width="108" height="40" rx="7" fill="#ffffff" stroke="#6b7785" stroke-width="1.8"/>
 <text x="1166.0" y="414.75" text-anchor="middle" dominant-baseline="middle" font-size="11.5" font-weight="700" fill="#202833">
-<tspan x="1166.0" dy="0">Final test</tspan>
+<tspan x="1166.0" dy="0">Fixed test</tspan>
 <tspan x="1166.0" dy="14.5">reporting</tspan>
 </text>
 <line x1="1084" y1="402" x2="1110" y2="354" stroke="#46515c" stroke-width="1.8" stroke-linecap="round" marker-end="url(#arrow)"/>
 <line x1="1166" y1="376" x2="1166" y2="400" stroke="#46515c" stroke-width="1.8" stroke-linecap="round" marker-end="url(#arrow)"/>
 <text x="638" y="456.0" text-anchor="middle" dominant-baseline="middle" font-size="11.3" font-weight="400" fill="#596571">
-<tspan x="638" dy="0">Options are toggled independently: MCA = coordinate recalibration; MUDD = same-stage reuse; DA = differential attention.</tspan>
+<tspan x="638" dy="0">UltraDrill selects the teacher after validation-fixed MCA/MUDD/DA ablation and localization-stress testing.</tspan>
 </text>
 <rect class="" x="28" y="504" width="1224" height="122" rx="12" fill="#fbfdfb" stroke="#d4d9df" stroke-width="1.3"/>
 <text x="48" y="534.0" text-anchor="start" dominant-baseline="middle" font-size="18" font-weight="700" fill="#111820">
-<tspan x="48" dy="0">C  Evidence pathway: analysis teacher to mobile student</tspan>
+<tspan x="48" dy="0">C  UltraDrill module chain: preprocessing to edge verification</tspan>
 </text>
 <rect class="" x="54" y="562" width="124" height="42" rx="7" fill="#ffffff" stroke="#6b7785" stroke-width="1.8"/>
 <text x="116.0" y="575.75" text-anchor="middle" dominant-baseline="middle" font-size="11.5" font-weight="600" fill="#202833">
-<tspan x="116.0" dy="0">Fixed splits</tspan>
-<tspan x="116.0" dy="14.5">and protocol</tspan>
+<tspan x="116.0" dy="0">ROI preprocessing</tspan>
+<tspan x="116.0" dy="14.5">and stress inputs</tspan>
 </text>
 <rect class="" x="218" y="562" width="130" height="42" rx="7" fill="#ffffff" stroke="#6b7785" stroke-width="1.8"/>
 <text x="283.0" y="575.75" text-anchor="middle" dominant-baseline="middle" font-size="11.5" font-weight="600" fill="#202833">
-<tspan x="283.0" dy="0">Teacher-family</tspan>
-<tspan x="283.0" dy="14.5">variants</tspan>
+<tspan x="283.0" dy="0">Teacher</tspan>
+<tspan x="283.0" dy="14.5">optimization</tspan>
 </text>
 <rect class="" x="388" y="562" width="152" height="42" rx="7" fill="#fff2e4" stroke="#b86a2a" stroke-width="1.8"/>
 <text x="464.0" y="575.75" text-anchor="middle" dominant-baseline="middle" font-size="11.5" font-weight="600" fill="#202833">
-<tspan x="464.0" dy="0">Benchmark, ablation</tspan>
-<tspan x="464.0" dy="14.5">and ROI robustness</tspan>
+<tspan x="464.0" dy="0">Teacher selection</tspan>
+<tspan x="464.0" dy="14.5">by stress testing</tspan>
 </text>
 <rect class="" x="580" y="562" width="112" height="42" rx="7" fill="#eaf4ff" stroke="#2b6f9f" stroke-width="1.8"/>
 <text x="636.0" y="575.75" text-anchor="middle" dominant-baseline="middle" font-size="11.5" font-weight="600" fill="#202833">
@@ -216,18 +216,18 @@
 </text>
 <rect class="" x="732" y="562" width="166" height="42" rx="7" fill="#eaf7ed" stroke="#3b7f4a" stroke-width="1.8"/>
 <text x="815.0" y="575.75" text-anchor="middle" dominant-baseline="middle" font-size="11.5" font-weight="700" fill="#202833">
-<tspan x="815.0" dy="0">EfficientFormer-L1</tspan>
-<tspan x="815.0" dy="14.5">+ ECA student</tspan>
+<tspan x="815.0" dy="0">Student distillation</tspan>
+<tspan x="815.0" dy="14.5">EfficientFormer-L1</tspan>
 </text>
 <rect class="" x="938" y="562" width="116" height="42" rx="7" fill="#ffffff" stroke="#6b7785" stroke-width="1.8"/>
 <text x="996.0" y="575.75" text-anchor="middle" dominant-baseline="middle" font-size="11.5" font-weight="600" fill="#202833">
-<tspan x="996.0" dy="0">ONNX Runtime</tspan>
-<tspan x="996.0" dy="14.5">export</tspan>
+<tspan x="996.0" dy="0">Fixed post-</tspan>
+<tspan x="996.0" dy="14.5">processing</tspan>
 </text>
 <rect class="" x="1094" y="562" width="126" height="42" rx="7" fill="#eaf4ff" stroke="#2b6f9f" stroke-width="1.8"/>
 <text x="1157.0" y="575.75" text-anchor="middle" dominant-baseline="middle" font-size="11.5" font-weight="700" fill="#202833">
-<tspan x="1157.0" dy="0">Two Android</tspan>
-<tspan x="1157.0" dy="14.5">devices</tspan>
+<tspan x="1157.0" dy="0">Android</tspan>
+<tspan x="1157.0" dy="14.5">verification</tspan>
 </text>
 <line x1="180" y1="583" x2="216" y2="583" stroke="#46515c" stroke-width="1.8" stroke-linecap="round" marker-end="url(#arrow)"/>
 <line x1="350" y1="583" x2="386" y2="583" stroke="#46515c" stroke-width="1.8" stroke-linecap="round" marker-end="url(#arrow)"/>

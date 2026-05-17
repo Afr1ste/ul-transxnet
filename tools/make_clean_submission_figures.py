@@ -133,10 +133,10 @@ def architecture() -> None:
     purple, purple_fill = "#7256a3", "#f1ebfb"
     gray_fill, panel_fill = "#f7f9fb", "#fbfcfd"
 
-    # A. Teacher backbone.
+    # A. Teacher optimization module.
     rect(28, 24, 1224, 188, fill=panel_fill, stroke="#d4d9df", sw=1.3, rx=12)
-    title(48, 55, "A", "Teacher backbone: what each stage changes")
-    text(48, 83, "Input resolution is 256 x 256; spatial size halves after each stage.", size=12, color="#5b6672", anchor="start")
+    title(48, 55, "A", "UltraDrill module 2: teacher optimization")
+    text(48, 83, "The high-capacity TransXNet-family teacher is optimized after fixed ROI preprocessing.", size=12, color="#5b6672", anchor="start")
 
     def stage_box(x, y, label, resolution, channels, depth, heads, sr, fill, stroke):
         rect(x, y, 138, 86, fill=fill, stroke=stroke, sw=1.7, rx=8)
@@ -159,9 +159,9 @@ def architecture() -> None:
     for x1, x2 in [(156, 182), (294, 322), (464, 484), (626, 646), (788, 808), (950, 990), (1064, 1086), (1182, 1200)]:
         line(x1, 143, x2, 143)
 
-    # B. Block-level options.
+    # B. Teacher design-space options.
     rect(28, 236, 1224, 244, fill="#ffffff", stroke="#d4d9df", sw=1.3, rx=12)
-    title(48, 268, "B", "Representative block: where the optional modules enter")
+    title(48, 268, "B", "Teacher design space: optional modules before distillation")
     by = 382
 
     # Stage-local memory is drawn above the main path so arrows do not cross the block sequence.
@@ -191,20 +191,20 @@ def architecture() -> None:
     box(1112, by + 20, 108, 40, ["Fixed test", "reporting"], fill="#ffffff", stroke="#6b7785", size=11.5, weight=700)
     line(1084, by + 20, 1110, by - 28)
     line(1166, by - 6, 1166, by + 18)
-    text(638, 456, "Options are toggled independently: MCA = coordinate recalibration; MUDD = same-stage reuse; DA = differential attention.", size=11.3, color="#596571")
+    text(638, 456, "UltraDrill selects the teacher after validation-fixed MCA/MUDD/DA ablation and localization-stress testing.", size=11.3, color="#596571")
 
-    # C. Evaluation and deployment path.
+    # C. UltraDrill framework chain.
     rect(28, 504, 1224, 122, fill="#fbfdfb", stroke="#d4d9df", sw=1.3, rx=12)
-    title(48, 534, "C", "Evidence pathway: analysis teacher to mobile student")
+    title(48, 534, "C", "UltraDrill module chain: preprocessing to edge verification")
     cy = 562
     path_boxes = [
-        (54, cy, 124, 42, ["Frozen manifest", "and labels"], "#ffffff", "#6b7785", 11.5, 600),
-        (218, cy, 130, 42, ["Teacher-family", "variants"], "#ffffff", "#6b7785", 11.5, 600),
-        (388, cy, 152, 42, ["Benchmark, ablation", "and ROI robustness"], orange_fill, orange, 11.5, 600),
+        (54, cy, 124, 42, ["ROI preprocessing", "and stress inputs"], "#ffffff", "#6b7785", 11.5, 600),
+        (218, cy, 130, 42, ["Teacher", "optimization"], "#ffffff", "#6b7785", 11.5, 600),
+        (388, cy, 152, 42, ["Teacher selection", "by stress testing"], orange_fill, orange, 11.5, 600),
         (580, cy, 112, 42, ["Teacher logits", "for KD"], blue_fill, blue, 11.5, 600),
-        (732, cy, 166, 42, ["EfficientFormer-L1", "+ ECA student"], green_fill, green, 11.5, 700),
-        (938, cy, 116, 42, ["ONNX Runtime", "export"], "#ffffff", "#6b7785", 11.5, 600),
-        (1094, cy, 126, 42, ["Two Android", "devices"], blue_fill, blue, 11.5, 700),
+        (732, cy, 166, 42, ["Student distillation", "EfficientFormer-L1"], green_fill, green, 11.5, 700),
+        (938, cy, 116, 42, ["Fixed post-", "processing"], "#ffffff", "#6b7785", 11.5, 600),
+        (1094, cy, 126, 42, ["Android", "verification"], blue_fill, blue, 11.5, 700),
     ]
     for bx, by0, bw, bh, label, fill, stroke, size, weight in path_boxes:
         box(bx, by0, bw, bh, label, fill=fill, stroke=stroke, size=size, weight=weight)
