@@ -18,7 +18,7 @@
 \graphicspath{{./}}
 \hypersetup{
     hidelinks,
-    pdftitle={Localization-Robust Teacher-Student Learning for Mobile Ultrasound Lesion Classification},
+    pdftitle={UltraDrill: A Distillation and Optimization Framework for Edge Ultrasound Lesion Classification},
     pdfauthor={Zihan Li and Cong Yang}
 }
 \pdfstringdefDisableCommands{%
@@ -30,7 +30,7 @@
 
 \begin{frontmatter}
 
-\title{Localization-Robust Teacher-Student Learning for Mobile Ultrasound Lesion Classification}
+\title{UltraDrill: A Distillation and Optimization Framework for Edge Ultrasound Lesion Classification}
 
 \author[inst1]{Zihan Li}
 \author[inst1]{Cong Yang\corref{cor1}}
@@ -47,15 +47,15 @@
 \textbf{Background and Objectives:}
 Ultrasound lesion classifiers are usually trained and reported on annotation-derived region-of-interest (ROI) crops, but mobile use depends on imperfect localization. A deployment-oriented classifier should therefore be selected not only by clean-ROI accuracy, but also by the performance loss caused by plausible ROI errors.
 \textbf{Methods:}
-We propose a localization-robust teacher-student pipeline for ultrasound lesion classification. A controlled ROI perturbation protocol first evaluates high-capacity TransXNet-family teachers under ground-truth boxes, synthetic box noise, detector-derived boxes, and full-image inputs. The selected teacher then supervises EfficientFormer-L1 students through knowledge distillation, and the resulting students are re-evaluated under the same localization-stress protocol before Android deployment. Experiments use TN5000 thyroid nodules as the primary benchmark, with BUSI breast and AUL liver datasets used as additional public in-domain benchmarks and for multi-organ boundary analysis.
+We propose UltraDrill, a distillation and optimization framework for edge ultrasound lesion classification. UltraDrill contains four linked modules: ROI preprocessing with localization-stress construction, high-capacity teacher optimization and selection, EfficientFormer student distillation, and edge post-processing with Android export verification. The ROI-stress module evaluates ground-truth boxes, synthetic box noise, detector-derived boxes, and full-image inputs before and after distillation, so teacher selection and mobile student verification use the same stress test. Experiments use TN5000 thyroid nodules as the primary benchmark, with BUSI breast and AUL liver datasets used as additional public in-domain benchmarks and for multi-organ boundary analysis.
 \textbf{Results:}
 On TN5000, UL-TransXNet reaches AUC 0.9537 and balanced accuracy 0.8865, slightly above ConvNeXt-Tiny under the fixed protocol. Full-factorial ablation identifies TransXNet-MUDD+DA as the strongest teacher configuration (AUC 0.9579, balanced accuracy 0.8901), while coordinate-aware refinement is dataset-dependent. Under the unified localization-stress protocol, the MUDD+DA teacher obtains GT-ROI AUC 0.9623, 20\% box-noise AUC 0.9463, and detector-ROI AUC 0.9497. The distilled EfficientFormer-L1+KD student obtains GT-ROI AUC 0.9585, 20\% box-noise AUC 0.9529, and detector-ROI AUC 0.9534, showing that distillation does not amplify localization sensitivity. The EfficientFormer-L1+ECA+KD Android artifact reaches 0.9552 TN5000 AUC with 31.3/56.5 ms hot latency on Xiaomi and Samsung devices. Joint multi-organ training is feasible, but leave-one-domain-out transfer remains weak.
 \textbf{Conclusions:}
-Localization-stress testing provides a useful bridge between ROI teacher analysis and mobile distillation. The resulting evidence supports a bounded mobile ultrasound classification workflow: choose teachers by clean-ROI accuracy and localization robustness, distill compact students, and verify that the student preserves robustness before claiming deployment feasibility.
+UltraDrill turns ROI localization stress into a framework-level criterion for teacher selection, student distillation, and edge verification. The resulting evidence supports a bounded edge-ultrasound classification workflow: optimize the teacher under localization stress, distill compact students, apply fixed post-processing, and verify both robustness and real-device latency before claiming deployment feasibility.
 \end{abstract}
 
 \begin{keyword}
-Ultrasound image classification \sep Region of interest \sep Localization robustness \sep Teacher-student learning \sep Knowledge distillation \sep Mobile inference
+Ultrasound image classification \sep Edge AI \sep Knowledge distillation \sep Model optimization \sep Localization robustness \sep Mobile inference
 \end{keyword}
 
 \end{frontmatter}
@@ -65,19 +65,19 @@ Ultrasound image classification \sep Region of interest \sep Localization robust
 
 Ultrasound is widely used for screening, follow-up, and diagnostic support because it is inexpensive, radiation-free, portable, and suitable for repeated acquisition. These advantages also create a difficult computer-aided diagnosis setting. Speckle noise, weak lesion boundaries, low contrast, operator dependency, and device-dependent appearance shifts can obscure benign--malignant cues. Deep learning has improved ultrasound classification, but practical lesion classifiers still face a specific deployment gap: many models are optimized and reported on annotation-derived ROI crops, whereas mobile use must tolerate imperfect lesion localization.
 
-This paper targets that gap from a computing-methods perspective. Rather than presenting a new universal medical vision backbone, we ask how ROI localization stress can guide the construction of a mobile ultrasound classifier. The intended workflow is sequential: first evaluate high-capacity teachers under controlled ROI errors, then choose a teacher that remains reliable under those errors, then distill a compact student, and finally verify that the student has not lost the same localization robustness before real-device measurement. In this framing, robustness evaluation is not a diagnostic table added after the fact; it is the link between teacher analysis and mobile student deployment.
+This paper targets that gap from a computing-methods perspective through UltraDrill, a distillation and optimization framework for edge ultrasound lesion classification. Rather than presenting a new universal medical vision backbone, UltraDrill organizes the steps needed to build a mobile classifier from ROI data: preprocess and stress-test lesion crops, optimize and select a reliable high-capacity teacher, distill a compact student, and apply fixed post-processing and export checks before real-device measurement. In this framing, localization robustness is not an auxiliary diagnostic table; it is a framework-level criterion that connects teacher selection, student compression, and edge verification.
 
 TN5000 thyroid nodules are used as the primary benchmark~\cite{Zhang_2025}, while BUSI breast lesions~\cite{Al_Dhabyani_2020} and the Annotated Ultrasound Liver (AUL) dataset~\cite{aul_dataset} provide additional public in-domain benchmarks from different organs. These datasets differ in anatomy, acquisition appearance, annotation protocol, and class prevalence, so they should not be treated as automatic evidence of zero-shot cross-organ generalization. We use a TransXNet-family teacher~\cite{transxnet} as a high-capacity ROI model and study three adaptations: coordinate-aware feature refinement inspired by coordinate attention~\cite{hou2021coordinate}, multi-scale dynamic dense reuse, and differential attention adapted from the Differential Transformer formulation~\cite{ye2024differential}. We then distill EfficientFormer-L1 students~\cite{li2022efficientformer} and measure exported artifacts on real Android devices.
 
-The paper is organized around three research questions. First, which TransXNet-family teacher remains accurate when ROI boxes are perturbed or replaced by detector-derived boxes? Second, after distillation, does an EfficientFormer student retain the same localization robustness rather than merely reproduce clean-ROI accuracy? Third, under what public-dataset conditions do the resulting models remain useful, and where do multi-organ or mobile claims stop?
+The paper is organized around three framework questions. First, how should an edge-ultrasound classification pipeline preprocess ROI inputs and quantify localization stress? Second, which high-capacity teacher should be selected for distillation when clean-ROI accuracy and localization robustness are both considered? Third, after distillation and post-processing, does the exported student preserve the same robustness while satisfying real-device latency constraints?
 
 The contributions are:
 \begin{itemize}[leftmargin=1.5em]
-    \item We formulate a localization-stress protocol for ROI ultrasound classification that evaluates GT boxes, synthetic box perturbations, detector-derived boxes, and full-image inputs under a fixed validation-derived operating point.
-    \item We use this protocol to analyze TransXNet-family teachers, showing through full-factorial MCA/MUDD/DA ablation that MUDD and differential attention provide the most reliable TN5000 teacher configuration.
-    \item We evaluate the same localization-stress protocol after distillation and show that EfficientFormer-L1 KD students preserve high TN5000 AUC and smaller 20\% box-noise degradation than the high-capacity teachers.
-    \item We deploy the selected student artifacts on Xiaomi and Samsung Android devices, linking robustness-aware student selection to measured mobile latency rather than to parameter count alone.
-    \item We report BUSI/AUL in-domain benchmarks and joint/leave-one-domain-out probes to define the boundary between multi-dataset evaluation and true cross-organ generalization.
+    \item We introduce UltraDrill, a modular edge-ultrasound classification framework that links ROI preprocessing, teacher optimization, student distillation, and deployment post-processing under one fixed reporting protocol.
+    \item We instantiate the preprocessing module with a localization-stress protocol that evaluates GT boxes, synthetic box perturbations, detector-derived boxes, and full-image inputs under a fixed validation-derived operating point.
+    \item We instantiate the teacher-optimization module with TransXNet-family MCA/MUDD/DA ablations, showing that MUDD and differential attention provide the most reliable TN5000 teacher configuration.
+    \item We instantiate the distillation module with EfficientFormer-L1 KD students and show under the same localization-stress protocol that compression does not amplify ROI-error sensitivity.
+    \item We instantiate the post-processing and edge-verification module with fixed calibration/threshold logic, ONNX Runtime export, and Xiaomi/Samsung Android measurements, while BUSI/AUL and LODO probes define the boundary of dataset generalization.
 \end{itemize}
 \FloatBarrier
 
@@ -92,6 +92,11 @@ Finally, robustness and reporting transparency are important for clinical AI. Ca
 
 \section{Methods}
 \label{sec:methods}
+
+\subsection{UltraDrill framework overview}
+\label{sec:ultradrill}
+
+UltraDrill is organized as a four-module framework for edge ultrasound lesion classification. The first module is ROI preprocessing and localization-stress construction: annotation boxes, synthetic perturbations, detector boxes, and full-image controls define the inputs used to quantify how much classification changes when localization is imperfect. The second module is teacher optimization and selection: high-capacity TransXNet-family variants are trained and ablated, then selected by both clean-ROI performance and localization-stress behavior. The third module is student distillation and optimization: teacher logits supervise EfficientFormer-L1 students, optionally with lightweight channel attention, while the same ROI preprocessing and validation protocol are kept fixed. The fourth module is post-processing and edge verification: validation-derived thresholds, temperature scaling, TTA/checkpoint averaging choices, ONNX export, and Android runtime measurement are treated as part of the reported system rather than as informal deployment details. The sections below describe these modules in order.
 
 \subsection{Problem setting and ROI construction}
 
@@ -108,14 +113,14 @@ The main protocol constructs expanded lesion-centered ROI crops from annotation 
     \label{fig:roi_preprocessing}
 \end{figure}
 
-\subsection{TransXNet-family teacher}
+\subsection{Teacher optimization and selection}
 
 The teacher is a TransXNet-family hierarchical local--global backbone. It follows a four-stage configuration with stage depths $[4,4,15,4]$, embedding dimensions $[48,96,224,448]$, head numbers $[1,2,4,8]$, and spatial-reduction ratios $[8,4,2,1]$. For compatibility with the original implementation and the saved experimental checkpoints, the backbone is configured with a 1000-D trainable task projection before the binary head. This vector is not interpreted as ImageNet class probabilities; it is fine-tuned end-to-end as an intermediate representation and then passed to a 1000--512--2 MLP head.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.93\textwidth]{fig_architecture_crop.pdf}
-    \caption{Overview of the ROI teacher-analysis and mobile-distillation workflow. (A) The TransXNet-family teacher processes expanded lesion ROIs through a four-stage local--global backbone; each stage lists its spatial resolution, channel width, depth, attention heads, and spatial-reduction ratio. (B) The representative block shows where coordinate-aware refinement, dynamic dense reuse, and differential attention enter the ablated teacher variants. (C) Teacher variants support benchmark, ablation, ROI-robustness, and distillation evidence before Android measurement of the EfficientFormer-L1+ECA student.}
+    \caption{UltraDrill framework overview. (A) The teacher-optimization module uses a TransXNet-family four-stage local--global backbone for expanded lesion ROIs. (B) The teacher design space toggles coordinate-aware refinement, dynamic dense reuse, and differential attention before validation-fixed teacher selection. (C) The framework links fixed ROI preprocessing, teacher-family optimization, localization-stress testing, student distillation, ONNX export, and two-device Android verification.}
     \label{fig:architecture}
 \end{figure}
 
@@ -140,16 +145,16 @@ The path outputs are concatenated to recover $C$ channels and are then processed
 \end{equation}
 where $\lambda$ is learned. In this ROI-ultrasound setting, the module is interpreted as a way to suppress common background or speckle-like responses while sharpening lesion-related relational contrast. We do not claim these modules as new independent primitives; the contribution is their controlled reorganization and evaluation for ROI-robust ultrasound classification.
 
-\subsection{Efficient mobile student}
+\subsection{Student distillation and edge post-processing}
 
-The TransXNet-family teacher is parameter/MAC-efficient relative to several large baselines, but it is not optimized for real-device latency. We therefore train EfficientFormer-L1 students with teacher guidance. This separates two roles: the TransXNet-family model provides an accuracy-oriented teacher and design analysis, whereas the EfficientFormer student is the mobile candidate. For student training, teacher logits $z_t$ are generated from the validation-selected TransXNet-family teacher under the same TN5000 ROI preprocessing. The student logits $z_s$ are optimized with a standard supervised and distillation objective,
+The TransXNet-family teacher is parameter/MAC-efficient relative to several large baselines, but it is not optimized for real-device latency. UltraDrill therefore trains EfficientFormer-L1 students with teacher guidance. This separates two roles: the TransXNet-family model provides an accuracy-oriented teacher and design analysis, whereas the EfficientFormer student is the edge candidate. For student training, teacher logits $z_t$ are generated from the validation-selected TransXNet-family teacher under the same TN5000 ROI preprocessing. The student logits $z_s$ are optimized with a standard supervised and distillation objective,
 \begin{equation}
     \mathcal{L} =
     (1-\alpha)\mathcal{L}_{\mathrm{CE}}(y,\sigma(z_s))
     + \alpha \tau^2
     \mathrm{KL}\left(\sigma(z_t/\tau)\,\|\,\sigma(z_s/\tau)\right),
 \end{equation}
-where $\tau$ is the distillation temperature and $\alpha$ controls the supervised--teacher trade-off. In the reported TN5000 mobile runs, $\alpha=0.45$ and $\tau=3.0$. Students are trained for up to 70 epochs with early stopping patience 12, 30\% expanded annotation-derived ROI crops, 224-pixel EfficientFormer input, backbone/head learning rates of $5\times10^{-5}$ and $1.5\times10^{-4}$, weight decay $10^{-4}$, dropout 0.3, EMA, horizontal-flip TTA, temperature scaling, and top-3 checkpoint averaging. The EfficientFormer-L1+ECA variant adds a lightweight efficient-channel-attention refinement to the student feature stream before the binary head. Noisy or detector-derived ROIs are used for robustness evaluation, not for retuning the KD loss. Android deployment uses ONNX Runtime and the same TN5000 ROI preprocessing, calibration temperature, and decision-threshold logic used by the validation-selected pipeline.
+where $\tau$ is the distillation temperature and $\alpha$ controls the supervised--teacher trade-off. In the reported TN5000 mobile runs, $\alpha=0.45$ and $\tau=3.0$. Students are trained for up to 70 epochs with early stopping patience 12, 30\% expanded annotation-derived ROI crops, 224-pixel EfficientFormer input, backbone/head learning rates of $5\times10^{-5}$ and $1.5\times10^{-4}$, weight decay $10^{-4}$, dropout 0.3, EMA, horizontal-flip TTA, temperature scaling, and top-3 checkpoint averaging. The EfficientFormer-L1+ECA variant adds a lightweight efficient-channel-attention refinement to the student feature stream before the binary head. Noisy or detector-derived ROIs are used for robustness evaluation, not for retuning the KD loss. The post-processing module fixes the calibration temperature, decision threshold, optional TTA/checkpoint-averaging choice, and ONNX Runtime export path before test reporting. Android deployment uses the same TN5000 ROI preprocessing and validation-selected post-processing logic used by the desktop reports.
 
 \section{Datasets and experimental protocol}
 \label{sec:protocol}
@@ -186,12 +191,12 @@ The main metrics are AUC, balanced accuracy (BalAcc), macro F1, accuracy, sensit
 
 \subsection{Compared protocols}
 
-The experiments follow the teacher-student chain used by the method. First, the dataset-specific benchmark establishes the clean-ROI accuracy context. Second, full-factorial TN5000 ablation identifies a robust high-capacity TransXNet-family teacher. Third, the localization-stress protocol evaluates both teacher and student models under GT boxes, synthetic box noise, detector boxes, and full-image input. Fourth, exported students are measured on two Android devices. A final multi-organ study compares joint multi-organ training with leave-one-domain-out (LODO) transfer to define the boundary of public-dataset generalization. This structure is designed to prevent three common interpretation errors: treating multi-dataset in-domain testing as zero-shot generalization, treating parameter efficiency as mobile speed, and treating oracle ROI classification as a complete clinical workflow. Table~\ref{tab:model_roles} defines the names used across these blocks.
+The experiments instantiate the four UltraDrill modules. First, the dataset-specific benchmark establishes the clean-ROI accuracy context for preprocessing and teacher candidates. Second, full-factorial TN5000 ablation identifies a robust high-capacity TransXNet-family teacher. Third, the localization-stress protocol evaluates both teacher and student models under GT boxes, synthetic box noise, detector boxes, and full-image input. Fourth, exported students are measured on two Android devices under the fixed post-processing and runtime protocol. A final multi-organ study compares joint multi-organ training with leave-one-domain-out (LODO) transfer to define the boundary of public-dataset generalization. This structure is designed to prevent three common interpretation errors: treating multi-dataset in-domain testing as zero-shot generalization, treating parameter efficiency as mobile speed, and treating oracle ROI classification as a complete clinical workflow. Table~\ref{tab:model_roles} defines the names used across these blocks.
 
 \begin{table}[!htbp]
     \centering
     \small
-    \caption{Roles of the reported model configurations. The paper reports a teacher design space and a distilled mobile student rather than a single model that is optimal for every protocol.}
+    \caption{Roles of the reported model configurations inside UltraDrill. The framework reports a teacher design space and a distilled edge student rather than a single model that is optimal for every protocol.}
     \label{tab:model_roles}
     \begin{adjustbox}{max width=\columnwidth}
     \begin{tabular}{llll}
@@ -326,7 +331,7 @@ Table~\ref{tab:teacher_student_robustness} applies the same TN5000 localization-
     \label{fig:roi_robustness}
 \end{figure}
 
-\subsection{Mobile teacher-student feasibility}
+\subsection{Edge post-processing and mobile feasibility}
 
 Table~\ref{tab:mobile} reports the mobile results after re-export and two-device remeasurement. Offline ensemble metrics are taken from the strict mobile model-level summary, while Android AUC is computed from the exported single ONNX artifact under the same TN5000 test protocol. The final mobile candidate is EfficientFormer-L1+ECA+KD, which reaches 0.9568 offline ensemble AUC, 0.9552 Android-exported AUC, and 31.3/56.5 ms hot end-to-end latency on the Xiaomi phone and Samsung tablet. The runtime sweep also shows that the default CPU backend is faster than XNNPACK and NNAPI on both measured devices for this model.
 
@@ -379,7 +384,7 @@ Table~\ref{tab:cross_organ} separates joint multi-organ training from true held-
 \section{Discussion}
 \label{sec:discussion}
 
-The central result is not that one backbone is uniformly best. It is that localization-stress evaluation can organize the teacher-student pipeline. Clean-ROI benchmarking identifies high-capacity candidates, full-factorial ablation shows which TransXNet-family teacher is most reliable, and the same perturbation protocol then checks whether a compact student preserves performance when lesion boxes are imperfect. This sequence is more useful than reporting a teacher and a mobile model as unrelated experiments, because it asks whether deployment compression changes the model's sensitivity to the very ROI error that motivated the framework.
+The central result is not that one backbone is uniformly best. It is that UltraDrill turns localization stress into a practical optimization criterion for edge ultrasound classification. Clean-ROI benchmarking identifies high-capacity candidates, full-factorial ablation shows which TransXNet-family teacher is most reliable, the same perturbation protocol checks whether a compact student preserves performance when lesion boxes are imperfect, and fixed post-processing/export makes the mobile claim measurable. This sequence is more useful than reporting a teacher and a mobile model as unrelated experiments, because it asks whether deployment compression changes the model's sensitivity to the very ROI error that motivated the framework.
 
 The factorial ablation also changes the interpretation of the modules. MUDD and differential attention provide the most reliable TN5000 teacher gain. MCA is not a universal AUC booster, even though it may still help some operating points and datasets. We therefore treat the TransXNet-family model as a teacher design space, not as a monotonic sequence where every added module improves every metric. This distinction is important for the paper's claim: the teacher is selected for analysis and distillation, not presented as a universally superior backbone.
 
@@ -396,7 +401,7 @@ This study has several limitations. First, all datasets are retrospective public
 \section{Conclusions}
 \label{sec:conclusion}
 
-We presented a localization-robust teacher-student workflow for mobile ultrasound lesion classification. The key idea is to use ROI perturbation as a selection and verification tool: high-capacity TransXNet-family teachers are first evaluated under controlled localization errors, then EfficientFormer students are distilled and tested under the same stress conditions before Android deployment. On TN5000, the MUDD+DA teacher provides the strongest clean-ROI teacher evidence, while KD students preserve high AUC under 20\% box noise and detector-derived boxes and run at practical two-device CPU latency after export. The result is a bounded workflow for mobile ROI classification, not a claim of clinical deployment readiness or universal cross-organ generalization.
+We presented UltraDrill, a distillation and optimization framework for edge ultrasound lesion classification. The key idea is to make ROI perturbation a framework-level selection and verification tool: inputs are preprocessed and stress-tested, high-capacity TransXNet-family teachers are optimized and selected under controlled localization errors, EfficientFormer students are distilled and tested under the same stress conditions, and fixed post-processing/export is verified on Android devices. On TN5000, the MUDD+DA teacher provides the strongest clean-ROI teacher evidence, while KD students preserve high AUC under 20\% box noise and detector-derived boxes and run at practical two-device CPU latency after export. The result is a bounded edge-classification framework, not a claim of clinical deployment readiness or universal cross-organ generalization.
 
 \section*{CRediT authorship contribution statement}
 Zihan Li: Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Visualization, Writing -- original draft. \\

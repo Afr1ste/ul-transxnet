@@ -1,8 +1,8 @@
-# Localization-Robust Teacher-Student Ultrasound Classification
+# UltraDrill Edge Ultrasound Classification
 
 This repository is the clean public artifact for the CMPB-oriented manuscript:
 
-**Localization-Robust Teacher-Student Learning for Mobile Ultrasound Lesion Classification**
+**UltraDrill: A Distillation and Optimization Framework for Edge Ultrasound Lesion Classification**
 
 The repository was rebuilt from an empty public branch on 2026-05-14 to remove stale internal experiment names and mixed-label artifacts. It contains the current manuscript package, strict result summaries, split/protocol metadata, and lightweight validation scripts.
 
@@ -47,4 +47,4 @@ OK: artifact validation passed
 
 ## Scope
 
-This is a review and reproducibility package, not a dataset mirror. The manuscript makes bounded claims: localization-stress teacher selection, robustness-preserving student distillation, mobile feasibility on two Android devices, and limits of zero-shot cross-organ transfer.
+This is a review and reproducibility package, not a dataset mirror. The manuscript makes bounded claims around UltraDrill: ROI preprocessing and localization-stress construction, robustness-aware teacher optimization, student distillation, fixed edge post-processing, two-device Android feasibility, and limits of zero-shot cross-organ transfer.

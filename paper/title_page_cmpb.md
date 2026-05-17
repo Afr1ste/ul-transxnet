@@ -1,7 +1,7 @@
 # Title Page
 
 Manuscript title:
-Localization-Robust Teacher-Student Learning for Mobile Ultrasound Lesion Classification
+UltraDrill: A Distillation and Optimization Framework for Edge Ultrasound Lesion Classification
 
 Article type:
 Original Research
