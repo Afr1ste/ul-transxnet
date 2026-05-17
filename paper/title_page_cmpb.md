@@ -7,10 +7,11 @@ Article type:
 Original Research
 
 Authors:
-Zihan Li; Cong Yang
+Zihan Li; Hongyu Wei; Cong Yang
 
 Affiliation:
-School of Future Science and Engineering, Soochow University, Suzhou, Jiangsu 215222, China
+Zihan Li and Cong Yang: School of Future Science and Engineering, Soochow University, Suzhou, Jiangsu 215222, China  
+Hongyu Wei: Qingyang People's Hospital, Qingyang, China
 
 Corresponding author:
 Prof. Cong Yang
