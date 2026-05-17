@@ -68,7 +68,7 @@ def panel(ax, x, y, w, h, title, fc="#fbfbfb", ec="#d5d9de"):
 def architecture() -> None:
     """Hand-authored SVG layout for the architecture workflow figure."""
 
-    width, height = 1280, 650
+    width, height = 1280, 500
     svg: list[str] = []
 
     def add(s: str) -> None:
@@ -133,85 +133,63 @@ def architecture() -> None:
     purple, purple_fill = "#7256a3", "#f1ebfb"
     gray_fill, panel_fill = "#f7f9fb", "#fbfcfd"
 
-    # A. Teacher optimization module.
-    rect(28, 24, 1224, 188, fill=panel_fill, stroke="#d4d9df", sw=1.3, rx=12)
-    title(48, 55, "A", "UltraDrill module 2: teacher optimization")
-    text(48, 83, "The high-capacity TransXNet-family teacher is optimized after fixed ROI preprocessing.", size=12, color="#5b6672", anchor="start")
+    # A. UltraDrill framework first: the four modules are the contribution.
+    rect(28, 24, 1224, 268, fill=panel_fill, stroke="#d4d9df", sw=1.3, rx=12)
+    title(48, 55, "A", "UltraDrill framework: one ROI-stress criterion from teacher selection to edge verification")
+    text(48, 83, "The same localization-stress protocol is used before and after distillation, so deployment compression is checked against the error source that motivates the framework.", size=12, color="#5b6672", anchor="start")
 
-    def stage_box(x, y, label, resolution, channels, depth, heads, sr, fill, stroke):
-        rect(x, y, 138, 86, fill=fill, stroke=stroke, sw=1.7, rx=8)
-        add(f'<line x1="{x}" y1="{y + 26}" x2="{x + 138}" y2="{y + 26}" stroke="{stroke}" stroke-width="1.2" opacity="0.65"/>')
-        text(x + 69, y + 14, label, size=14, weight=700, color="#1f2933")
-        text(x + 69, y + 39, resolution, size=12.5, weight=700, color="#26323d")
-        text(x + 69, y + 59, f"C={channels}  depth={depth}", size=11.5, color="#4d5965")
-        text(x + 69, y + 76, f"heads={heads}  SR={sr}", size=11, color="#6b7480")
-
-    y = 104
-    box(54, y + 8, 100, 62, ["Expanded ROI", "3 x 256 x 256"], fill="#ffffff", stroke="#6b7785", size=12, weight=600)
-    box(184, y + 8, 108, 62, ["Patch embed", "stride 4"], fill=orange_fill, stroke=orange, size=12, weight=600)
-    stage_box(324, y, "Stage 1", "64 x 64", "48", "4", "1", "8", "#eef5fc", blue)
-    stage_box(486, y, "Stage 2", "32 x 32", "96", "4", "2", "4", green_fill, green)
-    stage_box(648, y, "Stage 3", "16 x 16", "224", "15", "4", "2", orange_fill, orange)
-    stage_box(810, y, "Stage 4", "8 x 8", "448", "4", "8", "1", purple_fill, purple)
-    box(992, y + 8, 70, 62, ["Global", "pool"], fill=blue_fill, stroke=blue, size=12, weight=600)
-    box(1088, y + 8, 92, 62, ["1000-D", "task vector"], fill=blue_fill, stroke=blue, size=11.5, weight=600)
-    box(1202, y + 8, 38, 62, ["2", "logits"], fill=blue_fill, stroke=blue, size=11.5, weight=700)
-    for x1, x2 in [(156, 182), (294, 322), (464, 484), (626, 646), (788, 808), (950, 990), (1064, 1086), (1182, 1200)]:
-        line(x1, 143, x2, 143)
-
-    # B. Teacher design-space options.
-    rect(28, 236, 1224, 244, fill="#ffffff", stroke="#d4d9df", sw=1.3, rx=12)
-    title(48, 268, "B", "Teacher design space: optional modules before distillation")
-    by = 382
-
-    # Stage-local memory is drawn above the main path so arrows do not cross the block sequence.
-    box(54, by - 74, 156, 46, ["Stage-local cache", "previous block features"], fill=green_fill, stroke=green, size=11.5, weight=600)
-    box(238, by - 74, 148, 46, ["MUDD option", "dynamic dense reuse"], fill=green_fill, stroke=green, size=11.5, weight=700)
-    line(212, by - 55, 236, by - 55, color=green)
-    line(312, by - 32, 312, by + 14, color=green)
-
-    block_boxes = [
-        (54, by, 50, 40, "input", "#ffffff", "#79838f", 12, 600),
-        (132, by, 78, 40, "DPE", orange_fill, orange, 13, 600),
-        (238, by - 10, 122, 60, ["MCA option", "coordinate-aware", "refinement"], blue_fill, blue, 11, 700),
-        (388, by, 70, 40, "Norm", gray_fill, "#8a939d", 12, 600),
-        (486, by - 12, 148, 64, ["Local-global mixer", "DA option inside", "attention branch"], purple_fill, purple, 11.5, 700),
-        (662, by, 40, 40, "+", "#ffffff", "#79838f", 18, 600),
-        (730, by, 70, 40, "Norm", gray_fill, "#8a939d", 12, 600),
-        (828, by - 8, 108, 56, "MS-FFN", blue_fill, blue, 13, 700),
-        (964, by, 40, 40, "+", "#ffffff", "#79838f", 18, 600),
-        (1032, by, 50, 40, "output", "#ffffff", "#79838f", 11, 600),
+    module_y = 118
+    modules = [
+        (62, module_y, 250, 106, ["Module 1", "ROI preprocessing", "and stress inputs", "GT / 5-20% noise", "detector ROI / full image"], orange_fill, orange),
+        (348, module_y, 250, 106, ["Module 2", "Robust teacher", "optimization and selection", "TransXNet-family", "clean AUC + stress drop"], green_fill, green),
+        (634, module_y, 250, 106, ["Module 3", "Student distillation", "and compression", "EfficientFormer-L1", "same-stress retest"], purple_fill, purple),
+        (920, module_y, 250, 106, ["Module 4", "Post-processing", "and edge verification", "fixed threshold / export", "Xiaomi + Samsung"], blue_fill, blue),
     ]
-    for bx, by0, bw, bh, label, fill, stroke, size, weight in block_boxes:
-        box(bx, by0, bw, bh, label, fill=fill, stroke=stroke, size=size, weight=weight)
-    for x1, x2 in [(106, 130), (212, 236), (362, 386), (460, 484), (636, 660), (704, 728), (802, 826), (938, 962), (1006, 1030)]:
-        line(x1, by + 20, x2, by + 20)
+    for mx, my, mw, mh, label, fill, stroke in modules:
+        rect(mx, my, mw, mh, fill=fill, stroke=stroke, sw=2.0, rx=9)
+        text(mx + mw / 2, my + 18, label[0], size=12, weight=700, color=stroke)
+        text(mx + mw / 2, my + 42, label[1:3], size=14, weight=700, line_gap=16)
+        text(mx + mw / 2, my + 78, label[3:], size=11.3, color="#4d5965", line_gap=14)
+    for x1, x2 in [(314, 346), (600, 632), (886, 918)]:
+        line(x1, module_y + 53, x2, module_y + 53)
+    add(f'<line x1="90" y1="252" x2="1140" y2="252" stroke="#7a8490" stroke-width="1.2" stroke-dasharray="6 6"/>')
+    text(615, 266, "validation-fixed ROI-stress protocol reused across teacher and student", size=11.8, color="#596571")
 
-    box(1112, by - 48, 108, 40, ["Validation", "selection"], fill="#ffffff", stroke="#6b7785", size=11.5, weight=700)
-    box(1112, by + 20, 108, 40, ["Fixed test", "reporting"], fill="#ffffff", stroke="#6b7785", size=11.5, weight=700)
-    line(1084, by + 20, 1110, by - 28)
-    line(1166, by - 6, 1166, by + 18)
-    text(638, 456, "UltraDrill selects the teacher after validation-fixed MCA/MUDD/DA ablation and localization-stress testing.", size=11.3, color="#596571")
-
-    # C. UltraDrill framework chain.
-    rect(28, 504, 1224, 122, fill="#fbfdfb", stroke="#d4d9df", sw=1.3, rx=12)
-    title(48, 534, "C", "UltraDrill module chain: preprocessing to edge verification")
-    cy = 562
-    path_boxes = [
-        (54, cy, 124, 42, ["ROI preprocessing", "and stress inputs"], "#ffffff", "#6b7785", 11.5, 600),
-        (218, cy, 130, 42, ["Teacher", "optimization"], "#ffffff", "#6b7785", 11.5, 600),
-        (388, cy, 152, 42, ["Teacher selection", "by stress testing"], orange_fill, orange, 11.5, 600),
-        (580, cy, 112, 42, ["Teacher logits", "for KD"], blue_fill, blue, 11.5, 600),
-        (732, cy, 166, 42, ["Student distillation", "EfficientFormer-L1"], green_fill, green, 11.5, 700),
-        (938, cy, 116, 42, ["Fixed post-", "processing"], "#ffffff", "#6b7785", 11.5, 600),
-        (1094, cy, 126, 42, ["Android", "verification"], blue_fill, blue, 11.5, 700),
+    # B. Module 2 detail is smaller than the framework overview.
+    rect(28, 314, 590, 160, fill="#ffffff", stroke="#d4d9df", sw=1.3, rx=12)
+    title(48, 344, "B", "Module 2 detail: teacher design space")
+    detail_y = 380
+    detail_boxes = [
+        (54, detail_y, 82, 42, ["ROI", "crop"], "#ffffff", "#79838f", 11.5, 600),
+        (158, detail_y, 82, 42, ["patch", "embed"], orange_fill, orange, 11.5, 600),
+        (262, detail_y, 82, 42, ["4-stage", "backbone"], blue_fill, blue, 11.5, 700),
+        (366, detail_y, 82, 42, ["1000-D", "task vec"], blue_fill, blue, 11.2, 600),
+        (470, detail_y, 82, 42, ["binary", "logits"], "#ffffff", "#79838f", 11.5, 600),
     ]
-    for bx, by0, bw, bh, label, fill, stroke, size, weight in path_boxes:
+    for bx, by0, bw, bh, label, fill, stroke, size, weight in detail_boxes:
         box(bx, by0, bw, bh, label, fill=fill, stroke=stroke, size=size, weight=weight)
-    for x1, x2 in [(180, 216), (350, 386), (542, 578), (694, 730), (900, 936), (1056, 1092)]:
-        line(x1, cy + 21, x2, cy + 21)
-    text(464, 614, "analysis evidence", size=11, color=orange)
-    text(846, 614, "deployment evidence", size=11, color=green)
+    for x1, x2 in [(138, 156), (242, 260), (346, 364), (450, 468)]:
+        line(x1, detail_y + 21, x2, detail_y + 21)
+    box(132, 430, 92, 28, "MCA", fill=blue_fill, stroke=blue, size=11.5, weight=700)
+    box(250, 430, 92, 28, "MUDD", fill=green_fill, stroke=green, size=11.5, weight=700)
+    box(368, 430, 92, 28, "DA", fill=purple_fill, stroke=purple, size=11.5, weight=700)
+    text(324, 458, "Validation-fixed MCA/MUDD/DA ablation selects the teacher.", size=10.8, color="#596571")
+
+    # C. Outputs and claim boundary.
+    rect(650, 314, 602, 160, fill="#fbfdfb", stroke="#d4d9df", sw=1.3, rx=12)
+    title(670, 344, "C", "Decision evidence and claim boundary")
+    evidence_cards = [
+        (676, 374, 160, 74, ["Teacher", "MUDD+DA", "GT 0.9623", "20% 0.9463"], green_fill, green),
+        (858, 374, 160, 74, ["Student", "EffFormer+KD", "GT 0.9585", "20% 0.9529"], purple_fill, purple),
+        (1040, 374, 160, 74, ["Edge artifact", "ECA+KD", "AUC 0.9552", "31.3 / 56.5 ms"], blue_fill, blue),
+    ]
+    for bx, by0, bw, bh, label, fill, stroke in evidence_cards:
+        rect(bx, by0, bw, bh, fill=fill, stroke=stroke, sw=1.8, rx=8)
+        text(bx + bw / 2, by0 + 17, label[0], size=11.5, weight=700, color=stroke)
+        text(bx + bw / 2, by0 + 36, label[1], size=10.5, weight=600, color="#2f3944")
+        text(bx + bw / 2, by0 + 51, label[2], size=10.5, color="#2f3944")
+        text(bx + bw / 2, by0 + 66, label[3], size=10.5, color="#2f3944")
+    text(951, 458, "Bounded claim: edge ROI classification, not universal zero-shot clinical deployment.", size=11.2, color="#596571")
 
     add("</svg>")
     svg_text = "\n".join(svg)

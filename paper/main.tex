@@ -126,7 +126,7 @@ The teacher is a TransXNet-family hierarchical local--global backbone. It follow
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.93\textwidth]{fig_architecture_crop.pdf}
-    \caption{UltraDrill framework overview. (A) The teacher-optimization module uses a TransXNet-family four-stage local--global backbone for expanded lesion ROIs. (B) The teacher design space toggles coordinate-aware refinement, dynamic dense reuse, and differential attention before validation-fixed teacher selection. (C) The framework links fixed ROI preprocessing, teacher-family optimization, localization-stress testing, student distillation, ONNX export, and two-device Android verification.}
+    \caption{UltraDrill framework overview. (A) The four modules use the same localization-stress criterion from ROI preprocessing through teacher selection, student distillation, and edge verification. (B) The teacher-optimization module searches a TransXNet-family design space with coordinate-aware refinement, dynamic dense reuse, and differential attention. (C) The reported outputs and boundary statements are tied to teacher robustness, student robustness, and two-device Android evidence.}
     \label{fig:architecture}
 \end{figure}
 
